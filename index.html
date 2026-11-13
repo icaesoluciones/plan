@@ -31,7 +31,7 @@ h2{font-size:17px;margin:0 0 4px}h3{font-size:15px;margin:0 0 10px}
 .kpi .v{font-size:26px;font-weight:700;color:var(--pri)}
 .kpi .t{font-size:12px;color:var(--muted);margin-top:2px}
 .kpi.crit .v{color:var(--crit)}.kpi.bad .v{color:var(--bad)}.kpi.ok .v{color:var(--ok)}
-form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;align-items:end}
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;align-items:start}
 form.f .full{grid-column:1/-1}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600}
 input,select,textarea{width:100%;padding:8px 9px;border:1px solid #cfd6e0;border-radius:6px;font:inherit;background:#fff}
@@ -52,6 +52,8 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
 .blk.crit{border-top:5px solid var(--crit)}.blk.gen{border-top:5px solid var(--pri2)}
 .blk .card{box-shadow:none}.blkh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}.blkh h2{margin:0}.blkh span{color:var(--muted);font-size:12.5px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}.chips button{border:1.5px solid #cfd6e0;background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--ink)}.chips button.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}.chips button small{opacity:.75;margin-left:4px}
+.selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+select{text-overflow:ellipsis}
 .opc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
 .opc label{display:block;border:1.5px solid #cfd6e0;border-radius:8px;padding:9px 11px;cursor:pointer;color:var(--ink);font-weight:400;margin:0;background:#fff}
 .opc label b{display:block;font-size:13px;margin-bottom:2px}.opc label span{font-size:12px;color:var(--muted)}
@@ -218,7 +220,7 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
       <div><label>Código</label><input name="codigo" placeholder="OT1"></div>
       <div style="grid-column:span 2"><label>Objetivo táctico *</label><input name="nombre" required></div>
       <div><label>Año *</label><input name="anio" type="number" min="2000" max="2100" required></div>
-      <div><label>Objetivo estratégico al que aporta</label><select name="estrategicoId"></select></div>
+      <div><label>Objetivo estratégico al que aporta</label><select name="estrategicoId" data-full></select><div class="selfull"></div></div>
       <div style="grid-column:span 2"><label>Meta / indicador</label><input name="meta"></div>
       <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
     </form>
@@ -248,7 +250,7 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
       <input type="hidden" name="id">
       <div><label>Pilar *</label><select name="pilarId" required></select></div>
       <div style="grid-column:span 2"><label>Iniciativa *</label><input name="nombre" required></div>
-      <div><label>Objetivo táctico</label><select name="tacticoId"></select></div>
+      <div><label>Objetivo táctico</label><select name="tacticoId" data-full></select><div class="selfull"></div></div>
       <div><label>Año (si no tiene objetivo táctico)</label><input name="anio" type="number" min="2000" max="2100"></div>
       <div><label>Líder / responsable</label><input name="responsable" list="dlResp"></div>
       <div class="full"><label>Descripción</label><textarea name="descripcion"></textarea></div>
@@ -276,7 +278,7 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
     <h3>Agregar / editar actividad</h3>
     <form class="f" id="fmAct">
       <input type="hidden" name="id">
-      <div style="grid-column:span 2"><label>Iniciativa *</label><select name="iniciativaId" required></select></div>
+      <div style="grid-column:span 2"><label>Iniciativa *</label><select name="iniciativaId" required data-full></select><div class="selfull"></div></div>
       <div style="grid-column:span 2"><label>Actividad *</label><input name="nombre" required></div>
       <div><label>Responsable *</label><input name="responsable" list="dlResp" required></div>
       <div><label>Fecha estimada *</label><input name="fechaEstimada" type="date" required></div>
@@ -382,7 +384,10 @@ const prow=(name,sub,pct,cls)=>`<div class="prow"><div class="n">${esc(name)}${s
 const bP=p=>p?`<span class="badge ${PCLS[p]||'pr-desp'}">${AHORA.includes(p)?'Ahora · ':''}${esc(p)}</span>`:'';
 const bS=e=>`<span class="badge s-${e}">${EST[e]}</span>`;
 const prioOrd=p=>PRIOS.indexOf(p);
-const opts=(arr,sel,empty)=>(empty!==undefined?`<option value="">${empty}</option>`:'')+arr.map(([v,l])=>`<option value="${esc(v)}"${String(v)===String(sel)?' selected':''}>${esc(l)}</option>`).join('');
+const MAXOPT=60;const corto=l=>{l=String(l??'');return l.length>MAXOPT?l.slice(0,MAXOPT-1).trimEnd()+'…':l};
+const opts=(arr,sel,empty)=>(empty!==undefined?`<option value="">${empty}</option>`:'')+arr.map(([v,l])=>`<option value="${esc(v)}" title="${esc(l)}"${String(v)===String(sel)?' selected':''}>${esc(corto(l))}</option>`).join('');
+function hintsSel(){document.querySelectorAll('select[data-full]').forEach(s=>{const o=s.options[s.selectedIndex],d=s.parentElement.querySelector('.selfull');if(d)d.textContent=o&&o.value&&o.title&&o.title!==o.text?o.title:''})}
+document.addEventListener('change',e=>{if(e.target.matches&&e.target.matches('select[data-full]'))hintsSel()});
 const tacLbl=t=>`${t.codigo?t.codigo+' · ':''}${t.nombre} (${t.anio})`;
 const estLbl=e=>`${e.codigo?e.codigo+' · ':''}${e.nombre}`;
 const iniLbl=i=>{const p=byId(db.pilares,i.pilarId);return `${p?p.nombre+' › ':''}${i.nombre} (${anioIni(i)})`};
@@ -402,8 +407,9 @@ function render(){
   $('#dlResp').innerHTML=responsables().map(r=>`<option value="${esc(r)}">`).join('');
   renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
   renderCargaPlan();renderCargaPil();renderCargaIni();renderCargaAct();
+  hintsSel();
 }
-$('#selAnio').onchange=e=>{try{localStorage.setItem(KEY_ANIO,e.target.value)}catch(x){}db.plan.anioActivo=Number(e.target.value);render();toast('Año en seguimiento: '+e.target.value)};
+$('#selAnio').onchange=e=>{try{localStorage.setItem(KEY_ANIO,e.target.value)}catch(x){}db.plan.anioActivo=Number(e.target.value);{const f=$('#fmIni').elements;if(!f.id.value&&!f.tacticoId.value)f.anio.value=e.target.value;}render();toast('Año en seguimiento: '+e.target.value)};
 $('#btnRef').onclick=()=>run('obtenerDatos').then(ok('Datos actualizados'));
 
 /* ---------- RESUMEN ---------- */
@@ -512,7 +518,7 @@ function renderSeg(){
 /* ---------- formularios genéricos ---------- */
 function formData(fm){const o={};new FormData(fm).forEach((v,k)=>o[k]=typeof v==='string'?v.trim():v);return o}
 function fill(fm,obj){[...fm.elements].forEach(el=>{if(el.name&&obj[el.name]!==undefined)el.value=obj[el.name]});fm.classList.add('editing');fm.scrollIntoView({behavior:'smooth',block:'center'})}
-function resetF(fm){fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing');if(fm.getAttribute('id')==='fmIni'){fm.elements.prioridad.value='';$('#opHor').dataset.h='';pintarPrio()}}
+function resetF(fm){fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing');if(fm.getAttribute('id')==='fmIni'){delete fm.elements.anio.dataset.touched;fm.elements.prioridad.value='';$('#opHor').dataset.h='';pintarPrio()}}
 document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{resetF(b.closest('form'));render()});
 function guardarSrv(t,o,fm){if(pend>0)return;const nuevo=!o.id;run('guardar',COL[t],o).then(()=>{toast(nuevo?'Agregado':'Actualizado')}).catch(()=>{});return nuevo}
 const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades'};
@@ -577,7 +583,7 @@ function fillIniSelects(){
   f.pilarId.innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v1,'— Seleccione —');
   pintarPrio();
   f.tacticoId.innerHTML=opts([...db.tacticos].sort((a,b)=>b.anio-a.anio).map(t=>[t.id,tacLbl(t)]),v3,'— Sin vincular —');
-  if(!f.anio.value)f.anio.value=db.plan.anioActivo;
+  if(!f.anio.value||(!f.id.value&&!f.tacticoId.value&&!f.anio.dataset.touched))f.anio.value=db.plan.anioActivo;
 }
 function renderCargaIni(){
   fillIniSelects();
@@ -587,7 +593,7 @@ function renderCargaIni(){
 }
 $('#fIniPil').onchange=renderCargaIni;
 $('#fmIni').elements.tacticoId.onchange=e=>{const t=byId(db.tacticos,e.target.value);if(t)$('#fmIni').elements.anio.value=t.anio;pintarPrio()};
-$('#fmIni').elements.anio.oninput=()=>pintarPrio();
+$('#fmIni').elements.anio.oninput=e=>{e.target.dataset.touched=1;pintarPrio()};
 $('#fmIni').onsubmit=e=>{e.preventDefault();if(!db.pilares.length){toast('Primero cargue al menos un pilar');return}if(!e.target.elements.prioridad.value){toast($('#opHor').dataset.h==='Ahora'?'Seleccione la prioridad: Crítica, Importante o Deseable':'Seleccione ¿Cuándo?: Ahora, Después o Descartar / Revisar');return}const d=formData(e.target);const t=byId(db.tacticos,d.tacticoId);d.anio=Number(t?t.anio:(d.anio||db.plan.anioActivo));guardarSrv('ini',d);resetF(e.target)};
 
 /* ---------- CARGA: actividades ---------- */
