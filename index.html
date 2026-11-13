@@ -51,6 +51,7 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
 .blk{border-radius:12px;padding:16px 16px 2px;margin-bottom:18px;border:1px solid var(--line);background:#fff}
 .blk.crit{border-top:5px solid var(--crit)}.blk.gen{border-top:5px solid var(--pri2)}
 .blk .card{box-shadow:none}.blkh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}.blkh h2{margin:0}.blkh span{color:var(--muted);font-size:12.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chips button{border:1.5px solid #cfd6e0;background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--ink)}.chips button.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}.chips button small{opacity:.75;margin-left:4px}
 .opc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
 .opc label{display:block;border:1.5px solid #cfd6e0;border-radius:8px;padding:9px 11px;cursor:pointer;color:var(--ink);font-weight:400;margin:0;background:#fff}
 .opc label b{display:block;font-size:13px;margin-bottom:2px}.opc label span{font-size:12px;color:var(--muted)}
@@ -267,6 +268,11 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
   <h2>Actividades</h2>
   <p class="hint">Actividades necesarias para ejecutar cada iniciativa: actividad, responsable y fecha estimada de terminación.</p>
   <div class="card">
+    <label>Trabajar con iniciativas de tipo</label>
+    <div class="chips" id="actTipo"></div>
+    <p class="hint" style="margin:8px 0 0">Filtra las listas de iniciativas de esta pestaña (formulario, carga masiva y tabla).</p>
+  </div>
+  <div class="card">
     <h3>Agregar / editar actividad</h3>
     <form class="f" id="fmAct">
       <input type="hidden" name="id">
@@ -286,7 +292,7 @@ tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
     <div class="btns" style="margin-top:8px"><button class="btn" id="bulkBtn">Importar actividades</button></div>
   </div>
   <div class="card">
-    <div class="filters"><div style="max-width:420px"><label>Filtrar por iniciativa</label><select id="fActIni"></select></div></div>
+    <div class="filters"><div style="max-width:420px"><label>Filtrar por iniciativa</label><select id="fActIni"></select></div><div style="max-width:260px"><label>Filtrar por responsable</label><select id="fActResp"></select></div><div style="max-width:200px"><label>Estado</label><select id="fActEst"></select></div></div>
     <div id="tbAct"></div>
   </div>
 </section>
@@ -585,16 +591,26 @@ $('#fmIni').elements.anio.oninput=()=>pintarPrio();
 $('#fmIni').onsubmit=e=>{e.preventDefault();if(!db.pilares.length){toast('Primero cargue al menos un pilar');return}if(!e.target.elements.prioridad.value){toast($('#opHor').dataset.h==='Ahora'?'Seleccione la prioridad: Crítica, Importante o Deseable':'Seleccione ¿Cuándo?: Ahora, Después o Descartar / Revisar');return}const d=formData(e.target);const t=byId(db.tacticos,d.tacticoId);d.anio=Number(t?t.anio:(d.anio||db.plan.anioActivo));guardarSrv('ini',d);resetF(e.target)};
 
 /* ---------- CARGA: actividades ---------- */
-function iniOptsSorted(){return [...db.iniciativas].sort((a,b)=>anioIni(b)-anioIni(a)||iniLbl(a).localeCompare(iniLbl(b))).map(i=>[i.id,iniLbl(i)])}
-function fillActSelect(){const s=$('#fmAct').elements.iniciativaId,v=s.value;s.innerHTML=opts(iniOptsSorted(),v||$('#fActIni').value,'— Seleccione —')}
+let ACT_TIPO='';
+function iniOptsSorted(tipo,keep){return [...db.iniciativas].filter(i=>!tipo||i.prioridad===tipo||i.id===keep).sort((a,b)=>anioIni(b)-anioIni(a)||iniLbl(a).localeCompare(iniLbl(b))).map(i=>[i.id,iniLbl(i)])}
+function fillActSelect(){const s=$('#fmAct').elements.iniciativaId,v=s.value;s.innerHTML=opts(iniOptsSorted(ACT_TIPO,v),v||$('#fActIni').value,'— Seleccione —')}
 function renderCargaAct(){
+  const cnt=t=>db.iniciativas.filter(i=>!t||i.prioridad===t).length;
+  $('#actTipo').innerHTML=[['','Todas']].concat(PRIOS.map(p=>[p,(AHORA.includes(p)?'Ahora · ':'')+p])).map(([v,l])=>`<button type="button" data-tipo="${esc(v)}" class="${ACT_TIPO===v?'on':''}">${esc(l)}<small>(${cnt(v)})</small></button>`).join('');
   fillActSelect();
-  const vb=$('#bulkIni').value;$('#bulkIni').innerHTML=opts(iniOptsSorted(),vb,'— Seleccione —');
-  const vf=$('#fActIni').value;$('#fActIni').innerHTML=opts(iniOptsSorted(),vf,'Todas');
-  const list=db.actividades.filter(a=>!$('#fActIni').value||a.iniciativaId===$('#fActIni').value).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
+  const vb=$('#bulkIni').value;$('#bulkIni').innerHTML=opts(iniOptsSorted(ACT_TIPO),vb,'— Seleccione —');
+  const vf=$('#fActIni').value;$('#fActIni').innerHTML=opts(iniOptsSorted(ACT_TIPO),vf,'Todas');
+  const permit=new Set(iniOptsSorted(ACT_TIPO).map(x=>x[0]));
+  const base=db.actividades.filter(a=>permit.has(a.iniciativaId)&&(!$('#fActIni').value||a.iniciativaId===$('#fActIni').value));
+  const vr=$('#fActResp').value;$('#fActResp').innerHTML=opts([...new Set(base.map(a=>a.responsable).filter(Boolean))].sort((a,b)=>a.localeCompare(b)).map(r=>[r,r]),vr,'Todos');
+  const ve=$('#fActEst').value;$('#fActEst').innerHTML=opts(Object.entries(EST),ve,'Todos');
+  const list=base.filter(a=>(!$('#fActResp').value||a.responsable===$('#fActResp').value)&&(!$('#fActEst').value||estAct(a)===$('#fActEst').value)).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
   $('#tbAct').innerHTML=list.length?actTable(list,{ini:true,edit:true}):'<div class="empty">Sin actividades.</div>';
 }
 $('#fActIni').onchange=()=>{renderCargaAct()};
+$('#fActResp').onchange=()=>{renderCargaAct()};
+$('#fActEst').onchange=()=>{renderCargaAct()};
+$('#actTipo').onclick=e=>{const b=e.target.closest('button[data-tipo]');if(!b)return;ACT_TIPO=b.dataset.tipo;['#bulkIni','#fActIni'].forEach(s=>$(s).value='');const f=$('#fmAct').elements;if(!f.id.value)f.iniciativaId.value='';renderCargaAct()};
 $('#fmAct').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.id){d.completada=false;d.fechaCompletada=''}guardarSrv('act',d);const keepIni=d.iniciativaId;resetF(e.target);e.target.elements.iniciativaId.value=keepIni};
 $('#bulkBtn').onclick=()=>{
   const ini=$('#bulkIni').value;if(!ini){toast('Seleccione la iniciativa destino');return}
