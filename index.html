@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seguimiento de Planificación Estratégica</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--ink:#1c2433;--muted:#667085;--line:#e2e6ed;--pri:#1f3a5f;--pri2:#2f5d8f;--ok:#1d8a57;--warn:#c98400;--bad:#c4372c;--crit:#8a1c3c;--soft:#eef2f7}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+header{background:var(--pri);color:#fff;padding:14px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+header h1{font-size:18px;margin:0;font-weight:600}
+header .sub{font-size:12px;opacity:.8}
+header .ctl{display:flex;gap:8px;align-items:center;font-size:13px}
+header select{padding:5px 8px;border-radius:6px;border:0;font-size:13px}
+nav{background:#fff;border-bottom:1px solid var(--line);padding:0 16px;display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;position:sticky;top:0;z-index:5}
+nav .grp{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+nav .lbl{font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-right:6px;font-weight:600}
+nav button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 10px 9px;cursor:pointer;font-size:13px;color:var(--muted)}
+nav button.on{color:var(--pri);border-bottom-color:var(--pri);font-weight:600}
+nav button:hover{color:var(--pri)}
+main{padding:20px;max-width:1300px;margin:0 auto}
+section.tab{display:none}section.tab.on{display:block}
+h2{font-size:17px;margin:0 0 4px}h3{font-size:15px;margin:0 0 10px}
+.hint{color:var(--muted);font-size:12.5px;margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(460px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
+.kpi .v{font-size:26px;font-weight:700;color:var(--pri)}
+.kpi .t{font-size:12px;color:var(--muted);margin-top:2px}
+.kpi.crit .v{color:var(--crit)}.kpi.bad .v{color:var(--bad)}.kpi.ok .v{color:var(--ok)}
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;align-items:end}
+form.f .full{grid-column:1/-1}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600}
+input,select,textarea{width:100%;padding:8px 9px;border:1px solid #cfd6e0;border-radius:6px;font:inherit;background:#fff}
+textarea{min-height:60px;resize:vertical}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600}
+.btn:hover{background:var(--pri2)}
+.btn.sec{background:#fff;color:var(--pri);border:1px solid #c5cfdc}
+.btn.dan{background:#fff;color:var(--bad);border:1px solid #e8b4b0}
+.btn.sm{padding:4px 9px;font-size:12px;font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--line);padding:8px 8px}
+td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top}
+tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.p-Crítica{background:#f7e1e8;color:var(--crit)}.p-Alta{background:#fdebd3;color:#a35f00}.p-Media{background:#e3ecf7;color:var(--pri2)}.p-Baja{background:#ecefef;color:#5d6670}
+.s-ok{background:#ddf3e8;color:var(--ok)}.s-venc{background:#fbe2df;color:var(--bad)}.s-prox{background:#fff1d1;color:#9a6500}.s-pend{background:#eceff3;color:#5d6670}
+.bar{height:9px;background:#e6eaf0;border-radius:6px;overflow:hidden;min-width:80px}
+.bar>i{display:block;height:100%;background:var(--pri2);border-radius:6px}
+.bar.c>i{background:var(--crit)}.bar.g>i{background:var(--ok)}
+.prow{display:grid;grid-template-columns:minmax(140px,1.4fr) 3fr 52px;gap:10px;align-items:center;margin:9px 0}
+.prow .n{font-size:13px}.prow .n small{display:block;color:var(--muted);font-size:11.5px}
+.prow .pc{text-align:right;font-weight:700;font-size:13px}
+.empty{color:var(--muted);font-style:italic;padding:12px 0}
+.pilar{border-left:4px solid var(--pri2)}
+.pilar .desc{color:var(--muted);font-size:13px;margin:-4px 0 12px}
+.tree ul{list-style:none;margin:0;padding-left:22px;border-left:1px dashed #c9d2de}
+.tree>ul{padding-left:0;border:0}
+.tree li{margin:8px 0}
+.tree .node{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tree .node b{font-weight:600}
+.tree .node .bar{width:140px}
+.lvl{font-size:10px;font-weight:700;color:#fff;background:var(--pri);padding:2px 6px;border-radius:4px}
+.lvl.t{background:var(--pri2)}.lvl.i{background:#6b7f99}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.filters>div{min-width:150px;flex:1}
+.toast{position:fixed;bottom:18px;right:18px;background:var(--ink);color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:20}
+.toast.on{opacity:.92}
+.muted{color:var(--muted)}.right{text-align:right}.nowrap{white-space:nowrap}
+.chk{width:18px;height:18px;cursor:pointer;accent-color:var(--ok)}
+.editing{outline:2px solid var(--warn);outline-offset:2px}
+@media print{header .ctl,nav,.btn,.noprint,form.f{display:none!important}section.tab{display:none!important}section.tab.on{display:block!important}body{background:#fff}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="hTitle">Seguimiento de Planificación Estratégica</h1>
+    <div class="sub" id="hSub"></div>
+  </div>
+  <div class="ctl">
+    <span>Año en seguimiento:</span>
+    <select id="selAnio"></select>
+    <span id="sync" style="font-size:12px;opacity:.85;min-width:150px;text-align:right">Cargando…</span>
+    <button class="btn sec sm" id="btnRef">Actualizar</button>
+    <button class="btn sec sm" onclick="window.print()">Imprimir vista</button>
+  </div>
+</header>
+
+<nav>
+  <div class="grp"><span class="lbl">Visualizar</span>
+    <button data-t="resumen" class="on">Resumen</button>
+    <button data-t="pilares-v">Avance por pilar</button>
+    <button data-t="criticas">Iniciativas críticas</button>
+    <button data-t="mapa">Mapa estratégico</button>
+    <button data-t="seguimiento">Seguimiento de actividades</button>
+  </div>
+  <div class="grp"><span class="lbl">Cargar</span>
+    <button data-t="c-plan">Plan y objetivos</button>
+    <button data-t="c-pilares">Pilares</button>
+    <button data-t="c-ini">Iniciativas</button>
+    <button data-t="c-act">Actividades</button>
+    <button data-t="c-datos">Respaldo</button>
+  </div>
+</nav>
+
+<main>
+<!-- ================= VISUALIZAR ================= -->
+<section class="tab on" id="resumen">
+  <h2>Resumen general</h2>
+  <p class="hint" id="resHint"></p>
+  <div class="kpis" id="kpis"></div>
+  <div class="grid g2">
+    <div class="card"><h3>Avance por pilar</h3><div id="resPil"></div></div>
+    <div class="card"><h3>Avance por objetivo táctico</h3><div id="resTac"></div></div>
+    <div class="card"><h3>Iniciativas críticas</h3><div id="resCrit"></div></div>
+    <div class="card"><h3>Avance por responsable</h3><div id="resResp"></div></div>
+  </div>
+  <div class="card"><h3>Actividades vencidas y próximas (15 días)</h3><div id="resAlert"></div></div>
+</section>
+
+<section class="tab" id="pilares-v">
+  <h2>Avance por pilar</h2>
+  <p class="hint">El avance de cada pilar e iniciativa se calcula como actividades completadas ÷ actividades totales.</p>
+  <div id="pilView"></div>
+</section>
+
+<section class="tab" id="criticas">
+  <h2>Iniciativas críticas</h2>
+  <p class="hint">Iniciativas con prioridad <b>Crítica</b> del año en seguimiento, con el detalle de sus actividades.</p>
+  <div class="kpis" id="critKpis"></div>
+  <div id="critView"></div>
+</section>
+
+<section class="tab" id="mapa">
+  <h2>Mapa estratégico</h2>
+  <p class="hint">Alineación Objetivo estratégico → Objetivo táctico (año en seguimiento) → Iniciativa, con el avance de cada nivel.</p>
+  <div class="card tree" id="mapView"></div>
+</section>
+
+<section class="tab" id="seguimiento">
+  <h2>Seguimiento de actividades</h2>
+  <p class="hint">Marque la casilla para dar una actividad por completada. Se registra la fecha de cierre automáticamente.</p>
+  <div class="card">
+    <div class="filters">
+      <div><label>Pilar</label><select id="fPil"></select></div>
+      <div><label>Iniciativa</label><select id="fIni"></select></div>
+      <div><label>Prioridad</label><select id="fPri"></select></div>
+      <div><label>Responsable</label><select id="fResp"></select></div>
+      <div><label>Estado</label><select id="fEst"></select></div>
+    </div>
+    <div id="segView"></div>
+  </div>
+</section>
+
+<!-- ================= CARGAR ================= -->
+<section class="tab" id="c-plan">
+  <h2>Plan y objetivos</h2>
+  <p class="hint">Defina el horizonte del plan, los objetivos estratégicos (largo plazo) y los objetivos tácticos de cada año.</p>
+  <div class="card">
+    <h3>Datos del plan</h3>
+    <form class="f" id="fmPlan">
+      <div><label>Empresa / Cliente</label><input name="empresa"></div>
+      <div><label>Nombre del plan</label><input name="nombre" placeholder="Ej.: Plan Estratégico 2026-2030"></div>
+      <div><label>Año de inicio</label><input name="anioInicio" type="number" min="2000" max="2100" required></div>
+      <div><label>Año horizonte (hasta)</label><input name="anioHorizonte" type="number" min="2000" max="2100" required></div>
+      <div class="btns"><button class="btn">Guardar plan</button></div>
+    </form>
+  </div>
+  <div class="card">
+    <h3>Objetivos estratégicos</h3>
+    <form class="f" id="fmEst">
+      <input type="hidden" name="id">
+      <div><label>Código</label><input name="codigo" placeholder="OE1"></div>
+      <div style="grid-column:span 2"><label>Objetivo estratégico *</label><input name="nombre" required></div>
+      <div><label>Año meta (hasta)</label><input name="anioMeta" type="number" min="2000" max="2100"></div>
+      <div class="full"><label>Descripción / indicador</label><textarea name="descripcion"></textarea></div>
+      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+    </form>
+    <div id="tbEst" style="margin-top:14px"></div>
+  </div>
+  <div class="card">
+    <h3>Objetivos tácticos (por año)</h3>
+    <form class="f" id="fmTac">
+      <input type="hidden" name="id">
+      <div><label>Código</label><input name="codigo" placeholder="OT1"></div>
+      <div style="grid-column:span 2"><label>Objetivo táctico *</label><input name="nombre" required></div>
+      <div><label>Año *</label><input name="anio" type="number" min="2000" max="2100" required></div>
+      <div><label>Objetivo estratégico al que aporta</label><select name="estrategicoId"></select></div>
+      <div style="grid-column:span 2"><label>Meta / indicador</label><input name="meta"></div>
+      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+    </form>
+    <div id="tbTac" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<section class="tab" id="c-pilares">
+  <h2>Pilares</h2>
+  <p class="hint">Los pilares agrupan las iniciativas. Registre el nombre y su descriptivo.</p>
+  <div class="card">
+    <form class="f" id="fmPil">
+      <input type="hidden" name="id">
+      <div><label>Nombre del pilar *</label><input name="nombre" required></div>
+      <div style="grid-column:span 2"><label>Descriptivo</label><textarea name="descripcion"></textarea></div>
+      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+    </form>
+    <div id="tbPil" style="margin-top:14px"></div>
+  </div>
+</section>
+
+<section class="tab" id="c-ini">
+  <h2>Iniciativas</h2>
+  <p class="hint">Cada iniciativa pertenece a un pilar, tiene prioridad y puede vincularse a un objetivo táctico (de ahí toma el año).</p>
+  <div class="card">
+    <form class="f" id="fmIni">
+      <input type="hidden" name="id">
+      <div><label>Pilar *</label><select name="pilarId" required></select></div>
+      <div style="grid-column:span 2"><label>Iniciativa *</label><input name="nombre" required></div>
+      <div><label>Prioridad *</label><select name="prioridad" required></select></div>
+      <div><label>Objetivo táctico</label><select name="tacticoId"></select></div>
+      <div><label>Año (si no tiene objetivo táctico)</label><input name="anio" type="number" min="2000" max="2100"></div>
+      <div><label>Líder / responsable</label><input name="responsable" list="dlResp"></div>
+      <div class="full"><label>Descripción</label><textarea name="descripcion"></textarea></div>
+      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+    </form>
+  </div>
+  <div class="card">
+    <div class="filters"><div style="max-width:260px"><label>Filtrar por pilar</label><select id="fIniPil"></select></div></div>
+    <div id="tbIni"></div>
+  </div>
+</section>
+
+<section class="tab" id="c-act">
+  <h2>Actividades</h2>
+  <p class="hint">Actividades necesarias para ejecutar cada iniciativa: actividad, responsable y fecha estimada de terminación.</p>
+  <div class="card">
+    <h3>Agregar / editar actividad</h3>
+    <form class="f" id="fmAct">
+      <input type="hidden" name="id">
+      <div style="grid-column:span 2"><label>Iniciativa *</label><select name="iniciativaId" required></select></div>
+      <div style="grid-column:span 2"><label>Actividad *</label><input name="nombre" required></div>
+      <div><label>Responsable *</label><input name="responsable" list="dlResp" required></div>
+      <div><label>Fecha estimada *</label><input name="fechaEstimada" type="date" required></div>
+      <div class="full"><label>Comentario</label><input name="nota"></div>
+      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+    </form>
+  </div>
+  <div class="card noprint">
+    <h3>Carga masiva (pegar desde Excel)</h3>
+    <p class="hint">Copie 3 columnas desde Excel: <b>Actividad | Responsable | Fecha (dd/mm/aaaa)</b>. Una fila por actividad.</p>
+    <div class="filters"><div style="max-width:420px"><label>Iniciativa destino</label><select id="bulkIni"></select></div></div>
+    <textarea id="bulkTxt" style="min-height:110px" placeholder="Levantar procesos actuales	Juan Pérez	15/01/2027"></textarea>
+    <div class="btns" style="margin-top:8px"><button class="btn" id="bulkBtn">Importar actividades</button></div>
+  </div>
+  <div class="card">
+    <div class="filters"><div style="max-width:420px"><label>Filtrar por iniciativa</label><select id="fActIni"></select></div></div>
+    <div id="tbAct"></div>
+  </div>
+</section>
+
+<section class="tab" id="c-datos">
+  <h2>Respaldo de datos</h2>
+  <p class="hint">Los datos se guardan en la Google Sheet compartida; todos los usuarios ven la misma información. La página se actualiza sola cada minuto o con el botón <b>Actualizar</b>. La hoja de Google también conserva el historial de versiones.</p>
+  <div class="card">
+    <div class="btns">
+      <button class="btn" id="btnExp">Exportar respaldo (.json)</button>
+      <label class="btn sec" style="margin:0;color:var(--pri)">Importar respaldo (.json)<input type="file" id="fileImp" accept=".json,application/json" hidden></label>
+      <button class="btn sec" id="btnCsv">Exportar actividades a Excel (.csv)</button>
+    </div>
+    
+  </div>
+</section>
+</main>
+
+<datalist id="dlResp"></datalist>
+<div class="toast" id="toast"></div>
+<div id="loading" style="position:fixed;inset:0;background:rgba(243,245,248,.85);display:flex;align-items:center;justify-content:center;font-size:15px;color:#1f3a5f;z-index:30">Cargando datos…</div>
+
+<script>
+(function(){
+'use strict';
+/* ===== CONFIGURACIÓN: dirección de la aplicación web de Apps Script (termina en /exec) ===== */
+const API_URL='https://script.google.com/macros/s/AKfycbyk4lIV5xlCyxdsmM5WiBRzPb7lYzHxTDnRxIFATIPLa7tTksffBUetdW7xkUl5zfyG/exec';
+/* =========================================================================================== */
+const TOKEN=new URLSearchParams(location.search).get('k')||'';let CLIENTE='';
+const KEY_ANIO='planEstrategico_anio_'+TOKEN.slice(0,8);
+const PRIOS=['Crítica','Alta','Media','Baja'];
+const EST={ok:'Completada',venc:'Vencida',prox:'Próxima (≤15 días)',pend:'Pendiente'};
+const Y=new Date().getFullYear();
+const $=s=>document.querySelector(s);
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
+const parseD=s=>{if(!s)return null;const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])};
+const fmtD=s=>{if(!s)return '—';const p=s.split('-');return `${p[2]}/${p[1]}/${p[0]}`};
+
+function blank(){return{plan:{empresa:'',nombre:'',anioInicio:Y,anioHorizonte:Y+4,anioActivo:Y},estrategicos:[],tacticos:[],pilares:[],iniciativas:[],actividades:[],guardado:null}}
+let db=blank();
+/* ---------- comunicación con el servidor (Google Apps Script) ---------- */
+let pend=0,lastSync=null;
+function busy(n){pend+=n;$('#sync').textContent=pend>0?'Guardando…':(lastSync?'Sincronizado '+lastSync.toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'}):'')}
+function setDb(d){CLIENTE=d.cliente||CLIENTE;if(CLIENTE)document.title='Plan Estratégico — '+CLIENTE;const a=Number(localStorage.getItem(KEY_ANIO))||Y;const b=blank();for(const k in b)if(d[k]===undefined)d[k]=b[k];d.plan.anioActivo=a;db=d;lastSync=new Date();$('#loading').style.display='none';render()}
+function api(fn,args){
+  return fetch(API_URL,{method:'POST',credentials:'omit',redirect:'follow',body:JSON.stringify({k:TOKEN,fn:fn,args:args})})
+    .then(r=>r.text()).then(t=>{let j;try{j=JSON.parse(t)}catch(e){throw new Error('No se pudo conectar con el servidor. Verifique su conexión a internet.')}if(!j.ok)throw new Error(j.error);return j.data})
+    .catch(e=>{throw new Error(e&&e.message&&!/fetch/i.test(e.message)?e.message:'No se pudo conectar con el servidor. Verifique su conexión a internet.')});
+}
+function run(fn,...args){
+  busy(1);
+  return api(fn,args).then(d=>{busy(-1);setDb(d);busy(0);return d})
+    .catch(e=>{busy(-1);const m=e.message||String(e);
+      if(!lastSync){const L=$('#loading');L.style.display='flex';L.innerHTML='<div style="text-align:center;max-width:420px;padding:20px"><b>No se pudo abrir el plan.</b><br><br>'+esc(m)+'</div>';$('#sync').textContent='';}
+      else{toast('Error: '+m);render()}
+      throw e});
+}
+function ok(msg){return()=>toast(msg)}
+function refrescar(){if(pend>0||document.querySelector('form.editing'))return;const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('form'))return;run('obtenerDatos').catch(()=>{})}
+setInterval(()=>{if(!document.hidden)refrescar()},60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refrescar()});
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
+
+/* ---------- helpers de datos ---------- */
+const byId=(arr,id)=>arr.find(x=>x.id===id);
+const anioIni=i=>{const t=byId(db.tacticos,i.tacticoId);return Number(t?t.anio:(i.anio||db.plan.anioActivo))};
+const iniAnio=()=>db.iniciativas.filter(i=>anioIni(i)===Number(db.plan.anioActivo));
+const actsOf=ini=>db.actividades.filter(a=>a.iniciativaId===ini.id);
+function estAct(a){if(a.completada)return 'ok';const f=parseD(a.fechaEstimada);if(!f)return 'pend';const t=today();if(f<t)return 'venc';if((f-t)/864e5<=15)return 'prox';return 'pend'}
+function stats(acts){const total=acts.length,done=acts.filter(a=>a.completada).length,venc=acts.filter(a=>estAct(a)==='venc').length;return{total,done,venc,pct:total?Math.round(done*100/total):0}}
+function statsInis(inis){return stats(inis.flatMap(actsOf))}
+function estIni(i){const s=stats(actsOf(i));if(!s.total)return['Sin actividades','s-pend'];if(s.done===s.total)return['Completada','s-ok'];if(s.venc)return['Con atraso','s-venc'];if(s.done)return['En curso','s-prox'];return['No iniciada','s-pend']}
+const pb=(pct,cls='')=>`<div class="bar ${cls}"><i style="width:${pct}%"></i></div>`;
+const prow=(name,sub,pct,cls)=>`<div class="prow"><div class="n">${esc(name)}${sub?`<small>${sub}</small>`:''}</div>${pb(pct,cls)}<div class="pc">${pct}%</div></div>`;
+const bP=p=>`<span class="badge p-${p}">${esc(p)}</span>`;
+const bS=e=>`<span class="badge s-${e}">${EST[e]}</span>`;
+const prioOrd=p=>PRIOS.indexOf(p);
+const opts=(arr,sel,empty)=>(empty!==undefined?`<option value="">${empty}</option>`:'')+arr.map(([v,l])=>`<option value="${esc(v)}"${String(v)===String(sel)?' selected':''}>${esc(l)}</option>`).join('');
+const tacLbl=t=>`${t.codigo?t.codigo+' · ':''}${t.nombre} (${t.anio})`;
+const estLbl=e=>`${e.codigo?e.codigo+' · ':''}${e.nombre}`;
+const iniLbl=i=>{const p=byId(db.pilares,i.pilarId);return `${p?p.nombre+' › ':''}${i.nombre} (${anioIni(i)})`};
+const responsables=()=>[...new Set(db.actividades.map(a=>a.responsable).concat(db.iniciativas.map(i=>i.responsable)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
+
+/* ---------- pestañas ---------- */
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));window.scrollTo(0,0)});
+function goTab(t){document.querySelector(`nav button[data-t="${t}"]`).click()}
+
+/* ---------- render general ---------- */
+function render(){
+  const p=db.plan;
+  $('#hTitle').textContent=p.nombre||'Seguimiento de Planificación Estratégica';
+  $('#hSub').textContent=[CLIENTE||p.empresa,`Horizonte ${p.anioInicio}–${p.anioHorizonte}`].filter(Boolean).join(' · ');
+  const yrs=new Set();for(let y=Number(p.anioInicio);y<=Number(p.anioHorizonte);y++)yrs.add(y);db.tacticos.forEach(t=>yrs.add(Number(t.anio)));yrs.add(Number(p.anioActivo));
+  $('#selAnio').innerHTML=opts([...yrs].sort().map(y=>[y,y]),p.anioActivo);
+  $('#dlResp').innerHTML=responsables().map(r=>`<option value="${esc(r)}">`).join('');
+  renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
+  renderCargaPlan();renderCargaPil();renderCargaIni();renderCargaAct();
+}
+$('#selAnio').onchange=e=>{try{localStorage.setItem(KEY_ANIO,e.target.value)}catch(x){}db.plan.anioActivo=Number(e.target.value);render();toast('Año en seguimiento: '+e.target.value)};
+$('#btnRef').onclick=()=>run('obtenerDatos').then(ok('Datos actualizados'));
+
+/* ---------- RESUMEN ---------- */
+function renderResumen(){
+  const inis=iniAnio(),acts=inis.flatMap(actsOf),s=stats(acts);
+  const crit=inis.filter(i=>i.prioridad==='Crítica'),sc=statsInis(crit);
+  const critAtr=crit.filter(i=>stats(actsOf(i)).venc>0).length;
+  const prox=acts.filter(a=>estAct(a)==='prox').length;
+  $('#resHint').textContent=`Año ${db.plan.anioActivo} · ${inis.length} iniciativas en ${new Set(inis.map(i=>i.pilarId)).size} pilares · Corte al ${today().toLocaleDateString('es-DO')}`;
+  $('#kpis').innerHTML=`
+   <div class="kpi"><div class="v">${s.pct}%</div><div class="t">Avance general del año</div>${pb(s.pct)}</div>
+   <div class="kpi ok"><div class="v">${s.done}/${s.total}</div><div class="t">Actividades completadas</div></div>
+   <div class="kpi crit"><div class="v">${sc.pct}%</div><div class="t">Avance de iniciativas críticas (${crit.length})</div>${pb(sc.pct,'c')}</div>
+   <div class="kpi bad"><div class="v">${critAtr}</div><div class="t">Críticas con actividades vencidas</div></div>
+   <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>
+   <div class="kpi"><div class="v">${prox}</div><div class="t">Vencen en los próximos 15 días</div></div>`;
+  // pilares
+  $('#resPil').innerHTML=db.pilares.length?db.pilares.map(pl=>{const pi=inis.filter(i=>i.pilarId===pl.id),st=statsInis(pi);return prow(pl.nombre,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct)}).join(''):'<div class="empty">Sin pilares cargados.</div>';
+  // tácticos
+  const tacs=db.tacticos.filter(t=>Number(t.anio)===Number(db.plan.anioActivo));
+  $('#resTac').innerHTML=tacs.length?tacs.map(t=>{const ti=inis.filter(i=>i.tacticoId===t.id),st=statsInis(ti);return prow((t.codigo?t.codigo+' · ':'')+t.nombre,`${ti.length} iniciativas`,st.pct)}).join(''):'<div class="empty">Sin objetivos tácticos para este año.</div>';
+  // críticas
+  $('#resCrit').innerHTML=crit.length?crit.map(i=>{const st=stats(actsOf(i)),[e]=estIni(i);return prow(i.nombre,`${esc(byId(db.pilares,i.pilarId)?.nombre||'')} · ${e}${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,'c')}).join(''):'<div class="empty">No hay iniciativas críticas este año.</div>';
+  // responsables
+  const rs={};acts.forEach(a=>{const r=a.responsable||'(sin responsable)';(rs[r]=rs[r]||[]).push(a)});
+  const rk=Object.keys(rs).sort((a,b)=>rs[b].length-rs[a].length);
+  $('#resResp').innerHTML=rk.length?rk.map(r=>{const st=stats(rs[r]);return prow(r,`${st.done}/${st.total} actividades${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,'g')}).join(''):'<div class="empty">Sin actividades.</div>';
+  // alertas
+  const al=acts.filter(a=>['venc','prox'].includes(estAct(a))).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
+  $('#resAlert').innerHTML=al.length?actTable(al,{ini:true}):'<div class="empty">Sin actividades vencidas ni próximas a vencer.</div>';
+}
+
+function actTable(list,o={}){
+  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td><input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}></td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="nowrap noprint"><button class="btn sec sm" data-ed="act:${a.id}">Editar</button> <button class="btn dan sm" data-del="act:${a.id}">Eliminar</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
+}
+document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.chk;if(!id)return;const c=e.target.checked;run('marcarActividad',id,c,iso(new Date())).then(ok(c?'Actividad completada':'Actividad reabierta')).catch(()=>{})});
+
+/* ---------- POR PILAR ---------- */
+function renderPilares(){
+  const inis=iniAnio();
+  $('#pilView').innerHTML=db.pilares.length?db.pilares.map(pl=>{
+    const pi=inis.filter(i=>i.pilarId===pl.id).sort((a,b)=>prioOrd(a.prioridad)-prioOrd(b.prioridad)),st=statsInis(pi);
+    return `<div class="card pilar"><div class="prow" style="margin-top:0"><div class="n"><h3 style="margin:0">${esc(pl.nombre)}</h3></div>${pb(st.pct)}<div class="pc" style="font-size:16px">${st.pct}%</div></div>
+    ${pl.descripcion?`<p class="desc">${esc(pl.descripcion)}</p>`:''}
+    ${pi.length?`<table><thead><tr><th>Iniciativa</th><th>Prioridad</th><th>Líder</th><th>Actividades</th><th>Estado</th><th style="width:28%">Avance</th></tr></thead><tbody>${pi.map(i=>{const s=stats(actsOf(i)),[e,c]=estIni(i);return `<tr><td>${esc(i.nombre)}${i.descripcion?`<div class="muted" style="font-size:12px">${esc(i.descripcion)}</div>`:''}</td><td>${bP(i.prioridad)}</td><td>${esc(i.responsable||'—')}</td><td class="nowrap">${s.done}/${s.total}${s.venc?` <span class="badge s-venc">${s.venc} venc.</span>`:''}</td><td><span class="badge ${c}">${e}</span></td><td><div style="display:flex;gap:8px;align-items:center">${pb(s.pct,i.prioridad==='Crítica'?'c':'')}<b>${s.pct}%</b></div></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas para este año.</div>'}</div>`}).join(''):'<div class="card empty">Sin pilares cargados. Vaya a Cargar › Pilares.</div>';
+}
+
+/* ---------- CRÍTICAS ---------- */
+function renderCriticas(){
+  const crit=iniAnio().filter(i=>i.prioridad==='Crítica'),s=statsInis(crit);
+  const comp=crit.filter(i=>{const x=stats(actsOf(i));return x.total&&x.done===x.total}).length;
+  const atr=crit.filter(i=>stats(actsOf(i)).venc>0).length;
+  $('#critKpis').innerHTML=`<div class="kpi crit"><div class="v">${s.pct}%</div><div class="t">Avance consolidado críticas</div>${pb(s.pct,'c')}</div>
+  <div class="kpi"><div class="v">${crit.length}</div><div class="t">Iniciativas críticas</div></div>
+  <div class="kpi ok"><div class="v">${comp}</div><div class="t">Completadas</div></div>
+  <div class="kpi bad"><div class="v">${atr}</div><div class="t">Con atraso</div></div>
+  <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>`;
+  $('#critView').innerHTML=crit.length?crit.map(i=>{const acts=actsOf(i).sort((a,b)=>(a.completada-b.completada)||(a.fechaEstimada||'').localeCompare(b.fechaEstimada||'')),st=stats(acts),[e,c]=estIni(i),t=byId(db.tacticos,i.tacticoId);
+    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="prow" style="margin-top:0"><div class="n"><b>${esc(i.nombre)}</b><small>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(tacLbl(t)):''} · Líder: ${esc(i.responsable||'—')} · <span class="badge ${c}">${e}</span></small></div>${pb(st.pct,'c')}<div class="pc">${st.pct}%</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
+}
+
+/* ---------- MAPA ---------- */
+function renderMapa(){
+  const yr=Number(db.plan.anioActivo),inis=iniAnio();
+  const tacsY=db.tacticos.filter(t=>Number(t.anio)===yr);
+  const iniNode=i=>{const s=stats(actsOf(i));return `<li><div class="node"><span class="lvl i">INI</span>${esc(i.nombre)} ${bP(i.prioridad)}${pb(s.pct,i.prioridad==='Crítica'?'c':'')}<b>${s.pct}%</b></div></li>`};
+  const tacNode=t=>{const ti=inis.filter(i=>i.tacticoId===t.id),s=statsInis(ti);return `<li><div class="node"><span class="lvl t">OT</span><b>${esc(tacLbl(t))}</b>${pb(s.pct)}<b>${s.pct}%</b>${t.meta?`<span class="muted">Meta: ${esc(t.meta)}</span>`:''}</div>${ti.length?`<ul>${ti.map(iniNode).join('')}</ul>`:''}</li>`};
+  let h='';
+  db.estrategicos.forEach(e=>{const ts=tacsY.filter(t=>t.estrategicoId===e.id);const allT=db.tacticos.filter(t=>t.estrategicoId===e.id).map(t=>t.id);const sAll=statsInis(db.iniciativas.filter(i=>allT.includes(i.tacticoId)));
+    h+=`<li><div class="node"><span class="lvl">OE</span><b>${esc(estLbl(e))}</b>${e.anioMeta?`<span class="muted">Meta ${esc(e.anioMeta)}</span>`:''}${pb(sAll.pct)}<b>${sAll.pct}%</b><span class="muted">(acumulado todos los años)</span></div>${ts.length?`<ul>${ts.map(tacNode).join('')}</ul>`:`<ul><li class="muted">Sin objetivos tácticos en ${yr}.</li></ul>`}</li>`});
+  const tSin=tacsY.filter(t=>!byId(db.estrategicos,t.estrategicoId));
+  if(tSin.length)h+=`<li><div class="node"><span class="lvl" style="background:#999">—</span><b>Objetivos tácticos sin objetivo estratégico</b></div><ul>${tSin.map(tacNode).join('')}</ul></li>`;
+  const iSin=inis.filter(i=>!byId(db.tacticos,i.tacticoId));
+  if(iSin.length)h+=`<li><div class="node"><span class="lvl" style="background:#999">—</span><b>Iniciativas sin objetivo táctico</b></div><ul>${iSin.map(iniNode).join('')}</ul></li>`;
+  $('#mapView').innerHTML=h?`<ul>${h}</ul>`:'<div class="empty">Sin objetivos cargados.</div>';
+}
+
+/* ---------- SEGUIMIENTO ---------- */
+function renderSeg(){
+  const keep=id=>$(id).value;
+  const v={pil:keep('#fPil'),ini:keep('#fIni'),pri:keep('#fPri'),resp:keep('#fResp'),est:keep('#fEst')};
+  const inis=iniAnio();
+  $('#fPil').innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v.pil,'Todos');
+  $('#fIni').innerHTML=opts(inis.filter(i=>!v.pil||i.pilarId===v.pil).map(i=>[i.id,i.nombre]),v.ini,'Todas');
+  $('#fPri').innerHTML=opts(PRIOS.map(p=>[p,p]),v.pri,'Todas');
+  $('#fResp').innerHTML=opts(responsables().map(r=>[r,r]),v.resp,'Todos');
+  $('#fEst').innerHTML=opts(Object.entries(EST),v.est,'Todos');
+  const f={pil:$('#fPil').value,ini:$('#fIni').value,pri:$('#fPri').value,resp:$('#fResp').value,est:$('#fEst').value};
+  const fi=inis.filter(i=>(!f.pil||i.pilarId===f.pil)&&(!f.ini||i.id===f.ini)&&(!f.pri||i.prioridad===f.pri)).sort((a,b)=>prioOrd(a.prioridad)-prioOrd(b.prioridad));
+  let h='';
+  fi.forEach(i=>{const acts=actsOf(i).filter(a=>(!f.resp||a.responsable===f.resp)&&(!f.est||estAct(a)===f.est)).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));if(!acts.length)return;const s=stats(actsOf(i));
+    h+=`<div style="margin:16px 0 4px" class="prow"><div class="n"><b>${esc(i.nombre)}</b> ${bP(i.prioridad)}<small>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</small></div>${pb(s.pct,i.prioridad==='Crítica'?'c':'')}<div class="pc">${s.pct}%</div></div>${actTable(acts)}`});
+  $('#segView').innerHTML=h||'<div class="empty">No hay actividades con los filtros seleccionados.</div>';
+}
+['#fPil','#fIni','#fPri','#fResp','#fEst'].forEach(s=>$(s).onchange=renderSeg);
+
+/* ---------- formularios genéricos ---------- */
+function formData(fm){const o={};new FormData(fm).forEach((v,k)=>o[k]=typeof v==='string'?v.trim():v);return o}
+function fill(fm,obj){[...fm.elements].forEach(el=>{if(el.name&&obj[el.name]!==undefined)el.value=obj[el.name]});fm.classList.add('editing');fm.scrollIntoView({behavior:'smooth',block:'center'})}
+function resetF(fm){fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing')}
+document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{resetF(b.closest('form'));render()});
+function guardarSrv(t,o,fm){if(pend>0)return;const nuevo=!o.id;run('guardar',COL[t],o).then(()=>{toast(nuevo?'Agregado':'Actualizado')}).catch(()=>{});return nuevo}
+const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades'};
+const FM={est:'#fmEst',tac:'#fmTac',pil:'#fmPil',ini:'#fmIni',act:'#fmAct'};
+const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act'};
+
+document.addEventListener('click',e=>{
+  const ed=e.target.dataset&&e.target.dataset.ed, del=e.target.dataset&&e.target.dataset.del;
+  if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();fill(fm,o)}
+  if(del){const[t,id]=del.split(':');borrar(t,id)}
+});
+function borrar(t,id){
+  const o=byId(db[COL[t]],id);if(!o)return;
+  let msg=`¿Eliminar "${o.nombre}"?`;
+  if(t==='pil'){const n=db.iniciativas.filter(i=>i.pilarId===id).length;if(n)msg+=`\nTambién se eliminarán ${n} iniciativa(s) y sus actividades.`}
+  if(t==='ini'){const n=db.actividades.filter(a=>a.iniciativaId===id).length;if(n)msg+=`\nTambién se eliminarán ${n} actividad(es).`}
+  if(t==='est')msg+='\nLos objetivos tácticos vinculados quedarán sin objetivo estratégico.';
+  if(t==='tac')msg+='\nLas iniciativas vinculadas quedarán sin objetivo táctico (conservarán su año).';
+  if(!confirm(msg))return;
+  run('eliminar',COL[t],id).then(ok('Eliminado')).catch(()=>{});
+}
+const rowBtns=(t,id)=>`<td class="nowrap noprint right"><button class="btn sec sm" data-ed="${t}:${id}">Editar</button> <button class="btn dan sm" data-del="${t}:${id}">Eliminar</button></td>`;
+
+/* ---------- CARGA: plan y objetivos ---------- */
+function fillTacSelect(){const s=$('#fmTac').elements.estrategicoId,v=s.value;s.innerHTML=opts(db.estrategicos.map(e=>[e.id,estLbl(e)]),v,'— Sin vincular —')}
+function renderCargaPlan(){
+  const fp=$('#fmPlan');if(!fp.contains(document.activeElement))['empresa','nombre','anioInicio','anioHorizonte'].forEach(k=>fp.elements[k].value=db.plan[k]??'');
+  fillTacSelect();
+  if(!$('#fmTac').elements.anio.value)$('#fmTac').elements.anio.value=db.plan.anioActivo;
+  $('#tbEst').innerHTML=db.estrategicos.length?`<table><thead><tr><th>Código</th><th>Objetivo estratégico</th><th>Año meta</th><th>Obj. tácticos</th><th></th></tr></thead><tbody>${db.estrategicos.map(e=>`<tr><td>${esc(e.codigo)}</td><td><b>${esc(e.nombre)}</b>${e.descripcion?`<div class="muted" style="font-size:12px">${esc(e.descripcion)}</div>`:''}</td><td>${esc(e.anioMeta||'—')}</td><td>${db.tacticos.filter(t=>t.estrategicoId===e.id).length}</td>${rowBtns('est',e.id)}</tr>`).join('')}</tbody></table>`:'<div class="empty">Sin objetivos estratégicos.</div>';
+  const tacs=[...db.tacticos].sort((a,b)=>b.anio-a.anio||String(a.codigo).localeCompare(String(b.codigo)));
+  $('#tbTac').innerHTML=tacs.length?`<table><thead><tr><th>Año</th><th>Código</th><th>Objetivo táctico</th><th>Objetivo estratégico</th><th>Meta</th><th>Iniciativas</th><th></th></tr></thead><tbody>${tacs.map(t=>{const e=byId(db.estrategicos,t.estrategicoId);return `<tr><td>${esc(t.anio)}</td><td>${esc(t.codigo)}</td><td><b>${esc(t.nombre)}</b></td><td>${e?esc(estLbl(e)):'<span class="muted">—</span>'}</td><td>${esc(t.meta||'—')}</td><td>${db.iniciativas.filter(i=>i.tacticoId===t.id).length}</td>${rowBtns('tac',t.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin objetivos tácticos.</div>';
+}
+$('#fmPlan').onsubmit=e=>{e.preventDefault();const d=formData(e.target);d.anioInicio=Number(d.anioInicio);d.anioHorizonte=Number(d.anioHorizonte);if(d.anioHorizonte<d.anioInicio){toast('El año horizonte debe ser mayor o igual al de inicio');return}document.activeElement.blur();run('guardarPlan',d).then(ok('Plan guardado')).catch(()=>{})};
+$('#fmEst').onsubmit=e=>{e.preventDefault();const d=formData(e.target);guardarSrv('est',d);resetF(e.target)};
+$('#fmTac').onsubmit=e=>{e.preventDefault();const d=formData(e.target);guardarSrv('tac',d);resetF(e.target)};
+
+/* ---------- CARGA: pilares ---------- */
+function renderCargaPil(){
+  $('#tbPil').innerHTML=db.pilares.length?`<table><thead><tr><th>Pilar</th><th>Descriptivo</th><th>Iniciativas (total)</th><th></th></tr></thead><tbody>${db.pilares.map(p=>`<tr><td><b>${esc(p.nombre)}</b></td><td>${esc(p.descripcion||'')}</td><td>${db.iniciativas.filter(i=>i.pilarId===p.id).length}</td>${rowBtns('pil',p.id)}</tr>`).join('')}</tbody></table>`:'<div class="empty">Sin pilares.</div>';
+}
+$('#fmPil').onsubmit=e=>{e.preventDefault();guardarSrv('pil',formData(e.target));resetF(e.target)};
+
+/* ---------- CARGA: iniciativas ---------- */
+function fillIniSelects(){
+  const f=$('#fmIni').elements;
+  const v1=f.pilarId.value,v2=f.prioridad.value,v3=f.tacticoId.value;
+  f.pilarId.innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v1,'— Seleccione —');
+  f.prioridad.innerHTML=opts(PRIOS.map(p=>[p,p]),v2||'Media');
+  f.tacticoId.innerHTML=opts([...db.tacticos].sort((a,b)=>b.anio-a.anio).map(t=>[t.id,tacLbl(t)]),v3,'— Sin vincular —');
+  if(!f.anio.value)f.anio.value=db.plan.anioActivo;
+}
+function renderCargaIni(){
+  fillIniSelects();
+  const v=$('#fIniPil').value;$('#fIniPil').innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v,'Todos');
+  const list=db.iniciativas.filter(i=>!$('#fIniPil').value||i.pilarId===$('#fIniPil').value).sort((a,b)=>anioIni(b)-anioIni(a)||prioOrd(a.prioridad)-prioOrd(b.prioridad));
+  $('#tbIni').innerHTML=list.length?`<table><thead><tr><th>Año</th><th>Pilar</th><th>Iniciativa</th><th>Prioridad</th><th>Objetivo táctico</th><th>Líder</th><th>Activ.</th><th></th></tr></thead><tbody>${list.map(i=>{const t=byId(db.tacticos,i.tacticoId),s=stats(actsOf(i));return `<tr><td>${anioIni(i)}</td><td>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td><b>${esc(i.nombre)}</b></td><td>${bP(i.prioridad)}</td><td>${t?esc(tacLbl(t)):'<span class="muted">—</span>'}</td><td>${esc(i.responsable||'—')}</td><td>${s.done}/${s.total}</td>${rowBtns('ini',i.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas.</div>';
+}
+$('#fIniPil').onchange=renderCargaIni;
+$('#fmIni').elements.tacticoId.onchange=e=>{const t=byId(db.tacticos,e.target.value);if(t)$('#fmIni').elements.anio.value=t.anio};
+$('#fmIni').onsubmit=e=>{e.preventDefault();if(!db.pilares.length){toast('Primero cargue al menos un pilar');return}const d=formData(e.target);const t=byId(db.tacticos,d.tacticoId);d.anio=Number(t?t.anio:(d.anio||db.plan.anioActivo));guardarSrv('ini',d);resetF(e.target)};
+
+/* ---------- CARGA: actividades ---------- */
+function iniOptsSorted(){return [...db.iniciativas].sort((a,b)=>anioIni(b)-anioIni(a)||iniLbl(a).localeCompare(iniLbl(b))).map(i=>[i.id,iniLbl(i)])}
+function fillActSelect(){const s=$('#fmAct').elements.iniciativaId,v=s.value;s.innerHTML=opts(iniOptsSorted(),v||$('#fActIni').value,'— Seleccione —')}
+function renderCargaAct(){
+  fillActSelect();
+  const vb=$('#bulkIni').value;$('#bulkIni').innerHTML=opts(iniOptsSorted(),vb,'— Seleccione —');
+  const vf=$('#fActIni').value;$('#fActIni').innerHTML=opts(iniOptsSorted(),vf,'Todas');
+  const list=db.actividades.filter(a=>!$('#fActIni').value||a.iniciativaId===$('#fActIni').value).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
+  $('#tbAct').innerHTML=list.length?actTable(list,{ini:true,edit:true}):'<div class="empty">Sin actividades.</div>';
+}
+$('#fActIni').onchange=()=>{renderCargaAct()};
+$('#fmAct').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.id){d.completada=false;d.fechaCompletada=''}guardarSrv('act',d);const keepIni=d.iniciativaId;resetF(e.target);e.target.elements.iniciativaId.value=keepIni};
+$('#bulkBtn').onclick=()=>{
+  const ini=$('#bulkIni').value;if(!ini){toast('Seleccione la iniciativa destino');return}
+  const nuevas=[];const lines=$('#bulkTxt').value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);let n=0,bad=[];
+  lines.forEach((l,ix)=>{const c=l.split(/\t|;/).map(x=>x.trim());if(!c[0]){bad.push(ix+1);return}let f='';const m=(c[2]||'').match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/),m2=(c[2]||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(m){let y=Number(m[3]);if(y<100)y+=2000;f=`${y}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`}else if(m2)f=c[2];else if(c[2])bad.push(ix+1);
+    nuevas.push({iniciativaId:ini,nombre:c[0],responsable:c[1]||'',fechaEstimada:f,nota:''});n++});
+  if(!n){toast('No hay filas para importar');return}run('agregarActividades',nuevas).then(()=>{$('#bulkTxt').value='';toast(`${n} actividad(es) importada(s)`+(bad.length?` · revisar fecha en fila(s): ${bad.join(', ')}`:''))}).catch(()=>{});
+};
+
+/* ---------- RESPALDO ---------- */
+function download(name,content,type){const b=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+$('#btnExp').onclick=()=>download(`plan_estrategico_${iso(new Date())}.json`,JSON.stringify(db,null,2),'application/json');
+$('#fileImp').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.plan||!Array.isArray(d.actividades))throw 0;if(!confirm('Esto reemplazará TODOS los datos de este plan (para todos los usuarios) por los del respaldo. ¿Continuar?'))return;run('reemplazarTodo',d).then(ok('Respaldo importado')).catch(()=>{})}catch(x){toast('Archivo no válido')}e.target.value=''};r.readAsText(f)};
+$('#btnCsv').onclick=()=>{const q=s=>`"${String(s??'').replace(/"/g,'""')}"`;const rows=[['Año','Pilar','Iniciativa','Prioridad','Objetivo táctico','Actividad','Responsable','Fecha estimada','Estado','Fecha completada','Comentario']];
+  db.actividades.forEach(a=>{const i=byId(db.iniciativas,a.iniciativaId)||{},p=byId(db.pilares,i.pilarId)||{},t=byId(db.tacticos,i.tacticoId);rows.push([i.id?anioIni(i):'',p.nombre,i.nombre,i.prioridad,t?tacLbl(t):'',a.nombre,a.responsable,fmtD(a.fechaEstimada),EST[estAct(a)],a.fechaCompletada?fmtD(a.fechaCompletada):'',a.nota])});
+  download(`actividades_${iso(new Date())}.csv`,'﻿'+rows.map(r=>r.map(q).join(';')).join('\r\n'),'text/csv;charset=utf-8')};
+
+render();
+if(!TOKEN){const L=$('#loading');L.innerHTML='<div style="text-align:center;max-width:420px;padding:20px"><b>Enlace incompleto.</b><br><br>Solicite a su consultor el enlace completo de su plan.</div>'}
+else run('obtenerDatos').catch(()=>{});
+})();
+</script>
+</body>
+</html>
