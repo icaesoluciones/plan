@@ -161,6 +161,42 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .otc ul{list-style:none;margin:10px 0 0;padding:8px 0 0;border-top:1px solid #f1f4f7}
 .otc li{display:flex;align-items:center;gap:7px;font-size:12px;padding:3px 0}.otc li span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.otc li b{font-size:12px}
 .otc li.none{color:#94a3b8}
+.pbar{position:relative;height:9px;background:#eef1f5;border-radius:6px;min-width:80px}
+.pbar>i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:var(--crit)}
+.pbar.g>i{background:var(--pri2)}
+.pbar>em{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:#0f172a;border-radius:2px}
+.dv{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.dv.r{background:#fee2e2;color:#b91c1c}.dv.y{background:#fef3c7;color:#a16207}.dv.g{background:#dcfce7;color:#15803d}.dv.pend{background:#f1f5f9;color:#64748b}
+.irow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(90px,1.4fr) 42px 40px 82px;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #f1f4f7}
+.irow:last-child{border:0}
+.irow .n{font-weight:500;font-size:13px;min-width:0}.irow .n small{display:block;color:#94a3b8;font-size:11.5px;font-weight:400}
+.num{text-align:right;font-weight:700;font-size:13px}.num small{display:block;font-weight:400;color:#94a3b8;font-size:10.5px}
+.leg{font-size:11.5px;color:var(--muted);display:flex;gap:12px;align-items:center}.leg i{display:inline-block;width:14px;height:0;border-top:2.5px solid var(--crit);vertical-align:middle;margin-right:4px}.leg i.e{border-top:2px dashed #94a3b8}
+.kpi .v.neg{color:var(--bad)}.kpi .v.pos{color:var(--ok)}
+.kgrid{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
+.kgrid th{text-align:center;padding:8px 4px}.kgrid th:first-child{text-align:left}
+.kgrid td{text-align:center;padding:8px 2px;border-bottom:1px solid #f1f4f7;font-size:12.5px}
+.kgrid td:first-child{text-align:left;padding-right:12px}
+.kgrid input{width:46px;text-align:center;padding:6px 3px;font-size:12.5px;border-radius:6px}
+.kgrid input.cur{background:#fffbea;border-color:#f5c451}
+.kgrid input.dirty{background:#eef4fb;border-color:var(--pri2);font-weight:600}
+.kgrid input:disabled{background:transparent;border-color:transparent;color:#cbd5e1}
+.sem{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:middle}
+.sem.r{background:#dc2626}.sem.y{background:#f59e0b}.sem.g{background:#16a34a}.sem.n{background:#e2e8f0}
+.kn b{font-size:13px}.kn small{display:block;color:#94a3b8;font-size:11.5px;margin-top:2px}
+.krow{display:grid;grid-template-columns:16px minmax(0,1fr) auto 52px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #f1f4f7;font-size:13px}.krow:last-child{border:0}
+.krow small{display:block;color:#94a3b8;font-size:11.5px}
+.estado{display:flex;gap:8px}.estado label{flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 6px;text-align:center;margin:0;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;background:#fff}
+.estado label.sel[data-e="En línea"]{border-color:#16a34a;background:#f0fdf4}.estado label.sel[data-e="En riesgo"]{border-color:#f59e0b;background:#fffbeb}.estado label.sel[data-e="Atrasada"]{border-color:#dc2626;background:#fef2f2}
+.tl{border-left:2px solid #e2e8f0;margin-left:10px;padding-left:18px}
+#revHist{max-height:460px;overflow:auto;padding:4px 0 0 4px}
+.tli{position:relative;padding:0 0 16px;cursor:pointer}
+.tli::before{content:'';position:absolute;left:-25px;top:3px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid #16a34a}
+.tli.y::before{border-color:#f59e0b}.tli.r::before{border-color:#dc2626}
+.tli h4{margin:0 0 3px;font-size:13px}.tli p{margin:2px 0;font-size:12.5px;color:#475569}.tli p b{color:var(--ink);font-weight:600}
+.tli:hover h4{color:var(--pri2)}
+.dec{padding:10px 0;border-bottom:1px solid #f1f4f7;font-size:13px}.dec:last-child{border:0}.dec small{display:block;color:#94a3b8;font-size:11.5px;margin-top:2px}
+.revbtn{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:6vh 16px;overflow:auto}
 .modal.on{display:flex}
@@ -180,6 +216,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
   <nav>
     <span class="lbl">Ver</span>
     <button data-t="resumen" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg><span>Resumen</span></button>
+    <button data-t="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Indicadores</span></button>
     <button data-t="pilares-v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span>Avance por pilar</span></button>
     <button data-t="criticas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span>Iniciativas críticas</span></button>
     <button data-t="mapa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span>Mapa estratégico</span></button>
@@ -208,13 +245,15 @@ details.ot summary:hover .otn{color:var(--pri2)}
   <p class="hint" id="resHint"></p>
 
   <div class="blk crit">
-    <div class="blkh"><h2>Avance de críticas</h2><span>Ahora · Crítica</span></div>
+    <div class="blkh"><h2>Avance de críticas</h2><span>Ahora · Crítica · la marca negra indica dónde se debería ir a hoy</span></div>
     <div class="kpis" id="kpisC"></div>
     <div class="grid g2">
+      <div class="card"><div class="chead"><h3 id="evoT">Evolución del avance</h3><span class="leg"><span><i></i>real</span><span><i class="e"></i>esperado</span></span></div><div id="evo"></div></div>
+      <div class="card"><h3>Iniciativas críticas · real vs esperado</h3><div id="resCrit"></div></div>
       <div class="card"><h3>Por pilar</h3><div id="cPil"></div></div>
       <div class="card"><h3>Por objetivo táctico</h3><div id="cTac"></div></div>
-      <div class="card"><h3>Iniciativas críticas</h3><div id="resCrit"></div></div>
       <div class="card"><h3>Por responsable</h3><div id="cResp"></div></div>
+      <div class="card"><h3>Decisiones pendientes <span class="muted" style="font-weight:400;font-size:12px">· de las revisiones del mes</span></h3><div id="resDec"></div></div>
     </div>
   </div>
 
@@ -230,9 +269,32 @@ details.ot summary:hover .otn{color:var(--pri2)}
   </div>
 
   <div class="grid g2">
+    <div class="card"><div class="chead"><h3>Indicadores</h3><button class="btn sec sm" type="button" onclick="document.querySelector('nav button[data-t=kpi]').click()">Ver todos</button></div><div id="resKpi"></div></div>
     <div class="card"><h3>Actividades vencidas y próximas (15 días)</h3><div id="resAlert"></div></div>
     <div class="card"><h3>Descartar / revisar <span class="muted" style="font-weight:400;font-size:12px">· no suman al avance</span></h3><div id="resRev"></div></div>
   </div>
+</section>
+
+<section class="tab" id="kpi">
+  <div class="card">
+    <div class="chead"><h3 id="kpiT">Indicadores</h3><div class="btns"><button type="button" class="btn sec sm" data-new="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo indicador</button><button type="button" class="btn sm" id="btnKpiSave">Guardar valores</button></div></div>
+    <p class="hint" id="kpiHint" style="margin-top:-6px"></p>
+    <div id="kpiView" style="overflow-x:auto"></div>
+  </div>
+  <div class="modal" id="m-ind"><div class="sheet"><div class="mhead"><h3 data-tn="Nuevo indicador" data-te="Editar indicador">Nuevo indicador</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmInd">
+      <input type="hidden" name="id">
+      <div class="full"><label>Objetivo táctico *</label><select name="tacticoId" required data-full></select><div class="selfull"></div></div>
+      <div class="full"><label>Indicador *</label><input name="nombre" required placeholder="Ej.: Ventas firmadas"></div>
+      <div><label>Unidad</label><input name="unidad" placeholder="RD$ millones, %, # clientes"></div>
+      <div><label>Responsable del dato</label><input name="responsable" list="dlResp"></div>
+      <div><label>Sentido</label><select name="sentido"><option value="mas">Más es mejor</option><option value="menos">Menos es mejor</option></select></div>
+      <div><label>Cómo se acumula</label><select name="acumula"><option value="suma">Suma de los meses</option><option value="ultimo">Último valor registrado</option></select></div>
+      <div><label>Línea base</label><input name="base" inputmode="decimal"></div>
+      <div><label>Meta del año *</label><input name="meta" required inputmode="decimal"></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
+    </form>
+</div></div>
 </section>
 
 <section class="tab" id="pilares-v">
@@ -244,6 +306,21 @@ details.ot summary:hover .otn{color:var(--pri2)}
   
   <div class="kpis" id="critKpis"></div>
   <div id="critView"></div>
+  <div class="modal" id="m-rev"><div class="sheet w"><div class="mhead"><h3 id="revT">Revisión mensual</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+  <div class="grid" style="grid-template-columns:1.1fr 1fr;gap:22px">
+    <form class="f" id="fmRev">
+      <input type="hidden" name="id"><input type="hidden" name="iniciativaId"><input type="hidden" name="estado">
+      <div><label>Mes de la revisión</label><select name="periodo" id="revPer"></select></div>
+      <div class="full"><label>¿Cómo va? *</label><div class="estado" id="revEst"><label data-e="En línea">🟢 En línea</label><label data-e="En riesgo">🟡 En riesgo</label><label data-e="Atrasada">🔴 Atrasada</label></div></div>
+      <div class="full"><label>Logros del mes</label><textarea name="logros"></textarea></div>
+      <div class="full"><label>Próximos pasos</label><textarea name="proximos"></textarea></div>
+      <div class="full"><label>Riesgos / bloqueos</label><input name="riesgos"></div>
+      <div class="full"><label>Decisión requerida de gerencia</label><input name="decision" placeholder="Déjelo vacío si no hace falta"></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar revisión</button></div>
+    </form>
+    <div><h3 style="margin-bottom:12px">Historial</h3><div id="revHist"></div></div>
+  </div>
+</div></div>
 </section>
 
 <section class="tab" id="mapa">
@@ -360,6 +437,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
       <div class="full"><label>Actividad *</label><input name="nombre" required></div>
       <div><label>Responsable *</label><input name="responsable" list="dlResp" required></div>
       <div><label>Fecha estimada *</label><input name="fechaEstimada" type="date" required></div>
+      <div><label>Peso <span style="font-weight:400">(esfuerzo)</span></label><select name="peso"><option value="1">Bajo</option><option value="2" selected>Normal</option><option value="3">Alto</option></select></div>
       <div class="full"><label>Comentario</label><input name="nota"></div>
       <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
@@ -415,13 +493,18 @@ const today=()=>{const d=new Date();d.setHours(0,0,0,0);return d};
 const parseD=s=>{if(!s)return null;const p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2])};
 const fmtD=s=>{if(!s)return '—';const p=s.split('-');return `${p[2]}/${p[1]}/${p[0]}`};
 
-function blank(){return{plan:{empresa:'',nombre:'',anioInicio:Y,anioHorizonte:Y+4,anioActivo:Y},estrategicos:[],tacticos:[],pilares:[],iniciativas:[],actividades:[],guardado:null}}
+function blank(){return{plan:{empresa:'',nombre:'',anioInicio:Y,anioHorizonte:Y+4,anioActivo:Y},estrategicos:[],tacticos:[],pilares:[],iniciativas:[],actividades:[],indicadores:[],valores:[],revisiones:[],guardado:null}}
 let db=blank();
 /* ---------- comunicación con el servidor (Google Apps Script) ---------- */
 let pend=0,lastSync=null;
 function busy(n){pend+=n;$('#sync').textContent=pend>0?'Guardando…':(lastSync?'Sincronizado '+lastSync.toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'}):'')}
 function setDb(d){(d.iniciativas||[]).forEach(i=>{i.prioridad=normP(i.prioridad)});CLIENTE=d.cliente||CLIENTE;if(CLIENTE)document.title='Plan Estratégico — '+CLIENTE;const a=Number(localStorage.getItem(KEY_ANIO))||Y;const b=blank();for(const k in b)if(d[k]===undefined)d[k]=b[k];d.plan.anioActivo=a;db=d;lastSync=new Date();$('#loading').style.display='none';render()}
-function api(fn,args){
+function api(fn,args,intento=0){
+  return api1(fn,args).catch(e=>{const m=String(e&&e.message||'');
+    if(intento<2&&/ocupado|conectar|Lock|timeout/i.test(m)){return new Promise(r=>setTimeout(r,1500*(intento+1))).then(()=>api(fn,args,intento+1))}
+    throw e});
+}
+function api1(fn,args){
   return fetch(API_URL,{method:'POST',credentials:'omit',redirect:'follow',body:JSON.stringify({k:TOKEN,fn:fn,args:args})})
     .then(r=>r.text()).then(t=>{let j;try{j=JSON.parse(t)}catch(e){throw new Error('No se pudo conectar con el servidor. Verifique su conexión a internet.')}if(!j.ok)throw new Error(j.error);return j.data})
     .catch(e=>{throw new Error(e&&e.message&&!/fetch/i.test(e.message)?e.message:'No se pudo conectar con el servidor. Verifique su conexión a internet.')});
@@ -435,7 +518,7 @@ function run(fn,...args){
       throw e});
 }
 function ok(msg){return()=>toast(msg)}
-function refrescar(){if(pend>0||document.querySelector('form.editing'))return;const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('form'))return;run('obtenerDatos').catch(()=>{})}
+function refrescar(){if(pend>0||document.querySelector('form.editing,#kpiView input.dirty,.modal.on'))return;const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('form'))return;run('obtenerDatos').catch(()=>{})}
 setInterval(()=>{if(!document.hidden)refrescar()},60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refrescar()});
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
@@ -449,10 +532,20 @@ const CUENTA=i=>i.prioridad==='Crítica'; // solo las críticas cuentan en el av
 const statsAv=inis=>statsInis(inis.filter(CUENTA));
 const actsOf=ini=>db.actividades.filter(a=>a.iniciativaId===ini.id);
 function estAct(a){if(a.completada)return 'ok';const f=parseD(a.fechaEstimada);if(!f)return 'pend';const t=today();if(f<t)return 'venc';if((f-t)/864e5<=15)return 'prox';return 'pend'}
-function stats(acts){const total=acts.length,done=acts.filter(a=>a.completada).length,venc=acts.filter(a=>estAct(a)==='venc').length;return{total,done,venc,pct:total?Math.round(done*100/total):0}}
+const PESO=a=>{const n=Number(a.peso);return n>0?n:2};
+const finMes=(y,m)=>new Date(y,m,0,23,59,59); // m: 1-12
+function stats(acts){const total=acts.length,done=acts.filter(a=>a.completada).length,venc=acts.filter(a=>estAct(a)==='venc').length;
+  const wt=acts.reduce((s,a)=>s+PESO(a),0),wd=acts.reduce((s,a)=>s+(a.completada?PESO(a):0),0);return{total,done,venc,pct:wt?Math.round(wd*100/wt):0}}
+function esperadoAl(acts,f){const wt=acts.reduce((s,a)=>s+PESO(a),0);if(!wt)return 0;const w=acts.reduce((s,a)=>{const d=parseD(a.fechaEstimada);return s+(d&&d<=f?PESO(a):0)},0);return Math.round(w*100/wt)}
+function realAl(acts,f){const wt=acts.reduce((s,a)=>s+PESO(a),0);if(!wt)return 0;const w=acts.reduce((s,a)=>{if(!a.completada)return s;const d=parseD(a.fechaCompletada||a.fechaEstimada)||today();return s+(d<=f?PESO(a):0)},0);return Math.round(w*100/wt)}
+function ritmo(acts){const r=stats(acts).pct,e=esperadoAl(acts,today()),d=r-e;const est=!acts.length?['Sin actividades','pend']:(d>=-5?['En línea','g']:(d>=-15?['En riesgo','y']:['Atrasada','r']));return{r,e,d,est:est[0],cls:est[1]}}
+const pbE=(r,e,cls)=>`<div class="pbar ${cls||''}"><i style="width:${r}%"></i><em style="left:${e}%" title="Esperado a hoy: ${e}%"></em></div>`;
+const bR=x=>`<span class="dv ${x.cls}">${x.est}</span>`;
+const fmtD2=v=>(v>0?'+':v<0?'−':'')+Math.abs(v);
 function statsInis(inis){return stats(inis.flatMap(actsOf))}
 function estIni(i){const s=stats(actsOf(i));if(!s.total)return['Sin actividades','s-pend'];if(s.done===s.total)return['Completada','s-ok'];if(s.venc)return['Con atraso','s-venc'];if(s.done)return['En curso','s-prox'];return['No iniciada','s-pend']}
 const pb=(pct,cls='')=>`<div class="bar ${cls}"><i style="width:${pct}%"></i></div>`;
+const prowE=(name,sub,pct,e,cls)=>`<div class="prow"><div class="n" title="${esc(name)}">${esc(corto(name))}${sub?`<small>${sub}</small>`:''}</div>${pbE(pct,e,cls==='c'?'':'g')}<div class="pc" title="Esperado ${e}%">${pct}%</div></div>`;
 const prow=(name,sub,pct,cls)=>`<div class="prow"><div class="n" title="${esc(name)}">${esc(corto(name))}${sub?`<small>${sub}</small>`:''}</div>${pb(pct,cls)}<div class="pc">${pct}%</div></div>`;
 const bP=p=>p?`<span class="badge ${PCLS[p]||'pr-desp'}">${AHORA.includes(p)?'Ahora · ':''}${esc(p)}</span>`:'';
 const bS=e=>`<span class="badge s-${e}">${EST[e]}</span>`;
@@ -478,7 +571,7 @@ function render(){
   const yrs=new Set();for(let y=Number(p.anioInicio);y<=Number(p.anioHorizonte);y++)yrs.add(y);db.tacticos.forEach(t=>yrs.add(Number(t.anio)));yrs.add(Number(p.anioActivo));
   $('#selAnio').innerHTML=opts([...yrs].sort().map(y=>[y,y]),p.anioActivo);
   $('#dlResp').innerHTML=responsables().map(r=>`<option value="${esc(r)}">`).join('');
-  renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
+  renderKpi();renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
   renderCargaPlan();renderCargaPil();renderCargaIni();renderCargaAct();
   hintsSel();
 }
@@ -488,33 +581,39 @@ $('#btnRef').onclick=()=>run('obtenerDatos').then(ok('Datos actualizados'));
 /* ---------- RESUMEN ---------- */
 function bloqueAvance(inis,pre,cls){
   const acts=inis.flatMap(actsOf),s=stats(acts);
-  $('#'+pre+'Pil').innerHTML=db.pilares.length?db.pilares.map(pl=>{const pi=inis.filter(i=>i.pilarId===pl.id),st=statsInis(pi);return prow(pl.nombre,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct,cls)}).join(''):'<div class="empty">Sin pilares cargados.</div>';
+  $('#'+pre+'Pil').innerHTML=db.pilares.length?db.pilares.map(pl=>{const pi=inis.filter(i=>i.pilarId===pl.id),acts=pi.flatMap(actsOf),st=stats(acts);return prowE(pl.nombre,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct,esperadoAl(acts,today()),cls)}).join(''):'<div class="empty">Sin pilares cargados.</div>';
   const tacs=db.tacticos.filter(t=>Number(t.anio)===Number(db.plan.anioActivo));
-  $('#'+pre+'Tac').innerHTML=tacs.length?tacs.map(t=>{const ti=inis.filter(i=>i.tacticoId===t.id),st=statsInis(ti);return prow((t.codigo?t.codigo+' · ':'')+t.nombre,`${ti.length} iniciativas`,st.pct,cls)}).join(''):'<div class="empty">Sin objetivos tácticos para este año.</div>';
+  $('#'+pre+'Tac').innerHTML=tacs.length?tacs.map(t=>{const ti=inis.filter(i=>i.tacticoId===t.id),acts=ti.flatMap(actsOf),st=stats(acts);return prowE((t.codigo?t.codigo+' · ':'')+t.nombre,`${ti.length} iniciativas`,st.pct,esperadoAl(acts,today()),cls)}).join(''):'<div class="empty">Sin objetivos tácticos para este año.</div>';
   const rs={};acts.forEach(a=>{const r=a.responsable||'(sin responsable)';(rs[r]=rs[r]||[]).push(a)});
   const rk=Object.keys(rs).sort((a,b)=>rs[b].length-rs[a].length);
-  $('#'+pre+'Resp').innerHTML=rk.length?rk.map(r=>{const st=stats(rs[r]);return prow(r,`${st.done}/${st.total} actividades${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,cls)}).join(''):'<div class="empty">Sin actividades.</div>';
+  $('#'+pre+'Resp').innerHTML=rk.length?rk.map(r=>{const st=stats(rs[r]);return prowE(r,`${st.done}/${st.total} actividades${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,esperadoAl(rs[r],today()),cls)}).join(''):'<div class="empty">Sin actividades.</div>';
   return s;
 }
 function renderResumen(){
   const inis=iniAnio(),crit=inis.filter(CUENTA),acts=inis.flatMap(actsOf);
   $('#resHint').textContent=`Año ${db.plan.anioActivo} · ${inis.length} iniciativas activas (${crit.length} críticas) en ${new Set(inis.map(i=>i.pilarId)).size} pilares · Corte al ${today().toLocaleDateString('es-DO')}`;
   const sc=bloqueAvance(crit,'c','c'),sg=bloqueAvance(inis,'g','');
-  const critAtr=crit.filter(i=>stats(actsOf(i)).venc>0).length;
+  const cActs=crit.flatMap(actsOf),gActs=acts,rc=ritmo(cActs),rg=ritmo(gActs);
+  const rit=crit.map(i=>({i,x:ritmo(actsOf(i))}));
+  const malas=rit.filter(o=>o.x.cls==='r'||o.x.cls==='y').length;
   const prox=acts.filter(a=>estAct(a)==='prox').length;
+  const dcls=d=>d<-5?'neg':(d>=0?'pos':'');
   $('#kpisC').innerHTML=`
-   <div class="kpi crit"><div class="v">${sc.pct}%</div><div class="t">Avance de críticas</div>${pb(sc.pct,'c')}</div>
-   <div class="kpi ok"><div class="v">${sc.done}/${sc.total}</div><div class="t">Actividades críticas completadas</div></div>
-   <div class="kpi"><div class="v">${crit.length}</div><div class="t">Iniciativas críticas</div></div>
-   <div class="kpi bad"><div class="v">${critAtr}</div><div class="t">Críticas con actividades vencidas</div></div>
+   <div class="kpi crit"><div class="v">${rc.r}%</div><div class="t">Avance real · ${sc.done}/${sc.total} actividades</div>${pbE(rc.r,rc.e)}</div>
+   <div class="kpi"><div class="v" style="color:#64748b">${rc.e}%</div><div class="t">Esperado a hoy, según fechas</div></div>
+   <div class="kpi"><div class="v ${dcls(rc.d)}">${fmtD2(rc.d)} pts</div><div class="t">Desvío</div></div>
+   <div class="kpi bad"><div class="v">${malas} <span style="font-size:14px;color:var(--muted)">de ${crit.length}</span></div><div class="t">Críticas atrasadas o en riesgo</div></div>
    <div class="kpi bad"><div class="v">${sc.venc}</div><div class="t">Actividades críticas vencidas</div></div>`;
   $('#kpisG').innerHTML=`
-   <div class="kpi"><div class="v">${sg.pct}%</div><div class="t">Avance general</div>${pb(sg.pct)}</div>
-   <div class="kpi ok"><div class="v">${sg.done}/${sg.total}</div><div class="t">Actividades completadas</div></div>
-   <div class="kpi"><div class="v">${inis.length}</div><div class="t">Iniciativas activas</div></div>
+   <div class="kpi"><div class="v">${rg.r}%</div><div class="t">Avance general · ${sg.done}/${sg.total} actividades</div>${pbE(rg.r,rg.e,'g')}</div>
+   <div class="kpi"><div class="v" style="color:#64748b">${rg.e}%</div><div class="t">Esperado a hoy</div></div>
+   <div class="kpi"><div class="v ${dcls(rg.d)}">${fmtD2(rg.d)} pts</div><div class="t">Desvío</div></div>
    <div class="kpi bad"><div class="v">${sg.venc}</div><div class="t">Actividades vencidas</div></div>
    <div class="kpi"><div class="v">${prox}</div><div class="t">Vencen en los próximos 15 días</div></div>`;
-  $('#resCrit').innerHTML=crit.length?crit.map(i=>{const st=stats(actsOf(i)),[e]=estIni(i);return prow(i.nombre,`${esc(byId(db.pilares,i.pilarId)?.nombre||'')} · ${e}${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,'c')}).join(''):'<div class="empty">No hay iniciativas críticas este año.</div>';
+  $('#resCrit').innerHTML=rit.length?rit.sort((a,b)=>a.x.d-b.x.d).map(({i,x})=>`<div class="irow"><div class="n" title="${esc(i.nombre)}">${esc(corto(i.nombre))}<small>${esc(i.responsable||'—')}</small></div>${pbE(x.r,x.e)}<div class="num">${x.r}%<small>real</small></div><div class="num">${fmtD2(x.d)}<small>pts</small></div><div>${bR(x)}</div></div>`).join(''):'<div class="empty">No hay iniciativas críticas este año.</div>';
+  $('#evoT').textContent='Evolución del avance '+db.plan.anioActivo;
+  $('#evo').innerHTML=curva(cActs,Number(db.plan.anioActivo));
+  renderDecisiones();renderResKpi();
   $('#resPrio').innerHTML=PRIOS.filter(p=>p!==REV).map(p=>{const pi=inis.filter(i=>i.prioridad===p),st=statsInis(pi);return prow((AHORA.includes(p)?'Ahora · ':'')+p,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct,p==='Crítica'?'c':'')}).join('');
   const rev=iniAnioTodas().filter(i=>i.prioridad===REV);
   $('#resRev').innerHTML=rev.length?`<table><tbody>${rev.map(i=>`<tr><td>${esc(i.nombre)}</td><td class="muted">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td class="muted">${esc(i.responsable||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Ninguna.</div>';
@@ -522,6 +621,111 @@ function renderResumen(){
   $('#resAlert').innerHTML=al.length?actTable(al,{ini:true}):'<div class="empty">Sin actividades vencidas ni próximas a vencer.</div>';
 }
 
+function curva(acts,yr){
+  if(!acts.length)return '<div class="empty">Sin actividades críticas.</div>';
+  const W=640,H=230,L=38,R=14,T=16,B=200,MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const hoy=today(),x=k=>L+k*(W-L-R)/11,y=v=>B-v*(B-T)/100;
+  const esp=MES.map((_,k)=>esperadoAl(acts,finMes(yr,k+1)));
+  const real=[];for(let k=0;k<12;k++){const fm=finMes(yr,k+1);if(fm<=hoy)real.push(realAl(acts,fm));else{if(new Date(yr,k,1)<=hoy)real.push(realAl(acts,hoy));break}}
+  let g='';[0,25,50,75,100].forEach(v=>{g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#eef1f5"/><text x="${L-7}" y="${y(v)+4}" font-size="10" fill="#94a3b8" text-anchor="end">${v}%</text>`});
+  MES.forEach((m,k)=>{g+=`<text x="${x(k)}" y="${B+17}" font-size="10" fill="#94a3b8" text-anchor="middle">${m}</text>`});
+  const pe=esp.map((v,k)=>`${x(k).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const pr=real.map((v,k)=>`${x(k).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const dots=real.map((v,k)=>`<circle cx="${x(k)}" cy="${y(v)}" r="3.2" fill="var(--crit)"><title>${MES[k]}: real ${v}% · esperado ${esp[k]}%</title></circle>`).join('');
+  const lk=real.length-1,lab=lk>=0?`<text x="${Math.min(x(lk)+7,W-60)}" y="${y(real[lk])-7}" font-size="11" font-weight="700" fill="var(--crit)">${real[lk]}%</text>`:'';
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}<polyline points="${pe}" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="5 4"/>${real.length?`<polyline points="${pr}" fill="none" stroke="var(--crit)" stroke-width="2.6"/>`:''}${dots}${lab}</svg>`+(real.length?'':`<div class="empty" style="padding:4px 0">El año ${yr} aún no comienza.</div>`);
+}
+/* ---------- INDICADORES ---------- */
+const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const numV=v=>{if(v===undefined||v===null)return NaN;let s=String(v).trim().replace(/[%\s$]/g,'');if(!s)return NaN;if(s.includes(',')&&!s.includes('.'))s=s.replace(',','.');else s=s.replace(/,/g,'');return Number(s)};
+const fmtN=v=>isNaN(v)?'—':(Math.abs(v)>=100?Math.round(v).toLocaleString('es-DO'):(Math.round(v*100)/100).toLocaleString('es-DO'));
+function valoresDe(ind,yr){const m={};db.valores.filter(v=>v.indicadorId===ind.id&&Number(v.anio)===yr).sort((a,b)=>String(a.actualizado||'').localeCompare(String(b.actualizado||''))).forEach(v=>{m[Number(v.mes)]=v});return m}
+function evalInd(ind,yr){
+  const vals=valoresDe(ind,yr),meses=Object.keys(vals).map(Number).filter(k=>!isNaN(numV(vals[k].valor))).sort((a,b)=>a-b);
+  const M=numV(ind.meta),B0=numV(ind.base),B=isNaN(B0)?0:B0,menos=ind.sentido==='menos',suma=ind.acumula!=='ultimo';
+  if(!meses.length)return{vals,actual:NaN,m:0,c:null,sem:'n',txt:'Sin datos'};
+  const m=meses[meses.length-1];
+  const actual=suma?meses.reduce((s,k)=>s+numV(vals[k].valor),0):numV(vals[m].valor);
+  let c=null;
+  if(!isNaN(M)){
+    if(suma){const esp=M*m/12;c=menos?(actual===0?1:esp/actual):(esp===0?1:actual/esp)}
+    else{const obj=B+(M-B)*m/12;c=(obj-B)===0?1:(actual-B)/(obj-B)}
+  }
+  const sem=c===null?'n':(c>=0.95?'g':(c>=0.8?'y':'r'));
+  return{vals,actual,m,c,sem,txt:c===null?'Sin meta':Math.round(c*100)+'%'};
+}
+const indsAnio=()=>{const yr=Number(db.plan.anioActivo);return db.indicadores.filter(ind=>{const t=byId(db.tacticos,ind.tacticoId);return t&&Number(t.anio)===yr}).sort((a,b)=>{const ta=byId(db.tacticos,a.tacticoId),tb=byId(db.tacticos,b.tacticoId);return numCod(ta.codigo)-numCod(tb.codigo)||String(a.nombre).localeCompare(b.nombre)})};
+function renderKpi(){
+  if(document.querySelector('#kpiView input.dirty'))return; // no borrar lo que se está escribiendo
+  const yr=Number(db.plan.anioActivo),hoy=today(),cy=hoy.getFullYear(),cm=hoy.getMonth()+1;
+  const lim=yr<cy?12:(yr>cy?0:cm);
+  const inds=indsAnio();
+  $('#kpiT').textContent='Indicadores '+yr;
+  const falt=lim&&yr===cy?inds.filter(ind=>!valoresDe(ind,yr)[cm]||isNaN(numV(valoresDe(ind,yr)[cm].valor))).length:0;
+  $('#kpiHint').innerHTML=inds.length?(yr===cy?`Escriba el valor real de cada mes y pulse <b>Guardar valores</b>. ${MESES[cm-1]} por completar: <b>${falt} de ${inds.length}</b>.`:(yr>cy?'Año futuro: los valores se cargan cuando comience.':'Año cerrado: puede corregir valores si hace falta.')):'Cree un indicador para cada objetivo táctico con <b>Nuevo indicador</b>.';
+  if(!inds.length){$('#kpiView').innerHTML='<div class="empty">Sin indicadores para '+yr+'.</div>';return}
+  $('#kpiView').innerHTML=`<table class="kgrid"><thead><tr><th style="min-width:210px">Indicador</th>${MESES.map(m=>`<th>${m}</th>`).join('')}<th>Actual</th><th title="Cumplimiento contra lo esperado a la fecha">Cumpl.</th><th></th><th></th></tr></thead><tbody>${inds.map(ind=>{
+    const t=byId(db.tacticos,ind.tacticoId),ev=evalInd(ind,yr);
+    const cells=MESES.map((_,k)=>{const mes=k+1,v=ev.vals[mes];const dis=mes>lim?' disabled':'';const cur=(yr===cy&&mes===cm)?' cur':'';
+      return `<td><input data-ind="${ind.id}" data-mes="${mes}" data-vid="${v?v.id:''}" value="${v?esc(v.valor):''}" class="${cur.trim()}"${dis} inputmode="decimal"></td>`}).join('');
+    return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${esc(ind.base||'—')} · meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(ev.actual)}</b></td><td>${ev.txt}</td><td><span class="sem ${ev.sem}" title="${ev.txt}"></span></td>${rowBtns('ind',ind.id)}</tr>`}).join('')}</tbody></table>`;
+}
+document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.ind)e.target.classList.add('dirty')});
+$('#btnKpiSave').onclick=()=>{
+  const yr=String(db.plan.anioActivo);
+  const lista=[...document.querySelectorAll('#kpiView input.dirty')].map(el=>{const o={indicadorId:el.dataset.ind,anio:yr,mes:el.dataset.mes,valor:el.value.trim()};if(el.dataset.vid)o.id=el.dataset.vid;return o});
+  if(!lista.length){toast('No hay valores nuevos para guardar');return}
+  const malos=lista.filter(o=>o.valor!==''&&isNaN(numV(o.valor)));if(malos.length){toast('Revise los valores: solo números');return}
+  document.querySelectorAll('#kpiView input.dirty').forEach(el=>el.classList.remove('dirty'));
+  run('guardarLote','valores',lista).then(ok(lista.length+' valor(es) guardado(s)')).catch(()=>{});
+};
+function fillIndSelect(){const s=$('#fmInd').elements.tacticoId,v=s.value,yr=Number(db.plan.anioActivo);
+  const ts=[...db.tacticos].sort((a,b)=>(Number(b.anio)===yr)-(Number(a.anio)===yr)||b.anio-a.anio||numCod(a.codigo)-numCod(b.codigo));
+  s.innerHTML=opts(ts.map(t=>[t.id,tacLbl(t)]),v,'— Seleccione —')}
+$('#fmInd').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(isNaN(numV(d.meta))){toast('La meta debe ser un número');return}if(d.base&&isNaN(numV(d.base))){toast('La línea base debe ser un número');return}resetF(e.target);guardarSrv('ind',d)};
+function renderResKpi(){
+  const yr=Number(db.plan.anioActivo),inds=indsAnio();
+  $('#resKpi').innerHTML=inds.length?inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId),ev=evalInd(ind,yr);return `<div class="krow"><span class="sem ${ev.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · actual ${fmtN(ev.actual)} de meta ${esc(ind.meta||'—')} ${esc(ind.unidad||'')}</small></div><span class="muted" style="font-size:11.5px">${ev.m?'hasta '+MESES[ev.m-1]:''}</span><b style="text-align:right">${ev.txt==='Sin datos'?'—':ev.txt}</b></div>`}).join(''):'<div class="empty">Sin indicadores para este año.</div>';
+}
+/* ---------- REVISIONES ---------- */
+const EC={'En línea':'g','En riesgo':'y','Atrasada':'r'};
+const MESL=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const revsDe=iniId=>db.revisiones.filter(r=>r.iniciativaId===iniId).sort((a,b)=>(Number(b.anio)*12+Number(b.mes))-(Number(a.anio)*12+Number(a.mes)));
+const revDe=(iniId,y,m)=>db.revisiones.filter(r=>r.iniciativaId===iniId&&Number(r.anio)===y&&Number(r.mes)===m).sort((a,b)=>String(b.actualizado||'').localeCompare(String(a.actualizado||'')))[0];
+const ultRev=iniId=>revsDe(iniId)[0];
+function pintarEstado(){const v=$('#fmRev').elements.estado.value;document.querySelectorAll('#revEst label').forEach(l=>l.classList.toggle('sel',l.dataset.e===v))}
+function cargarRevPeriodo(){
+  const f=$('#fmRev').elements,[y,m]=f.periodo.value.split('-').map(Number),r=revDe(f.iniciativaId.value,y,m);
+  ['id','estado','logros','proximos','riesgos','decision'].forEach(k=>f[k].value=r?(r[k]||''):'');pintarEstado();
+}
+function abrirRevision(iniId,y,m){
+  const ini=byId(db.iniciativas,iniId);if(!ini)return;
+  const fm=$('#fmRev'),f=fm.elements;fm.reset();f.iniciativaId.value=iniId;
+  const h=today();const per=[];for(let k=0;k<12;k++){const d=new Date(h.getFullYear(),h.getMonth()-k,1);per.push([d.getFullYear()+'-'+(d.getMonth()+1),MESL[d.getMonth()]+' '+d.getFullYear()])}
+  f.periodo.innerHTML=opts(per,(y&&m)?y+'-'+m:per[0][0]);
+  $('#revT').textContent='Revisión · '+corto(ini.nombre);
+  cargarRevPeriodo();
+  const hs=revsDe(iniId);
+  $('#revHist').innerHTML=hs.length?`<div class="tl">${hs.map(r=>`<div class="tli ${EC[r.estado]||''}" data-y="${r.anio}" data-m="${r.mes}"><h4>${MESL[Number(r.mes)-1]} ${r.anio} · ${esc(r.estado||'')}</h4>${r.logros?`<p><b>Logros:</b> ${esc(r.logros)}</p>`:''}${r.proximos?`<p><b>Sigue:</b> ${esc(r.proximos)}</p>`:''}${r.riesgos?`<p><b>Riesgos:</b> ${esc(r.riesgos)}</p>`:''}${r.decision?`<p><b>Decisión:</b> ${esc(r.decision)}</p>`:''}</div>`).join('')}</div>`:'<div class="empty">Aún no hay revisiones registradas.</div>';
+  fm.classList.remove('editing');abrirModal('m-rev',false);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-rev]');if(b){abrirRevision(b.dataset.rev);return}
+  const l=e.target.closest&&e.target.closest('#revEst label');if(l){$('#fmRev').elements.estado.value=l.dataset.e;pintarEstado();return}
+  const h=e.target.closest&&e.target.closest('.tli[data-y]');if(h){$('#fmRev').elements.periodo.value=h.dataset.y+'-'+h.dataset.m;cargarRevPeriodo();return}
+});
+$('#revPer').onchange=cargarRevPeriodo;
+$('#fmRev').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.estado){toast('Indique cómo va la iniciativa');return}
+  const [y,m]=d.periodo.split('-');delete d.periodo;d.anio=y;d.mes=m;if(!d.id)delete d.id;
+  cerrarModal('m-rev');e.target.reset();guardarSrv('rev',d)};
+const btnRev=iniId=>{const r=ultRev(iniId);return `<span class="revbtn">${r?`<span class="dv ${EC[r.estado]||'pend'}" title="Última revisión">${MESL[Number(r.mes)-1].slice(0,3)} · ${esc(r.estado)}</span>`:'<span class="dv pend">Sin revisión</span>'}<button type="button" class="btn sec sm" data-rev="${iniId}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg> Revisión</button></span>`};
+function renderDecisiones(){
+  const h=today(),y=h.getFullYear(),m=h.getMonth()+1,ids=new Set(iniAnio().map(i=>i.id));
+  const del=db.revisiones.filter(r=>ids.has(r.iniciativaId)&&Number(r.anio)===y&&Number(r.mes)===m);
+  const crit=iniAnio().filter(CUENTA),hechas=crit.filter(i=>revDe(i.id,y,m)).length;
+  const dec=del.filter(r=>String(r.decision||'').trim());
+  $('#resDec').innerHTML=`<p class="hint" style="margin:-4px 0 6px">Revisiones de ${MESL[m-1]}: <b>${hechas} de ${crit.length}</b> críticas registradas.</p>`+(dec.length?dec.map(r=>{const i=byId(db.iniciativas,r.iniciativaId);return `<div class="dec"><span class="dv ${EC[r.estado]||'pend'}" style="float:right">${esc(r.estado)}</span><b>${esc(r.decision)}</b><small>${esc(i?corto(i.nombre):'')} · ${esc(i&&i.responsable||'')}</small></div>`}).join(''):'<div class="empty">Sin decisiones pendientes este mes.</div>');
+}
 function actTable(list,o={}){
   return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td><input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}></td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
 }
@@ -544,13 +748,16 @@ function renderCriticas(){
   const crit=iniAnio().filter(i=>i.prioridad==='Crítica'),s=statsInis(crit);
   const comp=crit.filter(i=>{const x=stats(actsOf(i));return x.total&&x.done===x.total}).length;
   const atr=crit.filter(i=>stats(actsOf(i)).venc>0).length;
-  $('#critKpis').innerHTML=`<div class="kpi crit"><div class="v">${s.pct}%</div><div class="t">Avance consolidado críticas</div>${pb(s.pct,'c')}</div>
+  const xr=ritmo(crit.flatMap(actsOf));
+  $('#critKpis').innerHTML=`<div class="kpi crit"><div class="v">${xr.r}%</div><div class="t">Avance real · esperado ${xr.e}%</div>${pbE(xr.r,xr.e)}</div>
   <div class="kpi"><div class="v">${crit.length}</div><div class="t">Iniciativas críticas</div></div>
   <div class="kpi ok"><div class="v">${comp}</div><div class="t">Completadas</div></div>
   <div class="kpi bad"><div class="v">${atr}</div><div class="t">Con atraso</div></div>
   <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>`;
   $('#critView').innerHTML=crit.length?crit.map(i=>{const acts=actsOf(i).sort((a,b)=>(a.completada-b.completada)||(a.fechaEstimada||'').localeCompare(b.fechaEstimada||'')),st=stats(acts),[e,c]=estIni(i),t=byId(db.tacticos,i.tacticoId);
-    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="prow" style="margin-top:0"><div class="n"><b>${esc(i.nombre)}</b><small>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(tacLbl(t)):''} · Líder: ${esc(i.responsable||'—')} · <span class="badge ${c}">${e}</span></small></div>${pb(st.pct,'c')}<div class="pc">${st.pct}%</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
+    const x=ritmo(acts);
+    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div>${btnRev(i.id)}</div>
+    <div class="irow" style="grid-template-columns:minmax(120px,2fr) 50px 50px 90px;padding-top:0"><div>${pbE(x.r,x.e)}</div><div class="num">${x.r}%<small>real</small></div><div class="num">${x.e}%<small>esperado</small></div><div>${bR(x)}</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
 }
 
 /* ---------- MAPA ---------- */
@@ -643,15 +850,15 @@ function renderSeg(){
 
 /* ---------- formularios genéricos ---------- */
 function formData(fm){const o={};new FormData(fm).forEach((v,k)=>o[k]=typeof v==='string'?v.trim():v);return o}
-function abrirModal(m,edit){if(typeof m==='string')m=$('#'+m);if(!m)return;const h=m.querySelector('.mhead h3');if(h)h.textContent=edit?h.dataset.te:h.dataset.tn;m.classList.add('on');setTimeout(()=>{const f=m.querySelector('input:not([type=hidden]):not([readonly]),select,textarea');f&&f.focus()},50)}
+function abrirModal(m,edit){if(typeof m==='string')m=$('#'+m);if(!m)return;const h=m.querySelector('.mhead h3');if(h&&h.dataset.tn)h.textContent=edit?h.dataset.te:h.dataset.tn;m.classList.add('on');setTimeout(()=>{const f=m.querySelector('input:not([type=hidden]):not([readonly]),select,textarea');f&&f.focus()},50)}
 function cerrarModal(m){if(typeof m==='string')m=$('#'+m);m&&m.classList.remove('on')}
-function fill(fm,obj){[...fm.elements].forEach(el=>{if(el.name&&obj[el.name]!==undefined)el.value=obj[el.name]});fm.classList.add('editing');abrirModal(fm.closest('.modal'),true);hintsSel()}
+function fill(fm,obj){[...fm.elements].forEach(el=>{if(!el.name||obj[el.name]===undefined)return;if(el.tagName==='SELECT'&&![...el.options].some(o=>o.value===String(obj[el.name])))return;el.value=obj[el.name]});fm.classList.add('editing');abrirModal(fm.closest('.modal'),true);hintsSel()}
 function resetF(fm,abierto){if(!abierto)cerrarModal(fm.closest('.modal'));fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing');if(fm.getAttribute('id')==='fmIni'){delete fm.elements.anio.dataset.touched;fm.elements.prioridad.value='';$('#opHor').dataset.h='';pintarPrio()}}
 document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{resetF(b.closest('form'));render()});
 document.addEventListener('click',e=>{
   const nw=e.target.closest&&e.target.closest('[data-new]');
   if(nw){const t=nw.dataset.new,fm=$(FM[t]);resetF(fm,true);
-    if(t==='ini')fillIniSelects();if(t==='tac'){fillTacSelect();fm.elements.anio.value=db.plan.anioActivo}
+    if(t==='ini')fillIniSelects();if(t==='ind')fillIndSelect();if(t==='tac'){fillTacSelect();fm.elements.anio.value=db.plan.anioActivo}
     if(t==='act'){fillActSelect();if($('#fActIni').value)fm.elements.iniciativaId.value=$('#fActIni').value}
     abrirModal(fm.closest('.modal'),false);hintsSel();return}
   const op=e.target.closest&&e.target.closest('[data-open]');if(op){abrirModal(op.dataset.open,false);return}
@@ -661,13 +868,13 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.querySelector('.modal.on');if(m){const f=m.querySelector('form');f?resetF(f):cerrarModal(m)}}});
 function guardarSrv(t,o,fm){if(pend>0)return;const nuevo=!o.id;run('guardar',COL[t],o).then(()=>{toast(nuevo?'Agregado':'Actualizado')}).catch(()=>{});return nuevo}
-const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades'};
-const FM={est:'#fmEst',tac:'#fmTac',pil:'#fmPil',ini:'#fmIni',act:'#fmAct'};
-const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act'};
+const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades',ind:'indicadores',rev:'revisiones'};
+const FM={est:'#fmEst',tac:'#fmTac',pil:'#fmPil',ini:'#fmIni',act:'#fmAct',ind:'#fmInd',rev:'#fmRev'};
+const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act',ind:'kpi',rev:'criticas'};
 
 document.addEventListener('click',e=>{
   const bt=e.target.closest&&e.target.closest('[data-ed],[data-del]');const ed=bt&&bt.dataset.ed, del=bt&&bt.dataset.del;
-  if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();fill(fm,o);if(t==='ini'){$('#opHor').dataset.h=horDe(o.prioridad);pintarPrio()}}
+  if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();if(t==='ind')fillIndSelect();fill(fm,o);if(t==='ini'){$('#opHor').dataset.h=horDe(o.prioridad);pintarPrio()}}
   if(del){const[t,id]=del.split(':');borrar(t,id)}
 });
 function borrar(t,id){
@@ -676,11 +883,13 @@ function borrar(t,id){
   if(t==='pil'){const n=db.iniciativas.filter(i=>i.pilarId===id).length;if(n)msg+=`\nTambién se eliminarán ${n} iniciativa(s) y sus actividades.`}
   if(t==='ini'){const n=db.actividades.filter(a=>a.iniciativaId===id).length;if(n)msg+=`\nTambién se eliminarán ${n} actividad(es).`}
   if(t==='est')msg+='\nLos objetivos tácticos vinculados quedarán sin objetivo estratégico.';
-  if(t==='tac')msg+='\nLas iniciativas vinculadas quedarán sin objetivo táctico (conservarán su año).';
+  if(t==='tac')msg+='\nLas iniciativas vinculadas quedarán sin objetivo táctico (conservarán su año). Sus indicadores se eliminarán.';
+  if(t==='ind')msg+='\nTambién se eliminarán sus valores mensuales.';
   if(!confirm(msg))return;
   run('eliminar',COL[t],id).then(ok('Eliminado')).catch(()=>{});
 }
 const IC={"edit": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20h4L19 9l-4-4L4 16z\"/></svg>", "trash": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"/></svg>"};
+const rowBtnsRev=id=>`<td class="acts noprint"><button class="ib sm" title="Revisión mensual" data-rev="${id}"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"5\" y=\"4\" width=\"14\" height=\"17\" rx=\"2\"/><path d=\"M9 4V3h6v1M9 10h6M9 14h6M9 18h3\"/></svg></button> <button class="ib sm" title="Editar" data-ed="ini:${id}">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="ini:${id}">${IC.trash}</button></td>`;
 const rowBtns=(t,id)=>`<td class="acts noprint"><button class="ib sm" title="Editar" data-ed="${t}:${id}">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="${t}:${id}">${IC.trash}</button></td>`;
 
 /* ---------- CARGA: plan y objetivos ---------- */
@@ -754,7 +963,7 @@ function renderCargaIni(){
   fillIniSelects();
   const v=$('#fIniPil').value;$('#fIniPil').innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v,'Todos');
   const list=db.iniciativas.filter(i=>!$('#fIniPil').value||i.pilarId===$('#fIniPil').value).sort((a,b)=>anioIni(b)-anioIni(a)||prioOrd(a.prioridad)-prioOrd(b.prioridad));
-  $('#tbIni').innerHTML=list.length?`<table><thead><tr><th>Año</th><th>Pilar</th><th>Iniciativa</th><th>Prioridad</th><th>Objetivo táctico</th><th>Líder</th><th>Activ.</th><th></th></tr></thead><tbody>${list.map(i=>{const t=byId(db.tacticos,i.tacticoId),s=stats(actsOf(i));return `<tr><td>${anioIni(i)}</td><td>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td><b>${esc(i.nombre)}</b></td><td>${bP(i.prioridad)}</td><td>${t?esc(tacLbl(t)):'<span class="muted">—</span>'}</td><td>${esc(i.responsable||'—')}</td><td>${s.done}/${s.total}</td>${rowBtns('ini',i.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas.</div>';
+  $('#tbIni').innerHTML=list.length?`<table><thead><tr><th>Año</th><th>Pilar</th><th>Iniciativa</th><th>Prioridad</th><th>Objetivo táctico</th><th>Líder</th><th>Activ.</th><th></th></tr></thead><tbody>${list.map(i=>{const t=byId(db.tacticos,i.tacticoId),s=stats(actsOf(i));return `<tr><td>${anioIni(i)}</td><td>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td><b>${esc(i.nombre)}</b></td><td>${bP(i.prioridad)}</td><td>${t?esc(tacLbl(t)):'<span class="muted">—</span>'}</td><td>${esc(i.responsable||'—')}</td><td>${s.done}/${s.total}</td>${rowBtnsRev(i.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas.</div>';
 }
 $('#fIniPil').onchange=renderCargaIni;
 $('#fmIni').elements.tacticoId.onchange=e=>{const t=byId(db.tacticos,e.target.value);if(t)$('#fmIni').elements.anio.value=t.anio;pintarPrio()};
@@ -788,7 +997,7 @@ $('#bulkBtn').onclick=()=>{
   const nuevas=[];const lines=$('#bulkTxt').value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);let n=0,bad=[];
   lines.forEach((l,ix)=>{const c=l.split(/\t|;/).map(x=>x.trim());if(!c[0]){bad.push(ix+1);return}let f='';const m=(c[2]||'').match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/),m2=(c[2]||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if(m){let y=Number(m[3]);if(y<100)y+=2000;f=`${y}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`}else if(m2)f=c[2];else if(c[2])bad.push(ix+1);
-    nuevas.push({iniciativaId:ini,nombre:c[0],responsable:c[1]||'',fechaEstimada:f,nota:''});n++});
+    nuevas.push({iniciativaId:ini,nombre:c[0],responsable:c[1]||'',fechaEstimada:f,nota:'',peso:'2'});n++});
   if(!n){toast('No hay filas para importar');return}run('agregarActividades',nuevas).then(()=>{$('#bulkTxt').value='';cerrarModal('m-bulk');toast(`${n} actividad(es) importada(s)`+(bad.length?` · revisar fecha en fila(s): ${bad.join(', ')}`:''))}).catch(()=>{});
 };
 
