@@ -102,6 +102,33 @@ td .muted{font-size:12px}
 .opc label b{display:block;font-size:13px;margin-bottom:2px}.opc label span{font-size:11.5px;color:var(--muted)}
 .opc label.sel{border-color:var(--pri);background:#eef4fb;box-shadow:0 0 0 1px var(--pri)}
 .opc.dis{opacity:.4;pointer-events:none}
+.mlegend{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);margin:0 0 16px;align-items:center}.mlegend span{display:inline-flex;align-items:center;gap:6px}
+.ringdot{width:12px;height:12px;border-radius:50%;border:3px solid var(--crit);display:inline-block}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0}.d-crit{background:var(--crit)}.d-imp{background:#d97706}.d-des{background:var(--pri2)}.d-desp{background:#94a3b8}
+.oe{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 20px 6px;margin-bottom:14px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.oe.sin{background:#fafbfc;border-style:dashed}
+.oeh{display:flex;align-items:center;gap:14px;padding-bottom:12px}
+.code{font-size:11px;font-weight:700;color:#fff;background:var(--pri);border-radius:6px;padding:3px 8px;flex-shrink:0;letter-spacing:.02em}
+.code.t{background:#e8f0fb;color:var(--pri2)}.code.n{background:#e2e8f0;color:#64748b}
+.oet{flex:1;min-width:0}.oet b{font-size:15px;display:block;line-height:1.3}.oet small{color:var(--muted);font-size:12px}
+.oep{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.ringw{position:relative;width:54px;height:54px}.ring{width:54px;height:54px;transform:rotate(-90deg)}
+.rbg{fill:none;stroke:#eef1f5;stroke-width:3.4}.rfg{fill:none;stroke:var(--crit);stroke-width:3.4;stroke-linecap:round}
+.rv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700}
+.pl{font-size:11.5px;color:var(--muted);line-height:1.4}.pl b{color:var(--pri2)}
+details.ot{border-top:1px solid #f1f4f7}
+details.ot summary{list-style:none;display:grid;grid-template-columns:auto 1fr 140px 42px 18px;gap:14px;align-items:center;padding:11px 2px;cursor:pointer}
+details.ot summary::-webkit-details-marker{display:none}
+details.ot summary:hover .otn{color:var(--pri2)}
+.otn{font-size:13.5px;min-width:0}.otn small{display:block;color:#94a3b8;font-size:11.5px;margin-top:1px}
+.opc2{font-weight:700;text-align:right;font-size:13px}
+.chev{width:14px;height:14px;color:#94a3b8;transition:transform .2s}details[open] .chev{transform:rotate(90deg)}
+.inis{display:flex;flex-wrap:wrap;gap:8px;padding:2px 2px 14px 50px}
+.ich{display:inline-flex;align-items:center;gap:7px;background:var(--soft);border-radius:20px;padding:5px 12px;font-size:12.5px;max-width:100%}
+.ich b{font-weight:700;margin-left:2px}
+.ich span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:320px}
+.inis .none{font-size:12px;color:#94a3b8}
+@media (max-width:900px){details.ot summary{grid-template-columns:auto 1fr 42px 18px}details.ot summary .bar{display:none}.inis{padding-left:2px}.oeh{flex-wrap:wrap}}
 .selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:6vh 16px;overflow:auto}
 .modal.on{display:flex}
@@ -188,8 +215,8 @@ td .muted{font-size:12px}
 </section>
 
 <section class="tab" id="mapa">
-  <p class="hint">OE → OT → Iniciativa · barra: avance de críticas.</p>
-  <div class="card tree" id="mapView"></div>
+  <div class="mlegend"><span><i class="ringdot"></i>Avance de críticas</span><span><i class="dot d-crit"></i>Crítica</span><span><i class="dot d-imp"></i>Importante</span><span><i class="dot d-des"></i>Deseable</span><span><i class="dot d-desp"></i>Después</span><span class="muted">· Clic en un objetivo táctico para ver sus iniciativas</span></div>
+  <div id="mapView"></div>
 </section>
 
 <section class="tab" id="seguimiento">
@@ -497,16 +524,30 @@ function renderCriticas(){
 function renderMapa(){
   const yr=Number(db.plan.anioActivo),inis=iniAnio();
   const tacsY=db.tacticos.filter(t=>Number(t.anio)===yr);
-  const iniNode=i=>{const s=stats(actsOf(i));return `<li><div class="node"><span class="lvl i">INI</span>${esc(i.nombre)} ${bP(i.prioridad)}${pb(s.pct,i.prioridad==='Crítica'?'c':'')}<b>${s.pct}%</b></div></li>`};
-  const tacNode=t=>{const ti=inis.filter(i=>i.tacticoId===t.id),s=statsAv(ti),g=statsInis(ti);return `<li><div class="node"><span class="lvl t">OT</span><b>${esc(tacLbl(t))}</b>${pb(s.pct,'c')}<b>${s.pct}%</b><span class="muted">críticas · general ${g.pct}%</span>${t.meta?`<span class="muted">Meta: ${esc(t.meta)}</span>`:''}</div>${ti.length?`<ul>${ti.map(iniNode).join('')}</ul>`:''}</li>`};
+  const DOT={'Crítica':'d-crit','Importante':'d-imp','Deseable':'d-des','Después':'d-desp'};
+  const ring=pct=>`<div class="ringw"><svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="15.5" class="rbg"/><circle cx="18" cy="18" r="15.5" class="rfg" stroke-dasharray="${(pct*0.974).toFixed(1)} 97.4"/></svg><span class="rv">${pct}%</span></div>`;
+  const chev='<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>';
+  const chip=i=>{const s=stats(actsOf(i));return `<span class="ich" title="${esc(i.nombre)} · ${esc(i.prioridad)} · ${s.done}/${s.total} actividades"><i class="dot ${DOT[i.prioridad]||'d-desp'}"></i><span>${esc(i.nombre)}</span><b>${s.pct}%</b></span>`};
+  const otRow=(t,code,nombre,ti)=>{const s=statsAv(ti),g=statsInis(ti),nc=ti.filter(CUENTA).length;
+    return `<details class="ot"><summary title="${esc(nombre)}"><span class="code ${code==='—'?'n':'t'}">${esc(code)}</span><span class="otn">${esc(corto(nombre))}<small>${ti.length} iniciativa${ti.length===1?'':'s'}${nc?` · ${nc} crítica${nc===1?'':'s'}`:''} · general ${g.pct}%</small></span>${pb(s.pct,'c')}<span class="opc2">${s.pct}%</span>${chev}</summary>
+      <div class="inis">${ti.length?ti.sort((a,b)=>prioOrd(a.prioridad)-prioOrd(b.prioridad)).map(chip).join(''):'<span class="none">Sin iniciativas vinculadas.</span>'}</div></details>`};
   let h='';
-  db.estrategicos.forEach(e=>{const ts=tacsY.filter(t=>t.estrategicoId===e.id);const allT=db.tacticos.filter(t=>t.estrategicoId===e.id).map(t=>t.id);const iAll=db.iniciativas.filter(i=>allT.includes(i.tacticoId)&&i.prioridad!==REV),sAll=statsAv(iAll),gAll=statsInis(iAll);
-    h+=`<li><div class="node"><span class="lvl">OE</span><b>${esc(estLbl(e))}</b>${e.anioMeta?`<span class="muted">Meta ${esc(e.anioMeta)}</span>`:''}${pb(sAll.pct,'c')}<b>${sAll.pct}%</b><span class="muted">críticas · general ${gAll.pct}% (acumulado todos los años)</span></div>${ts.length?`<ul>${ts.map(tacNode).join('')}</ul>`:`<ul><li class="muted">Sin objetivos tácticos en ${yr}.</li></ul>`}</li>`});
+  db.estrategicos.forEach(e=>{
+    const ts=tacsY.filter(t=>t.estrategicoId===e.id);
+    const allT=db.tacticos.filter(t=>t.estrategicoId===e.id).map(t=>t.id);
+    const iAll=db.iniciativas.filter(i=>allT.includes(i.tacticoId)&&i.prioridad!==REV),sAll=statsAv(iAll),gAll=statsInis(iAll);
+    h+=`<div class="oe"><div class="oeh"><span class="code">${esc(e.codigo||'OE')}</span>
+      <div class="oet"><b>${esc(e.nombre)}</b><small>${e.anioMeta?`Meta ${esc(e.anioMeta)} · `:''}${ts.length} objetivo${ts.length===1?'':'s'} táctico${ts.length===1?'':'s'} en ${yr}</small></div>
+      <div class="oep">${ring(sAll.pct)}<div class="pl">críticas<br>general <b>${gAll.pct}%</b></div></div></div>
+      ${ts.map(t=>otRow(t,t.codigo||'OT',t.nombre,inis.filter(i=>i.tacticoId===t.id))).join('')}</div>`});
   const tSin=tacsY.filter(t=>!byId(db.estrategicos,t.estrategicoId));
-  if(tSin.length)h+=`<li><div class="node"><span class="lvl" style="background:#999">—</span><b>Objetivos tácticos sin objetivo estratégico</b></div><ul>${tSin.map(tacNode).join('')}</ul></li>`;
   const iSin=inis.filter(i=>!byId(db.tacticos,i.tacticoId));
-  if(iSin.length)h+=`<li><div class="node"><span class="lvl" style="background:#999">—</span><b>Iniciativas sin objetivo táctico</b></div><ul>${iSin.map(iniNode).join('')}</ul></li>`;
-  $('#mapView').innerHTML=h?`<ul>${h}</ul>`:'<div class="empty">Sin objetivos cargados.</div>';
+  if(tSin.length||iSin.length){
+    h+=`<div class="oe sin"><div class="oeh"><span class="code n">—</span><div class="oet"><b>Sin vincular</b><small>Elementos sin objetivo superior asignado</small></div></div>
+      ${tSin.map(t=>otRow(t,t.codigo||'OT',t.nombre,inis.filter(i=>i.tacticoId===t.id))).join('')}
+      ${iSin.length?otRow(null,'—','Iniciativas sin objetivo táctico',iSin):''}</div>`;
+  }
+  $('#mapView').innerHTML=h||'<div class="card empty">Sin objetivos cargados.</div>';
 }
 
 /* ---------- SEGUIMIENTO ---------- */
