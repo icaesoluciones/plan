@@ -5,128 +5,151 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seguimiento de Planificación Estratégica</title>
 <style>
-:root{--bg:#f3f5f8;--card:#fff;--ink:#1c2433;--muted:#667085;--line:#e2e6ed;--pri:#1f3a5f;--pri2:#2f5d8f;--ok:#1d8a57;--warn:#c98400;--bad:#c4372c;--crit:#8a1c3c;--soft:#eef2f7}
+:root{--bg:#f5f7fa;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e8ecf1;--pri:#1f3a5f;--pri2:#2f6db5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--crit:#9f1239;--soft:#f1f5f9;--side:#14243b}
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
-header{background:var(--pri);color:#fff;padding:14px 22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
-header h1{font-size:18px;margin:0;font-weight:600}
-header .sub{font-size:12px;opacity:.8}
-header .ctl{display:flex;gap:8px;align-items:center;font-size:13px}
-header select{padding:5px 8px;border-radius:6px;border:0;font-size:13px}
-nav{background:#fff;border-bottom:1px solid var(--line);padding:0 16px;display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;position:sticky;top:0;z-index:5}
-nav .grp{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
-nav .lbl{font-size:10px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-right:6px;font-weight:600}
-nav button{background:none;border:0;border-bottom:3px solid transparent;padding:12px 10px 9px;cursor:pointer;font-size:13px;color:var(--muted)}
-nav button.on{color:var(--pri);border-bottom-color:var(--pri);font-weight:600}
-nav button:hover{color:var(--pri)}
-main{padding:20px;max-width:1300px;margin:0 auto}
+body{margin:0;font-family:Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.45}
+.app{display:flex;min-height:100vh}
+.side{width:236px;background:var(--side);color:#cbd5e1;position:sticky;top:0;height:100vh;overflow-y:auto;padding:18px 12px;flex-shrink:0}
+.brand{padding:4px 10px 16px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:6px}
+.brand h1{font-size:15px;color:#fff;margin:0;font-weight:600;line-height:1.3}
+.brand .sub{font-size:12px;color:#94a3b8;margin-top:4px}
+nav .lbl{display:block;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#64748b;padding:16px 10px 6px;font-weight:600}
+nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;color:#cbd5e1;padding:9px 10px;border-radius:8px;font-size:13.5px;cursor:pointer;text-align:left;margin:1px 0}
+nav button svg{width:18px;height:18px;flex-shrink:0;opacity:.9;pointer-events:none}
+nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+nav button.on{background:#fff;color:var(--pri);font-weight:600}
+.mainwrap{flex:1;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 28px;background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+#pgTitle{font-size:19px;margin:0;font-weight:700}
+.ctl{display:flex;align-items:center;gap:8px}
+.ctl label{margin:0;font-size:12px}
+.ctl select{width:auto;padding:6px 10px}
+#sync{font-size:12px;color:var(--muted);margin:0 4px}
+.ib{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:#fff;color:#475569;cursor:pointer;padding:0}
+.ib:hover{background:var(--soft);color:var(--ink)}
+.ib svg,.btn svg{width:17px;height:17px;pointer-events:none}
+.ib.sm{width:30px;height:30px}.ib.sm svg{width:15px;height:15px}
+.ib.del:hover{color:var(--bad);border-color:#fecaca;background:#fef2f2}
+main{padding:24px 28px;max-width:1300px}
 section.tab{display:none}section.tab.on{display:block}
-h2{font-size:17px;margin:0 0 4px}h3{font-size:15px;margin:0 0 10px}
+h2{font-size:17px;margin:0 0 4px}h3{font-size:14.5px;margin:0 0 12px;font-weight:600}
 .hint{color:var(--muted);font-size:12.5px;margin:0 0 16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
-.grid{display:grid;gap:16px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(460px,1fr))}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
-.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px}
-.kpi .v{font-size:26px;font-weight:700;color:var(--pri)}
-.kpi .t{font-size:12px;color:var(--muted);margin-top:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.chead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap}.chead h3{margin:0}
+.chead .sub{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px}
+.grid{display:grid;gap:18px}.g2{grid-template-columns:repeat(auto-fit,minmax(440px,1fr))}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.kpi .v{font-size:26px;font-weight:700;color:var(--pri);letter-spacing:-.02em;line-height:1.1}
+.kpi .t{font-size:12px;color:var(--muted);margin-top:4px}
+.kpi .bar{margin-top:10px}
 .kpi.crit .v{color:var(--crit)}.kpi.bad .v{color:var(--bad)}.kpi.ok .v{color:var(--ok)}
-form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 14px;align-items:start}
+form.f{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;align-items:start}
 form.f .full{grid-column:1/-1}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px;font-weight:600}
-input,select,textarea{width:100%;padding:8px 9px;border:1px solid #cfd6e0;border-radius:6px;font:inherit;background:#fff}
-textarea{min-height:60px;resize:vertical}
-.btns{display:flex;gap:8px;flex-wrap:wrap}
-.btn{background:var(--pri);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:13px;font-weight:600}
-.btn:hover{background:var(--pri2)}
-.btn.sec{background:#fff;color:var(--pri);border:1px solid #c5cfdc}
-.btn.dan{background:#fff;color:var(--bad);border:1px solid #e8b4b0}
-.btn.sm{padding:4px 9px;font-size:12px;font-weight:500}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;border-bottom:2px solid var(--line);padding:8px 8px}
-td{border-bottom:1px solid var(--line);padding:8px;vertical-align:top}
-tr.done td{color:#8a94a6}tr.done td.nm{text-decoration:line-through}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
-.pr-crit{background:#f7e1e8;color:var(--crit)}.pr-imp{background:#fdebd3;color:#a35f00}.pr-des{background:#e3ecf7;color:var(--pri2)}.pr-desp{background:#ecefef;color:#5d6670}.pr-rev{background:#f3e8ff;color:#6b3fa0}
-.blk{border-radius:12px;padding:16px 16px 2px;margin-bottom:18px;border:1px solid var(--line);background:#fff}
-.blk.crit{border-top:5px solid var(--crit)}.blk.gen{border-top:5px solid var(--pri2)}
-.blk .card{box-shadow:none}.blkh{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}.blkh h2{margin:0}.blkh span{color:var(--muted);font-size:12.5px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}.chips button{border:1.5px solid #cfd6e0;background:#fff;border-radius:20px;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--ink)}.chips button.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}.chips button small{opacity:.75;margin-left:4px}
-.selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+input,select,textarea{width:100%;padding:9px 11px;border:1px solid #d6dde6;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pri2);box-shadow:0 0 0 3px rgba(47,109,181,.12)}
+input.ro{background:var(--soft);color:var(--muted);cursor:default}
+textarea{min-height:64px;resize:vertical}
 select{text-overflow:ellipsis}
-.opc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
-.opc label{display:block;border:1.5px solid #cfd6e0;border-radius:8px;padding:9px 11px;cursor:pointer;color:var(--ink);font-weight:400;margin:0;background:#fff}
-.opc label b{display:block;font-size:13px;margin-bottom:2px}.opc label span{font-size:12px;color:var(--muted)}
-.opc input{display:none}.opc label.sel{border-color:var(--pri);background:#eef3fa;box-shadow:0 0 0 1px var(--pri)}
-.opc.dis{opacity:.4;pointer-events:none}
-.s-ok{background:#ddf3e8;color:var(--ok)}.s-venc{background:#fbe2df;color:var(--bad)}.s-prox{background:#fff1d1;color:#9a6500}.s-pend{background:#eceff3;color:#5d6670}
-.bar{height:9px;background:#e6eaf0;border-radius:6px;overflow:hidden;min-width:80px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+form.f .btns{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(--line);padding-top:14px;margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--pri);color:#fff;border:0;border-radius:8px;padding:9px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.btn:hover{background:#264a78}
+.btn.sec{background:#fff;color:var(--ink);border:1px solid #d6dde6}.btn.sec:hover{background:var(--soft)}
+.btn.dan{background:#fff;color:var(--bad);border:1px solid #fecaca}
+.btn.sm{padding:6px 11px;font-size:12.5px;font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line);padding:8px 10px;font-weight:600}
+td{border-bottom:1px solid #f1f4f7;padding:10px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#fafbfd}
+tr.done td{color:#9aa3af}tr.done td.nm{text-decoration:line-through}
+td .muted{font-size:12px}
+.acts{white-space:nowrap;text-align:right;width:1%}
+.badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.pr-crit{background:#fde8ee;color:var(--crit)}.pr-imp{background:#fef3e2;color:#b45309}.pr-des{background:#e8f0fb;color:var(--pri2)}.pr-desp{background:#f1f5f9;color:#64748b}.pr-rev{background:#f3e8ff;color:#7e22ce}
+.s-ok{background:#dcfce7;color:#15803d}.s-venc{background:#fee2e2;color:#b91c1c}.s-prox{background:#fef3c7;color:#a16207}.s-pend{background:#f1f5f9;color:#64748b}
+.bar{height:8px;background:#eef1f5;border-radius:6px;overflow:hidden;min-width:60px}
 .bar>i{display:block;height:100%;background:var(--pri2);border-radius:6px}
 .bar.c>i{background:var(--crit)}.bar.g>i{background:var(--ok)}
-.prow{display:grid;grid-template-columns:minmax(140px,1.4fr) 3fr 52px;gap:10px;align-items:center;margin:9px 0}
-.prow .n{font-size:13px}.prow .n small{display:block;color:var(--muted);font-size:11.5px}
+.prow{display:grid;grid-template-columns:minmax(140px,1.3fr) 3fr 46px;gap:12px;align-items:center;margin:12px 0}
+.prow .n{font-size:13px;font-weight:500}.prow .n small{display:block;color:#94a3b8;font-size:11.5px;font-weight:400;margin-top:1px}
 .prow .pc{text-align:right;font-weight:700;font-size:13px}
-.empty{color:var(--muted);font-style:italic;padding:12px 0}
+.empty{color:#94a3b8;padding:14px 0;font-size:13px}
 .pilar{border-left:4px solid var(--pri2)}
 .pilar .desc{color:var(--muted);font-size:13px;margin:-4px 0 12px}
-.tree ul{list-style:none;margin:0;padding-left:22px;border-left:1px dashed #c9d2de}
-.tree>ul{padding-left:0;border:0}
-.tree li{margin:8px 0}
-.tree .node{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tree .node b{font-weight:600}
-.tree .node .bar{width:140px}
-.lvl{font-size:10px;font-weight:700;color:#fff;background:var(--pri);padding:2px 6px;border-radius:4px}
-.lvl.t{background:var(--pri2)}.lvl.i{background:#6b7f99}
-.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
-.filters>div{min-width:150px;flex:1}
-.toast{position:fixed;bottom:18px;right:18px;background:var(--ink);color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:20}
-.toast.on{opacity:.92}
+.tree ul{list-style:none;margin:0;padding-left:22px;border-left:1px dashed #d6dde6}.tree>ul{padding-left:0;border:0}
+.tree li{margin:10px 0}.tree .node{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tree .node b{font-weight:600}.tree .node .bar{width:140px}
+.lvl{font-size:10px;font-weight:700;color:#fff;background:var(--pri);padding:2px 6px;border-radius:4px}.lvl.t{background:var(--pri2)}.lvl.i{background:#94a3b8}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:flex-end}
+.filters>div{min-width:140px;flex:1}
+.filters label{font-size:11px}
+.filters select{padding:7px 9px;font-size:13px}
+.toast{position:fixed;bottom:18px;right:18px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:60}
+.toast.on{opacity:.94}
 .muted{color:var(--muted)}.right{text-align:right}.nowrap{white-space:nowrap}
 .chk{width:18px;height:18px;cursor:pointer;accent-color:var(--ok)}
-.editing{outline:2px solid var(--warn);outline-offset:2px}
-@media print{header .ctl,nav,.btn,.noprint,form.f{display:none!important}section.tab{display:none!important}section.tab.on{display:block!important}body{background:#fff}.card{break-inside:avoid}}
+.blk{border-radius:14px;padding:18px 18px 2px;margin-bottom:20px;border:1px solid var(--line);background:#fff}
+.blk.crit{border-top:4px solid var(--crit)}.blk.gen{border-top:4px solid var(--pri2)}
+.blk .card{box-shadow:none;border-color:#eef1f5}
+.blkh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px}.blkh h2{margin:0;font-size:16px}.blkh span{color:var(--muted);font-size:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1px solid #d6dde6;background:#fff;border-radius:20px;padding:5px 12px;font-size:12.5px;cursor:pointer;color:var(--ink);font-family:inherit}
+.chips button.on{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}.chips button small{opacity:.7;margin-left:4px}
+.opc{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.opc label{display:block;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 12px;cursor:pointer;color:var(--ink);font-weight:400;margin:0;background:#fff}
+.opc label b{display:block;font-size:13px;margin-bottom:2px}.opc label span{font-size:11.5px;color:var(--muted)}
+.opc label.sel{border-color:var(--pri);background:#eef4fb;box-shadow:0 0 0 1px var(--pri)}
+.opc.dis{opacity:.4;pointer-events:none}
+.selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:6vh 16px;overflow:auto}
+.modal.on{display:flex}
+.sheet{background:#fff;border-radius:16px;width:100%;max-width:640px;box-shadow:0 24px 60px rgba(15,23,42,.25);padding:20px 22px}
+.sheet.w{max-width:880px}
+.mhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.mhead h3{margin:0;font-size:16px}
+.x{border:0;background:none;font-size:26px;line-height:1;color:#94a3b8;cursor:pointer;padding:0 4px}.x:hover{color:var(--ink)}
+.warn{border:1px solid #fecaca;background:#fef2f2;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+@media (max-width:900px){.app{display:block}.side{position:static;width:auto;height:auto;padding:10px 10px 6px}.brand{border:0;padding:2px 6px 8px;margin:0}nav{display:flex;overflow-x:auto;gap:2px}nav .lbl{display:none}nav button{width:auto;white-space:nowrap;padding:8px 10px}main{padding:16px}.topbar{padding:10px 16px;position:static}.g2{grid-template-columns:1fr}.prow{grid-template-columns:1fr 2fr 40px}}
+@media print{.side,.topbar .ctl,.btn,.ib,.noprint,.modal,.chips,.filters{display:none!important}section.tab{display:none!important}section.tab.on{display:block!important}body{background:#fff}.card,.blk{break-inside:avoid}.app{display:block}}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1 id="hTitle">Seguimiento de Planificación Estratégica</h1>
-    <div class="sub" id="hSub"></div>
-  </div>
+<div class="app">
+<aside class="side">
+  <div class="brand"><h1 id="hTitle">Plan Estratégico</h1><div class="sub" id="hSub"></div></div>
+  <nav>
+    <span class="lbl">Ver</span>
+    <button data-t="resumen" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg><span>Resumen</span></button>
+    <button data-t="pilares-v"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/></svg><span>Avance por pilar</span></button>
+    <button data-t="criticas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span>Iniciativas críticas</span></button>
+    <button data-t="mapa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg><span>Mapa estratégico</span></button>
+    <button data-t="seguimiento"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="m8 12 3 3 5-6"/></svg><span>Seguimiento</span></button>
+    <span class="lbl">Gestionar</span>
+    <button data-t="c-plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg><span>Plan y objetivos</span></button>
+    <button data-t="c-pilares"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M10 20V10M14 20V10M19 20V10M3 20h18M12 4 3 9h18z"/></svg><span>Pilares</span></button>
+    <button data-t="c-ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Iniciativas</span></button>
+    <button data-t="c-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span>Actividades</span></button>
+    <button data-t="c-datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg><span>Respaldo</span></button>
+  </nav>
+</aside>
+<div class="mainwrap">
+<div class="topbar">
+  <h2 id="pgTitle">Resumen</h2>
   <div class="ctl">
-    <span>Año en seguimiento:</span>
-    <select id="selAnio"></select>
-    <span id="sync" style="font-size:12px;opacity:.85;min-width:150px;text-align:right">Cargando…</span>
-    <button class="btn sec sm" id="btnRef">Actualizar</button>
-    <button class="btn sec sm" onclick="window.print()">Imprimir vista</button>
+    <label for="selAnio">Año</label><select id="selAnio"></select>
+    <span id="sync">Cargando…</span>
+    <button class="ib" id="btnRef" title="Actualizar datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg></button>
+    <button class="ib" onclick="window.print()" title="Imprimir esta vista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></button>
   </div>
-</header>
-
-<nav>
-  <div class="grp"><span class="lbl">Visualizar</span>
-    <button data-t="resumen" class="on">Resumen</button>
-    <button data-t="pilares-v">Avance por pilar</button>
-    <button data-t="criticas">Iniciativas críticas</button>
-    <button data-t="mapa">Mapa estratégico</button>
-    <button data-t="seguimiento">Seguimiento de actividades</button>
-  </div>
-  <div class="grp"><span class="lbl">Cargar</span>
-    <button data-t="c-plan">Plan y objetivos</button>
-    <button data-t="c-pilares">Pilares</button>
-    <button data-t="c-ini">Iniciativas</button>
-    <button data-t="c-act">Actividades</button>
-    <button data-t="c-datos">Respaldo</button>
-  </div>
-</nav>
-
+</div>
 <main>
 <!-- ================= VISUALIZAR ================= -->
 <section class="tab on" id="resumen">
-  <h2>Resumen</h2>
   <p class="hint" id="resHint"></p>
 
   <div class="blk crit">
-    <div class="blkh"><h2>1. Avance de iniciativas críticas</h2><span>Solo iniciativas <b>Ahora · Crítica</b></span></div>
+    <div class="blkh"><h2>Avance de críticas</h2><span>Ahora · Crítica</span></div>
     <div class="kpis" id="kpisC"></div>
     <div class="grid g2">
       <div class="card"><h3>Por pilar</h3><div id="cPil"></div></div>
@@ -137,7 +160,7 @@ select{text-overflow:ellipsis}
   </div>
 
   <div class="blk gen">
-    <div class="blkh"><h2>2. Avance general</h2><span>Todas las iniciativas, excepto <b>Descartar / Revisar</b></span></div>
+    <div class="blkh"><h2>Avance general</h2><span>Todas, excepto Descartar / Revisar</span></div>
     <div class="kpis" id="kpisG"></div>
     <div class="grid g2">
       <div class="card"><h3>Por pilar</h3><div id="gPil"></div></div>
@@ -149,32 +172,28 @@ select{text-overflow:ellipsis}
 
   <div class="grid g2">
     <div class="card"><h3>Actividades vencidas y próximas (15 días)</h3><div id="resAlert"></div></div>
-    <div class="card"><h3>Iniciativas para descartar / revisar</h3><p class="hint" style="margin:-4px 0 8px">No cuentan en ningún avance.</p><div id="resRev"></div></div>
+    <div class="card"><h3>Descartar / revisar <span class="muted" style="font-weight:400;font-size:12px">· no suman al avance</span></h3><div id="resRev"></div></div>
   </div>
 </section>
 
 <section class="tab" id="pilares-v">
-  <h2>Avance por pilar</h2>
-  <p class="hint"><b>Avance críticas:</b> solo iniciativas Ahora · Crítica. <b>Avance general:</b> todas excepto Descartar / Revisar. Cada iniciativa muestra su propio avance.</p>
+  <p class="hint">Barra vino: críticas · barra azul: general.</p>
   <div id="pilView"></div>
 </section>
 
 <section class="tab" id="criticas">
-  <h2>Iniciativas críticas</h2>
-  <p class="hint">Iniciativas <b>Ahora · Crítica</b> del año en seguimiento, con el detalle de sus actividades.</p>
+  
   <div class="kpis" id="critKpis"></div>
   <div id="critView"></div>
 </section>
 
 <section class="tab" id="mapa">
-  <h2>Mapa estratégico</h2>
-  <p class="hint">Alineación Objetivo estratégico → Objetivo táctico (año en seguimiento) → Iniciativa. Cada objetivo muestra el avance de críticas (barra) y el general.</p>
+  <p class="hint">OE → OT → Iniciativa · barra: avance de críticas.</p>
   <div class="card tree" id="mapView"></div>
 </section>
 
 <section class="tab" id="seguimiento">
-  <h2>Seguimiento de actividades</h2>
-  <p class="hint">Marque la casilla para dar una actividad por completada. Se registra la fecha de cierre automáticamente.</p>
+  <p class="hint">Marque la casilla al terminar una actividad.</p>
   <div class="card">
     <div class="filters">
       <div><label>Pilar</label><select id="fPil"></select></div>
@@ -189,129 +208,123 @@ select{text-overflow:ellipsis}
 
 <!-- ================= CARGAR ================= -->
 <section class="tab" id="c-plan">
-  <h2>Plan y objetivos</h2>
-  <p class="hint">Defina el horizonte del plan, los objetivos estratégicos (largo plazo) y los objetivos tácticos de cada año.</p>
   <div class="card">
     <h3>Datos del plan</h3>
-    <form class="f" id="fmPlan">
+    <form class="f" id="fmPlan" style="grid-template-columns:2fr 2fr 1fr 1fr auto;align-items:end">
       <div><label>Empresa / Cliente</label><input name="empresa"></div>
-      <div><label>Nombre del plan</label><input name="nombre" placeholder="Ej.: Plan Estratégico 2026-2030"></div>
-      <div><label>Año de inicio</label><input name="anioInicio" type="number" min="2000" max="2100" required></div>
-      <div><label>Año horizonte (hasta)</label><input name="anioHorizonte" type="number" min="2000" max="2100" required></div>
-      <div class="btns"><button class="btn">Guardar plan</button></div>
+      <div><label>Nombre del plan</label><input name="nombre" placeholder="Plan Estratégico 2027-2029"></div>
+      <div><label>Desde</label><input name="anioInicio" type="number" min="2000" max="2100" required></div>
+      <div><label>Hasta</label><input name="anioHorizonte" type="number" min="2000" max="2100" required></div>
+      <div><button class="btn">Guardar</button></div>
     </form>
   </div>
+  <div id="codWarn"></div>
   <div class="card">
-    <h3>Objetivos estratégicos</h3>
-    <form class="f" id="fmEst">
+    <div class="chead"><h3>Objetivos estratégicos<span class="sub">OE1, OE2… automáticos</span></h3><div class="btns"><button type="button" class="btn sec sm" id="btnRenum" title="Reordenar códigos OE / OT"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14M5 15h14M10 4 8 20M16 4l-2 16"/></svg>Renumerar</button><button type="button" class="btn sm" data-new="est"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo</button></div></div>
+    <div id="tbEst"></div>
+  </div>
+  <div class="card">
+    <div class="chead"><h3>Objetivos tácticos<span class="sub">OT1, OT2… por año</span></h3><div class="btns"><button type="button" class="btn sm" data-new="tac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo</button></div></div>
+    <div id="tbTac"></div>
+  </div>
+  <div class="modal" id="m-est"><div class="sheet"><div class="mhead"><h3 data-tn="Nuevo objetivo estratégico" data-te="Editar objetivo estratégico">Nuevo objetivo estratégico</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmEst">
       <input type="hidden" name="id">
-      <div><label>Código</label><input name="codigo" placeholder="OE1"></div>
-      <div style="grid-column:span 2"><label>Objetivo estratégico *</label><input name="nombre" required></div>
-      <div><label>Año meta (hasta)</label><input name="anioMeta" type="number" min="2000" max="2100"></div>
+      <div><label>Código</label><input name="codigo" readonly tabindex="-1" class="ro" placeholder="Automático"></div>
+      <div><label>Año meta</label><input name="anioMeta" type="number" min="2000" max="2100"></div>
+      <div class="full"><label>Objetivo estratégico *</label><input name="nombre" required></div>
       <div class="full"><label>Descripción / indicador</label><textarea name="descripcion"></textarea></div>
-      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
-    <div id="tbEst" style="margin-top:14px"></div>
-  </div>
-  <div class="card">
-    <h3>Objetivos tácticos (por año)</h3>
-    <form class="f" id="fmTac">
+</div></div>
+  <div class="modal" id="m-tac"><div class="sheet"><div class="mhead"><h3 data-tn="Nuevo objetivo táctico" data-te="Editar objetivo táctico">Nuevo objetivo táctico</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmTac">
       <input type="hidden" name="id">
-      <div><label>Código</label><input name="codigo" placeholder="OT1"></div>
-      <div style="grid-column:span 2"><label>Objetivo táctico *</label><input name="nombre" required></div>
+      <div><label>Código</label><input name="codigo" readonly tabindex="-1" class="ro" placeholder="Automático"></div>
       <div><label>Año *</label><input name="anio" type="number" min="2000" max="2100" required></div>
-      <div><label>Objetivo estratégico al que aporta</label><select name="estrategicoId" data-full></select><div class="selfull"></div></div>
-      <div style="grid-column:span 2"><label>Meta / indicador</label><input name="meta"></div>
-      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+      <div class="full"><label>Objetivo táctico *</label><input name="nombre" required></div>
+      <div class="full"><label>Aporta al objetivo estratégico</label><select name="estrategicoId" data-full></select><div class="selfull"></div></div>
+      <div class="full"><label>Meta / indicador</label><input name="meta"></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
-    <div id="tbTac" style="margin-top:14px"></div>
-  </div>
+</div></div>
 </section>
 
 <section class="tab" id="c-pilares">
-  <h2>Pilares</h2>
-  <p class="hint">Los pilares agrupan las iniciativas. Registre el nombre y su descriptivo.</p>
   <div class="card">
-    <form class="f" id="fmPil">
-      <input type="hidden" name="id">
-      <div><label>Nombre del pilar *</label><input name="nombre" required></div>
-      <div style="grid-column:span 2"><label>Descriptivo</label><textarea name="descripcion"></textarea></div>
-      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
-    </form>
-    <div id="tbPil" style="margin-top:14px"></div>
+    <div class="chead"><h3>Pilares</h3><div class="btns"><button type="button" class="btn sm" data-new="pil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo pilar</button></div></div>
+    <div id="tbPil"></div>
   </div>
+  <div class="modal" id="m-pil"><div class="sheet"><div class="mhead"><h3 data-tn="Nuevo pilar" data-te="Editar pilar">Nuevo pilar</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmPil">
+      <input type="hidden" name="id">
+      <div class="full"><label>Nombre del pilar *</label><input name="nombre" required></div>
+      <div class="full"><label>Descriptivo</label><textarea name="descripcion"></textarea></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
+    </form>
+</div></div>
 </section>
 
 <section class="tab" id="c-ini">
-  <h2>Iniciativas</h2>
-  <p class="hint">Cada iniciativa pertenece a un pilar, tiene prioridad y puede vincularse a un objetivo táctico (de ahí toma el año).</p>
   <div class="card">
-    <form class="f" id="fmIni">
-      <input type="hidden" name="id">
-      <div><label>Pilar *</label><select name="pilarId" required></select></div>
-      <div style="grid-column:span 2"><label>Iniciativa *</label><input name="nombre" required></div>
-      <div><label>Objetivo táctico</label><select name="tacticoId" data-full></select><div class="selfull"></div></div>
-      <div><label>Año (si no tiene objetivo táctico)</label><input name="anio" type="number" min="2000" max="2100"></div>
-      <div><label>Líder / responsable</label><input name="responsable" list="dlResp"></div>
-      <div class="full"><label>Descripción</label><textarea name="descripcion"></textarea></div>
-      <input type="hidden" name="prioridad">
-      <div class="full"><label>1. ¿Cuándo? *</label><div class="opc" id="opHor"></div></div>
-      <div class="full"><label>2. Prioridad (solo para "Ahora") *</label><div class="opc" id="opNiv"></div></div>
-      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
-    </form>
-  </div>
-  <div class="card">
-    <div class="filters"><div style="max-width:260px"><label>Filtrar por pilar</label><select id="fIniPil"></select></div></div>
+    <div class="chead"><div class="filters" style="margin:0;flex:1;max-width:300px"><div><label>Pilar</label><select id="fIniPil"></select></div></div><div class="btns"><button type="button" class="btn sm" data-new="ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nueva iniciativa</button></div></div>
     <div id="tbIni"></div>
   </div>
+  <div class="modal" id="m-ini"><div class="sheet w"><div class="mhead"><h3 data-tn="Nueva iniciativa" data-te="Editar iniciativa">Nueva iniciativa</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmIni">
+      <input type="hidden" name="id">
+      <div class="full"><label>Iniciativa *</label><input name="nombre" required></div>
+      <div><label>Pilar *</label><select name="pilarId" required></select></div>
+      <div><label>Líder</label><input name="responsable" list="dlResp"></div>
+      <div><label>Objetivo táctico</label><select name="tacticoId" data-full></select><div class="selfull"></div></div>
+      <div><label>Año <span style="font-weight:400">(si no tiene objetivo)</span></label><input name="anio" type="number" min="2000" max="2100"></div>
+      <div class="full"><label>Descripción</label><textarea name="descripcion"></textarea></div>
+      <input type="hidden" name="prioridad">
+      <div class="full"><label>¿Cuándo? *</label><div class="opc" id="opHor"></div></div>
+      <div class="full"><label>Prioridad <span style="font-weight:400">(solo para Ahora)</span> *</label><div class="opc" id="opNiv"></div></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
+    </form>
+</div></div>
 </section>
 
 <section class="tab" id="c-act">
-  <h2>Actividades</h2>
-  <p class="hint">Actividades necesarias para ejecutar cada iniciativa: actividad, responsable y fecha estimada de terminación.</p>
   <div class="card">
-    <label>Trabajar con iniciativas de tipo</label>
-    <div class="chips" id="actTipo"></div>
-    <p class="hint" style="margin:8px 0 0">Filtra las listas de iniciativas de esta pestaña (formulario, carga masiva y tabla).</p>
+    <div class="chead"><div class="chips" id="actTipo"></div><div class="btns"><button type="button" class="btn sec sm" data-open="m-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 17v3h16v-3"/></svg>Desde Excel</button><button type="button" class="btn sm" data-new="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nueva actividad</button></div></div>
+    <div class="filters"><div style="flex:2"><label>Iniciativa</label><select id="fActIni"></select></div><div><label>Responsable</label><select id="fActResp"></select></div><div><label>Estado</label><select id="fActEst"></select></div></div>
+    <div id="tbAct"></div>
   </div>
-  <div class="card">
-    <h3>Agregar / editar actividad</h3>
-    <form class="f" id="fmAct">
+  <div class="modal" id="m-act"><div class="sheet"><div class="mhead"><h3 data-tn="Nueva actividad" data-te="Editar actividad">Nueva actividad</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<form class="f" id="fmAct">
       <input type="hidden" name="id">
-      <div style="grid-column:span 2"><label>Iniciativa *</label><select name="iniciativaId" required data-full></select><div class="selfull"></div></div>
-      <div style="grid-column:span 2"><label>Actividad *</label><input name="nombre" required></div>
+      <div class="full"><label>Iniciativa *</label><select name="iniciativaId" required data-full></select><div class="selfull"></div></div>
+      <div class="full"><label>Actividad *</label><input name="nombre" required></div>
       <div><label>Responsable *</label><input name="responsable" list="dlResp" required></div>
       <div><label>Fecha estimada *</label><input name="fechaEstimada" type="date" required></div>
       <div class="full"><label>Comentario</label><input name="nota"></div>
-      <div class="btns"><button class="btn">Guardar</button><button type="button" class="btn sec" data-cancel>Cancelar edición</button></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
-  </div>
-  <div class="card noprint">
-    <h3>Carga masiva (pegar desde Excel)</h3>
-    <p class="hint">Copie 3 columnas desde Excel: <b>Actividad | Responsable | Fecha (dd/mm/aaaa)</b>. Una fila por actividad.</p>
-    <div class="filters"><div style="max-width:420px"><label>Iniciativa destino</label><select id="bulkIni"></select></div></div>
-    <textarea id="bulkTxt" style="min-height:110px" placeholder="Levantar procesos actuales	Juan Pérez	15/01/2027"></textarea>
-    <div class="btns" style="margin-top:8px"><button class="btn" id="bulkBtn">Importar actividades</button></div>
-  </div>
-  <div class="card">
-    <div class="filters"><div style="max-width:420px"><label>Filtrar por iniciativa</label><select id="fActIni"></select></div><div style="max-width:260px"><label>Filtrar por responsable</label><select id="fActResp"></select></div><div style="max-width:200px"><label>Estado</label><select id="fActEst"></select></div></div>
-    <div id="tbAct"></div>
-  </div>
+</div></div>
+  <div class="modal" id="m-bulk"><div class="sheet"><div class="mhead"><h3 data-tn="Importar desde Excel" data-te="Importar desde Excel">Importar desde Excel</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<p class="hint">Pegue 3 columnas de Excel: <b>Actividad · Responsable · Fecha (dd/mm/aaaa)</b>.</p>
+    <label>Iniciativa destino</label><select id="bulkIni"></select>
+    <textarea id="bulkTxt" style="min-height:140px;margin-top:12px" placeholder="Levantar procesos actuales	Juan Pérez	15/01/2027"></textarea>
+    <div class="btns" style="justify-content:flex-end;margin-top:14px"><button type="button" class="btn sec" data-close>Cancelar</button><button class="btn" id="bulkBtn">Importar</button></div>
+</div></div>
 </section>
 
 <section class="tab" id="c-datos">
-  <h2>Respaldo de datos</h2>
-  <p class="hint">Los datos se guardan en la Google Sheet compartida; todos los usuarios ven la misma información. La página se actualiza sola cada minuto o con el botón <b>Actualizar</b>. La hoja de Google también conserva el historial de versiones.</p>
   <div class="card">
+    <h3>Respaldo</h3>
+    <p class="hint">Los datos se guardan en línea automáticamente. Use esto para tener una copia propia.</p>
     <div class="btns">
-      <button class="btn" id="btnExp">Exportar respaldo (.json)</button>
-      <label class="btn sec" style="margin:0;color:var(--pri)">Importar respaldo (.json)<input type="file" id="fileImp" accept=".json,application/json" hidden></label>
-      <button class="btn sec" id="btnCsv">Exportar actividades a Excel (.csv)</button>
+      <button class="btn" id="btnExp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>Exportar respaldo</button>
+      <label class="btn sec" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 17v3h16v-3"/></svg>Importar respaldo<input type="file" id="fileImp" accept=".json,application/json" hidden></label>
+      <button class="btn sec" id="btnCsv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg>Actividades a Excel</button>
     </div>
-    
   </div>
 </section>
 </main>
+</div></div>
 
 <datalist id="dlResp"></datalist>
 <div class="toast" id="toast"></div>
@@ -380,7 +393,7 @@ function stats(acts){const total=acts.length,done=acts.filter(a=>a.completada).l
 function statsInis(inis){return stats(inis.flatMap(actsOf))}
 function estIni(i){const s=stats(actsOf(i));if(!s.total)return['Sin actividades','s-pend'];if(s.done===s.total)return['Completada','s-ok'];if(s.venc)return['Con atraso','s-venc'];if(s.done)return['En curso','s-prox'];return['No iniciada','s-pend']}
 const pb=(pct,cls='')=>`<div class="bar ${cls}"><i style="width:${pct}%"></i></div>`;
-const prow=(name,sub,pct,cls)=>`<div class="prow"><div class="n">${esc(name)}${sub?`<small>${sub}</small>`:''}</div>${pb(pct,cls)}<div class="pc">${pct}%</div></div>`;
+const prow=(name,sub,pct,cls)=>`<div class="prow"><div class="n" title="${esc(name)}">${esc(corto(name))}${sub?`<small>${sub}</small>`:''}</div>${pb(pct,cls)}<div class="pc">${pct}%</div></div>`;
 const bP=p=>p?`<span class="badge ${PCLS[p]||'pr-desp'}">${AHORA.includes(p)?'Ahora · ':''}${esc(p)}</span>`:'';
 const bS=e=>`<span class="badge s-${e}">${EST[e]}</span>`;
 const prioOrd=p=>PRIOS.indexOf(p);
@@ -394,13 +407,13 @@ const iniLbl=i=>{const p=byId(db.pilares,i.pilarId);return `${p?p.nombre+' › '
 const responsables=()=>[...new Set(db.actividades.map(a=>a.responsable).concat(db.iniciativas.map(i=>i.responsable)).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
 
 /* ---------- pestañas ---------- */
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));window.scrollTo(0,0)});
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{$('#pgTitle').textContent=b.textContent.trim();document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));window.scrollTo(0,0)});
 function goTab(t){document.querySelector(`nav button[data-t="${t}"]`).click()}
 
 /* ---------- render general ---------- */
 function render(){
   const p=db.plan;
-  $('#hTitle').textContent=p.nombre||'Seguimiento de Planificación Estratégica';
+  $('#hTitle').textContent=p.nombre||'Plan Estratégico';
   $('#hSub').textContent=[CLIENTE||p.empresa,`Horizonte ${p.anioInicio}–${p.anioHorizonte}`].filter(Boolean).join(' · ');
   const yrs=new Set();for(let y=Number(p.anioInicio);y<=Number(p.anioHorizonte);y++)yrs.add(y);db.tacticos.forEach(t=>yrs.add(Number(t.anio)));yrs.add(Number(p.anioActivo));
   $('#selAnio').innerHTML=opts([...yrs].sort().map(y=>[y,y]),p.anioActivo);
@@ -450,7 +463,7 @@ function renderResumen(){
 }
 
 function actTable(list,o={}){
-  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td><input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}></td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="nowrap noprint"><button class="btn sec sm" data-ed="act:${a.id}">Editar</button> <button class="btn dan sm" data-del="act:${a.id}">Eliminar</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
+  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td><input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}></td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
 }
 document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.chk;if(!id)return;const c=e.target.checked;run('marcarActividad',id,c,iso(new Date())).then(ok(c?'Actividad completada':'Actividad reabierta')).catch(()=>{})});
 
@@ -517,16 +530,30 @@ function renderSeg(){
 
 /* ---------- formularios genéricos ---------- */
 function formData(fm){const o={};new FormData(fm).forEach((v,k)=>o[k]=typeof v==='string'?v.trim():v);return o}
-function fill(fm,obj){[...fm.elements].forEach(el=>{if(el.name&&obj[el.name]!==undefined)el.value=obj[el.name]});fm.classList.add('editing');fm.scrollIntoView({behavior:'smooth',block:'center'})}
-function resetF(fm){fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing');if(fm.getAttribute('id')==='fmIni'){delete fm.elements.anio.dataset.touched;fm.elements.prioridad.value='';$('#opHor').dataset.h='';pintarPrio()}}
+function abrirModal(m,edit){if(typeof m==='string')m=$('#'+m);if(!m)return;const h=m.querySelector('.mhead h3');if(h)h.textContent=edit?h.dataset.te:h.dataset.tn;m.classList.add('on');setTimeout(()=>{const f=m.querySelector('input:not([type=hidden]):not([readonly]),select,textarea');f&&f.focus()},50)}
+function cerrarModal(m){if(typeof m==='string')m=$('#'+m);m&&m.classList.remove('on')}
+function fill(fm,obj){[...fm.elements].forEach(el=>{if(el.name&&obj[el.name]!==undefined)el.value=obj[el.name]});fm.classList.add('editing');abrirModal(fm.closest('.modal'),true);hintsSel()}
+function resetF(fm,abierto){if(!abierto)cerrarModal(fm.closest('.modal'));fm.reset();fm.elements.id&&(fm.elements.id.value='');fm.classList.remove('editing');if(fm.getAttribute('id')==='fmIni'){delete fm.elements.anio.dataset.touched;fm.elements.prioridad.value='';$('#opHor').dataset.h='';pintarPrio()}}
 document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{resetF(b.closest('form'));render()});
+document.addEventListener('click',e=>{
+  const nw=e.target.closest&&e.target.closest('[data-new]');
+  if(nw){const t=nw.dataset.new,fm=$(FM[t]);resetF(fm,true);
+    if(t==='ini')fillIniSelects();if(t==='tac'){fillTacSelect();fm.elements.anio.value=db.plan.anioActivo}
+    if(t==='act'){fillActSelect();if($('#fActIni').value)fm.elements.iniciativaId.value=$('#fActIni').value}
+    abrirModal(fm.closest('.modal'),false);hintsSel();return}
+  const op=e.target.closest&&e.target.closest('[data-open]');if(op){abrirModal(op.dataset.open,false);return}
+  const cl=e.target.closest&&e.target.closest('[data-close]');
+  if(cl){const m=cl.closest('.modal'),f=m&&m.querySelector('form');f?resetF(f):cerrarModal(m);return}
+  if(e.target.classList&&e.target.classList.contains('modal')){const f=e.target.querySelector('form');f?resetF(f):cerrarModal(e.target)}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.querySelector('.modal.on');if(m){const f=m.querySelector('form');f?resetF(f):cerrarModal(m)}}});
 function guardarSrv(t,o,fm){if(pend>0)return;const nuevo=!o.id;run('guardar',COL[t],o).then(()=>{toast(nuevo?'Agregado':'Actualizado')}).catch(()=>{});return nuevo}
 const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades'};
 const FM={est:'#fmEst',tac:'#fmTac',pil:'#fmPil',ini:'#fmIni',act:'#fmAct'};
 const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act'};
 
 document.addEventListener('click',e=>{
-  const ed=e.target.dataset&&e.target.dataset.ed, del=e.target.dataset&&e.target.dataset.del;
+  const bt=e.target.closest&&e.target.closest('[data-ed],[data-del]');const ed=bt&&bt.dataset.ed, del=bt&&bt.dataset.del;
   if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();fill(fm,o);if(t==='ini'){$('#opHor').dataset.h=horDe(o.prioridad);pintarPrio()}}
   if(del){const[t,id]=del.split(':');borrar(t,id)}
 });
@@ -540,7 +567,8 @@ function borrar(t,id){
   if(!confirm(msg))return;
   run('eliminar',COL[t],id).then(ok('Eliminado')).catch(()=>{});
 }
-const rowBtns=(t,id)=>`<td class="nowrap noprint right"><button class="btn sec sm" data-ed="${t}:${id}">Editar</button> <button class="btn dan sm" data-del="${t}:${id}">Eliminar</button></td>`;
+const IC={"edit": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20h4L19 9l-4-4L4 16z\"/></svg>", "trash": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13\"/></svg>"};
+const rowBtns=(t,id)=>`<td class="acts noprint"><button class="ib sm" title="Editar" data-ed="${t}:${id}">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="${t}:${id}">${IC.trash}</button></td>`;
 
 /* ---------- CARGA: plan y objetivos ---------- */
 function fillTacSelect(){const s=$('#fmTac').elements.estrategicoId,v=s.value;s.innerHTML=opts(db.estrategicos.map(e=>[e.id,estLbl(e)]),v,'— Sin vincular —')}
@@ -551,10 +579,34 @@ function renderCargaPlan(){
   $('#tbEst').innerHTML=db.estrategicos.length?`<table><thead><tr><th>Código</th><th>Objetivo estratégico</th><th>Año meta</th><th>Obj. tácticos</th><th></th></tr></thead><tbody>${db.estrategicos.map(e=>`<tr><td>${esc(e.codigo)}</td><td><b>${esc(e.nombre)}</b>${e.descripcion?`<div class="muted" style="font-size:12px">${esc(e.descripcion)}</div>`:''}</td><td>${esc(e.anioMeta||'—')}</td><td>${db.tacticos.filter(t=>t.estrategicoId===e.id).length}</td>${rowBtns('est',e.id)}</tr>`).join('')}</tbody></table>`:'<div class="empty">Sin objetivos estratégicos.</div>';
   const tacs=[...db.tacticos].sort((a,b)=>b.anio-a.anio||String(a.codigo).localeCompare(String(b.codigo)));
   $('#tbTac').innerHTML=tacs.length?`<table><thead><tr><th>Año</th><th>Código</th><th>Objetivo táctico</th><th>Objetivo estratégico</th><th>Meta</th><th>Iniciativas</th><th></th></tr></thead><tbody>${tacs.map(t=>{const e=byId(db.estrategicos,t.estrategicoId);return `<tr><td>${esc(t.anio)}</td><td>${esc(t.codigo)}</td><td><b>${esc(t.nombre)}</b></td><td>${e?esc(estLbl(e)):'<span class="muted">—</span>'}</td><td>${esc(t.meta||'—')}</td><td>${db.iniciativas.filter(i=>i.tacticoId===t.id).length}</td>${rowBtns('tac',t.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin objetivos tácticos.</div>';
+  const dupE=new Set(),dupT=new Set(),vE={},vT={};
+  db.estrategicos.forEach(x=>{if(vE[x.codigo])dupE.add(x.codigo);vE[x.codigo]=1});
+  db.tacticos.forEach(x=>{const k=x.anio+'|'+x.codigo;if(vT[k])dupT.add(x.codigo+' ('+x.anio+')');vT[k]=1});
+  const nd=[...dupE,...dupT];
+  $('#codWarn').innerHTML=nd.length?`<div class="warn"><b style="color:var(--bad)">Códigos repetidos:</b> ${esc(nd.join(', '))}. Use <b>Renumerar códigos</b> para corregirlos.</div>`:'';
 }
 $('#fmPlan').onsubmit=e=>{e.preventDefault();const d=formData(e.target);d.anioInicio=Number(d.anioInicio);d.anioHorizonte=Number(d.anioHorizonte);if(d.anioHorizonte<d.anioInicio){toast('El año horizonte debe ser mayor o igual al de inicio');return}document.activeElement.blur();run('guardarPlan',d).then(ok('Plan guardado')).catch(()=>{})};
-$('#fmEst').onsubmit=e=>{e.preventDefault();const d=formData(e.target);guardarSrv('est',d);resetF(e.target)};
-$('#fmTac').onsubmit=e=>{e.preventDefault();const d=formData(e.target);guardarSrv('tac',d);resetF(e.target)};
+// ---- Códigos automáticos: OE secuencial en el plan; OT secuencial por año ----
+const numCod=c=>{const m=String(c||'').match(/(\d+)\s*$/);return m?Number(m[1]):0};
+const sigCod=(pref,lista)=>pref+(lista.reduce((mx,x)=>Math.max(mx,numCod(x.codigo)),0)+1);
+async function guardarObjetivo(t,d){
+  if(pend>0)return;
+  try{await run('obtenerDatos')}catch(e){return}            // datos frescos para no repetir códigos
+  if(t==='est'){if(!d.id||!d.codigo)d.codigo=sigCod('OE',db.estrategicos.filter(x=>x.id!==d.id))}
+  else{const prev=d.id&&byId(db.tacticos,d.id);
+    if(!d.id||!d.codigo||!prev||String(prev.anio)!==String(d.anio))d.codigo=sigCod('OT',db.tacticos.filter(x=>x.id!==d.id&&String(x.anio)===String(d.anio)))}
+  guardarSrv(t,d);
+}
+$('#btnRenum').onclick=async()=>{
+  if(!confirm('Se reasignarán los códigos: OE1, OE2… para los objetivos estratégicos y OT1, OT2… dentro de cada año para los tácticos, en el orden en que fueron creados. ¿Continuar?'))return;
+  try{await run('obtenerDatos')}catch(e){return}
+  const d=JSON.parse(JSON.stringify(db));
+  d.estrategicos.forEach((x,i)=>x.codigo='OE'+(i+1));
+  const porAnio={};d.tacticos.forEach(x=>{const a=String(x.anio);porAnio[a]=(porAnio[a]||0)+1;x.codigo='OT'+porAnio[a]});
+  run('reemplazarTodo',d).then(ok('Códigos renumerados')).catch(()=>{});
+};
+$('#fmEst').onsubmit=e=>{e.preventDefault();const d=formData(e.target);resetF(e.target);guardarObjetivo('est',d)};
+$('#fmTac').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.anio){toast('Indique el año');return}resetF(e.target);guardarObjetivo('tac',d)};
 
 /* ---------- CARGA: pilares ---------- */
 function renderCargaPil(){
@@ -617,14 +669,14 @@ $('#fActIni').onchange=()=>{renderCargaAct()};
 $('#fActResp').onchange=()=>{renderCargaAct()};
 $('#fActEst').onchange=()=>{renderCargaAct()};
 $('#actTipo').onclick=e=>{const b=e.target.closest('button[data-tipo]');if(!b)return;ACT_TIPO=b.dataset.tipo;['#bulkIni','#fActIni'].forEach(s=>$(s).value='');const f=$('#fmAct').elements;if(!f.id.value)f.iniciativaId.value='';renderCargaAct()};
-$('#fmAct').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.id){d.completada=false;d.fechaCompletada=''}guardarSrv('act',d);const keepIni=d.iniciativaId;resetF(e.target);e.target.elements.iniciativaId.value=keepIni};
+$('#fmAct').onsubmit=e=>{e.preventDefault();const d=formData(e.target);const nuevo=!d.id;if(nuevo){d.completada=false;d.fechaCompletada=''}guardarSrv('act',d);const keepIni=d.iniciativaId;resetF(e.target,nuevo);e.target.elements.iniciativaId.value=keepIni;hintsSel();if(nuevo){toast('Agregada · puede cargar la siguiente');e.target.elements.nombre.focus()}};
 $('#bulkBtn').onclick=()=>{
   const ini=$('#bulkIni').value;if(!ini){toast('Seleccione la iniciativa destino');return}
   const nuevas=[];const lines=$('#bulkTxt').value.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);let n=0,bad=[];
   lines.forEach((l,ix)=>{const c=l.split(/\t|;/).map(x=>x.trim());if(!c[0]){bad.push(ix+1);return}let f='';const m=(c[2]||'').match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/),m2=(c[2]||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if(m){let y=Number(m[3]);if(y<100)y+=2000;f=`${y}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`}else if(m2)f=c[2];else if(c[2])bad.push(ix+1);
     nuevas.push({iniciativaId:ini,nombre:c[0],responsable:c[1]||'',fechaEstimada:f,nota:''});n++});
-  if(!n){toast('No hay filas para importar');return}run('agregarActividades',nuevas).then(()=>{$('#bulkTxt').value='';toast(`${n} actividad(es) importada(s)`+(bad.length?` · revisar fecha en fila(s): ${bad.join(', ')}`:''))}).catch(()=>{});
+  if(!n){toast('No hay filas para importar');return}run('agregarActividades',nuevas).then(()=>{$('#bulkTxt').value='';cerrarModal('m-bulk');toast(`${n} actividad(es) importada(s)`+(bad.length?` · revisar fecha en fila(s): ${bad.join(', ')}`:''))}).catch(()=>{});
 };
 
 /* ---------- RESPALDO ---------- */
