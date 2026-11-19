@@ -173,6 +173,21 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .num{text-align:right;font-weight:700;font-size:13px}.num small{display:block;font-weight:400;color:#94a3b8;font-size:10.5px}
 .leg{font-size:11.5px;color:var(--muted);display:flex;gap:12px;align-items:center}.leg i{display:inline-block;width:14px;height:0;border-top:2.5px solid var(--crit);vertical-align:middle;margin-right:4px}.leg i.e{border-top:2px dashed #94a3b8}
 .kpi .v.neg{color:var(--bad)}.kpi .v.pos{color:var(--ok)}
+.kmeses{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.kmeses button{border:1px solid var(--line,#e2e8f0);background:#fff;border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.kmeses button.on{background:var(--pri2);border-color:var(--pri2);color:#fff;font-weight:600}
+.kmeses button.full:not(.on){color:#15803d;border-color:#bbf7d0;background:#f0fdf4}
+.kmprog{display:flex;align-items:center;gap:12px;font-size:13px;margin-bottom:14px}.kmprog .bar{flex:1;max-width:260px;height:8px;background:#eef1f5;border-radius:6px;overflow:hidden}.kmprog .bar i{display:block;height:100%;background:#16a34a;border-radius:6px;transition:width .3s}
+.kcards{display:flex;flex-direction:column;gap:8px}
+.kcard{display:grid;grid-template-columns:minmax(0,1fr) 90px 170px 190px;gap:14px;align-items:center;border:1px solid #e8edf3;border-left:4px solid #e2e8f0;border-radius:10px;padding:10px 14px;background:#fff}
+.kcard.done{border-left-color:#16a34a}.kcard.hito{grid-template-columns:minmax(0,1fr) 170px 190px}
+.kcard .kci b{display:block;font-size:13.5px}.kcard .kci small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+.kcard .kcref,.kcard .kcst div{font-size:12.5px}.kcard small.l{display:block;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.kcard input{width:100%;font-size:16px;font-weight:600;text-align:center;padding:8px 6px;border-radius:8px}
+.kcard input.dirty{background:#eef4fb;border-color:var(--pri2)}.kcard input.bad{border-color:#dc2626;background:#fef2f2}
+.kst{display:block;font-size:11px;min-height:14px;margin-top:3px;text-align:center;color:var(--muted)}.kst.ok{color:#15803d}.kst.err{color:#dc2626}
+.kcard .kcst{display:flex;gap:16px;align-items:center}.kcard .kcst b{font-size:14px}
+@media(max-width:760px){.kcard,.kcard.hito{grid-template-columns:1fr 1fr}.kcard .kci{grid-column:1/-1}}
 .kgrid{width:100%;border-collapse:separate;border-spacing:0;min-width:900px}
 .kgrid th{text-align:center;padding:8px 4px}.kgrid th:first-child{text-align:left}
 .kgrid td{text-align:center;padding:8px 2px;border-bottom:1px solid #f1f4f7;font-size:12.5px}
@@ -181,6 +196,8 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .kgrid input.cur{background:#fffbea;border-color:#f5c451}
 .kgrid input.dirty{background:#eef4fb;border-color:var(--pri2);font-weight:600}
 .kgrid input:disabled{background:transparent;border-color:transparent;color:#cbd5e1}
+.rochk{display:inline-flex;width:16px;height:16px;border:1.5px solid #cbd5e1;border-radius:4px;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff}.rochk.on{background:#16a34a;border-color:#16a34a}
+.rtag{font-size:12px;color:var(--muted)}
 .sem{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:middle}
 .sem.r{background:#dc2626}.sem.y{background:#f59e0b}.sem.g{background:#16a34a}.sem.n{background:#e2e8f0}
 .kn b{font-size:13px}.kn small{display:block;color:#94a3b8;font-size:11.5px;margin-top:2px}
@@ -232,6 +249,8 @@ details.ot summary:hover .otn{color:var(--pri2)}
     <button data-t="c-pilares"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20V10M10 20V10M14 20V10M19 20V10M3 20h18M12 4 3 9h18z"/></svg><span>Pilares</span></button>
     <button data-t="c-ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Iniciativas</span></button>
     <button data-t="c-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span>Actividades</span></button>
+    <button data-t="c-ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Indicadores</span></button>
+    <button data-t="c-rev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg><span>Revisión mensual</span></button>
     <button data-t="c-datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg><span>Respaldo</span></button>
   </nav>
 </aside>
@@ -283,10 +302,12 @@ details.ot summary:hover .otn{color:var(--pri2)}
 
 <section class="tab" id="kpi">
   <div class="card">
-    <div class="chead"><h3 id="kpiT">Indicadores</h3><div class="btns"><button type="button" class="btn sec sm" data-new="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo indicador</button><button type="button" class="btn sm" id="btnKpiSave">Guardar valores</button></div></div>
-    <p class="hint" id="kpiHint" style="margin-top:-6px"></p>
-    <div id="kpiView" style="overflow-x:auto"></div>
+    <div class="chead"><h3 id="kpiRT">Indicadores</h3></div>
+    <p class="hint" id="kpiRHint" style="margin-top:-6px"></p>
+    <div id="kpiRO" style="overflow-x:auto"></div>
   </div>
+</section>
+
   <div class="modal" id="m-ind"><div class="sheet"><div class="mhead"><h3 data-tn="Nuevo indicador" data-te="Editar indicador">Nuevo indicador</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
 <form class="f" id="fmInd">
       <input type="hidden" name="id">
@@ -308,8 +329,21 @@ details.ot summary:hover .otn{color:var(--pri2)}
       <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
 </div></div>
-</section>
-
+  <div class="modal" id="m-rev"><div class="sheet w"><div class="mhead"><h3 id="revT">Revisión mensual</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+  <div class="grid" style="grid-template-columns:1.1fr 1fr;gap:22px">
+    <form class="f" id="fmRev">
+      <input type="hidden" name="id"><input type="hidden" name="iniciativaId"><input type="hidden" name="estado">
+      <div><label>Mes de la revisión</label><select name="periodo" id="revPer"></select></div>
+      <div class="full"><label>¿Cómo va? *</label><div class="estado" id="revEst"><label data-e="En línea">🟢 En línea</label><label data-e="En riesgo">🟡 En riesgo</label><label data-e="Atrasada">🔴 Atrasada</label></div></div>
+      <div class="full"><label>Logros del mes</label><textarea name="logros"></textarea></div>
+      <div class="full"><label>Próximos pasos</label><textarea name="proximos"></textarea></div>
+      <div class="full"><label>Riesgos / bloqueos</label><input name="riesgos"></div>
+      <div class="full"><label>Decisión requerida de gerencia</label><input name="decision" placeholder="Déjelo vacío si no hace falta"></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar revisión</button></div>
+    </form>
+    <div><h3 style="margin-bottom:12px">Historial</h3><div id="revHist"></div></div>
+  </div>
+</div></div>
 <div class="modal" id="m-hito"><div class="sheet"><div class="mhead"><h3 id="hitoT">Marcar hito cumplido</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
     <p class="hint" id="hitoCrit"></p>
     <form class="f" id="fmHito">
@@ -328,21 +362,6 @@ details.ot summary:hover .otn{color:var(--pri2)}
   
   <div class="kpis" id="critKpis"></div>
   <div id="critView"></div>
-  <div class="modal" id="m-rev"><div class="sheet w"><div class="mhead"><h3 id="revT">Revisión mensual</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
-  <div class="grid" style="grid-template-columns:1.1fr 1fr;gap:22px">
-    <form class="f" id="fmRev">
-      <input type="hidden" name="id"><input type="hidden" name="iniciativaId"><input type="hidden" name="estado">
-      <div><label>Mes de la revisión</label><select name="periodo" id="revPer"></select></div>
-      <div class="full"><label>¿Cómo va? *</label><div class="estado" id="revEst"><label data-e="En línea">🟢 En línea</label><label data-e="En riesgo">🟡 En riesgo</label><label data-e="Atrasada">🔴 Atrasada</label></div></div>
-      <div class="full"><label>Logros del mes</label><textarea name="logros"></textarea></div>
-      <div class="full"><label>Próximos pasos</label><textarea name="proximos"></textarea></div>
-      <div class="full"><label>Riesgos / bloqueos</label><input name="riesgos"></div>
-      <div class="full"><label>Decisión requerida de gerencia</label><input name="decision" placeholder="Déjelo vacío si no hace falta"></div>
-      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar revisión</button></div>
-    </form>
-    <div><h3 style="margin-bottom:12px">Historial</h3><div id="revHist"></div></div>
-  </div>
-</div></div>
 </section>
 
 <section class="tab" id="mapa">
@@ -352,7 +371,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
 </section>
 
 <section class="tab" id="seguimiento">
-  <p class="hint">Marque la casilla al terminar una actividad.</p>
+  <p class="hint">Vista de consulta. Las actividades se marcan en <b>Gestionar › Actividades</b>.</p>
   <div class="card">
     <div class="filters">
       <div><label>Pilar</label><select id="fPil"></select></div>
@@ -472,6 +491,24 @@ details.ot summary:hover .otn{color:var(--pri2)}
 </div></div>
 </section>
 
+<section class="tab" id="c-ind">
+  <div class="card">
+    <div class="chead"><h3 id="kpiT">Indicadores</h3><div class="btns"><button type="button" class="btn sec sm" data-new="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nuevo indicador</button><button type="button" class="btn sm" id="btnKpiSave">Guardar valores</button></div></div>
+    <p class="hint" id="kpiHint" style="margin-top:-6px"></p>
+    <div class="seg" id="kpiModo"><button type="button" data-m="mes">Cargar mes</button><button type="button" data-m="anio">Ver año</button></div>
+    <div id="kpiMesW"></div>
+    <div id="kpiView" style="overflow-x:auto"></div>
+  </div>
+</section>
+
+<section class="tab" id="c-rev">
+  <div class="card">
+    <div class="chead"><h3 id="revTabT">Revisión mensual</h3></div>
+    <p class="hint" id="revTabHint" style="margin-top:-6px"></p>
+    <div id="revTab"></div>
+  </div>
+</section>
+
 <section class="tab" id="c-datos">
   <div class="card">
     <h3>Respaldo</h3>
@@ -540,7 +577,7 @@ function run(fn,...args){
       throw e});
 }
 function ok(msg){return()=>toast(msg)}
-function refrescar(){if(pend>0||document.querySelector('form.editing,#kpiView input.dirty,.modal.on'))return;const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('form'))return;run('obtenerDatos').catch(()=>{})}
+function refrescar(){if(pend>0||document.querySelector('form.editing,#kpiView input.dirty,#kpiMesW input.dirty,.modal.on'))return;const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('form,#kpiMesW'))return;run('obtenerDatos').catch(()=>{})}
 setInterval(()=>{if(!document.hidden)refrescar()},60000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)refrescar()});
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2200)}
@@ -593,7 +630,7 @@ function render(){
   const yrs=new Set();for(let y=Number(p.anioInicio);y<=Number(p.anioHorizonte);y++)yrs.add(y);db.tacticos.forEach(t=>yrs.add(Number(t.anio)));yrs.add(Number(p.anioActivo));
   $('#selAnio').innerHTML=opts([...yrs].sort().map(y=>[y,y]),p.anioActivo);
   $('#dlResp').innerHTML=responsables().map(r=>`<option value="${esc(r)}">`).join('');
-  renderKpi();renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
+  renderKpi();renderKpiRO();renderRevTab();renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
   renderCargaPlan();renderCargaPil();renderCargaIni();renderCargaAct();
   hintsSel();
 }
@@ -691,7 +728,7 @@ function ajustarTipoInd(){const f=$('#fmInd'),t=f.elements.tipo.value||'numerico
   f.elements.meta.required=!h;f.elements.criterio.required=h;f.elements.fechaCompromiso.required=h}
 document.addEventListener('click',e=>{const l=e.target.closest&&e.target.closest('#opTipo label');if(!l)return;$('#fmInd').elements.tipo.value=l.dataset.tipo;ajustarTipoInd()});
 const indsAnio=()=>{const yr=Number(db.plan.anioActivo);return db.indicadores.filter(ind=>{const t=byId(db.tacticos,ind.tacticoId);return t&&Number(t.anio)===yr}).sort((a,b)=>{const ta=byId(db.tacticos,a.tacticoId),tb=byId(db.tacticos,b.tacticoId);return numCod(ta.codigo)-numCod(tb.codigo)||String(a.nombre).localeCompare(b.nombre)})};
-function renderKpi(){
+function renderKpiAnio(){
   if(document.querySelector('#kpiView input.dirty'))return; // no borrar lo que se está escribiendo
   const yr=Number(db.plan.anioActivo),hoy=today(),cy=hoy.getFullYear(),cm=hoy.getMonth()+1;
   const lim=yr<cy?12:(yr>cy?0:cm);
@@ -712,6 +749,98 @@ function renderKpi(){
       return `<td><input data-ind="${ind.id}" data-mes="${mes}" data-vid="${v?v.id:''}" value="${v?esc(v.valor):''}" class="${cur.trim()}"${dis} inputmode="decimal"></td>`}).join('');
     return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${esc(ind.base||'—')} · meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(ev.actual)}</b></td><td>${ev.txt}</td><td><span class="sem ${ev.sem}" title="${ev.txt}"></span></td>${rowBtns('ind',ind.id)}</tr>`}).join('')}</tbody></table>`;
 }
+/* ---- Ver › Indicadores (solo lectura) ---- */
+function renderKpiRO(){
+  const yr=Number(db.plan.anioActivo),hoy=today(),cy=hoy.getFullYear(),cm=hoy.getMonth()+1,lim=yr<cy?12:(yr>cy?0:cm),inds=indsAnio();
+  $('#kpiRT').textContent='Indicadores '+yr;
+  const nums=inds.filter(i=>!esHito(i)),ev=nums.map(i=>evalInd(i,yr)),hs=inds.filter(esHito).map(evalHito);
+  const cnt=k=>ev.filter(e=>e.sem===k).length+hs.filter(h=>h.sem===k).length;
+  $('#kpiRHint').innerHTML=inds.length?`<span class="sem g"></span> ${cnt('g')} en meta · <span class="sem y"></span> ${cnt('y')} cerca · <span class="sem r"></span> ${cnt('r')} por debajo o vencidos · Los valores se cargan en <b>Gestionar › Indicadores</b>.`:'Sin indicadores. Se crean en <b>Gestionar › Indicadores</b>.';
+  if(!inds.length){$('#kpiRO').innerHTML='<div class="empty">Sin indicadores para '+yr+'.</div>';return}
+  $('#kpiRO').innerHTML=`<table class="kgrid"><thead><tr><th style="min-width:210px">Indicador</th>${MESES.map(m=>`<th>${m}</th>`).join('')}<th>Actual</th><th>Meta</th><th title="Cumplimiento contra lo esperado a la fecha">Cumpl.</th><th></th></tr></thead><tbody>${inds.map(ind=>{
+    const t=byId(db.tacticos,ind.tacticoId)||{},hd=`<td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}</b>`;
+    if(esHito(ind)){const h=evalHito(ind),ok=h.sem==='g';
+      return `<tr>${hd}<small>Hito · compromiso ${fmtD(ind.fechaCompromiso)}${ind.responsable?' · '+esc(ind.responsable):''}</small></td><td colspan="12" class="hitocell"><b>Criterio:</b> ${esc(ind.criterio||'—')}${ok&&ind.evidencia?`<span class="ctx">Evidencia: ${/^https?:\/\//.test(ind.evidencia)?`<a href="${esc(ind.evidencia)}" target="_blank" rel="noopener">${esc(corto(ind.evidencia))}</a>`:esc(ind.evidencia)}</span>`:''}</td><td>${ok?'Sí':'No'}</td><td>Sí</td><td title="${esc(h.det)}">${h.txt}</td><td><span class="sem ${h.sem}" title="${esc(h.det)}"></span></td></tr>`}
+    const e=evalInd(ind,yr);
+    const cells=MESES.map((_,k)=>{const v=e.vals[k+1],x=v?numV(v.valor):NaN;return `<td${k+1>lim?' style="color:#cbd5e1"':''}>${!isNaN(x)?esc(v.valor):(k+1>lim?'':'<span style="color:#cbd5e1">—</span>')}</td>`}).join('');
+    return `<tr>${hd}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(e.actual)}</b></td><td>${esc(ind.meta||'—')}</td><td>${e.txt==='Sin datos'?'—':e.txt}</td><td><span class="sem ${e.sem}" title="${esc(e.txt)}"></span></td></tr>`}).join('')}</tbody></table>`;
+}
+/* ---- Gestionar › Revisión mensual ---- */
+function renderRevTab(){
+  const h=today(),y=h.getFullYear(),m=h.getMonth()+1,ML=MESL[m-1][0].toUpperCase()+MESL[m-1].slice(1);
+  const crit=iniAnio().filter(CUENTA).sort((a,b)=>String(a.nombre).localeCompare(b.nombre)),hechas=crit.filter(i=>revDe(i.id,y,m)).length;
+  $('#revTabT').textContent='Revisión mensual · '+ML+' '+y;
+  $('#revTabHint').innerHTML=crit.length?`Registre cómo va cada iniciativa crítica este mes. Registradas: <b>${hechas} de ${crit.length}</b>. Las demás iniciativas se revisan desde <b>Gestionar › Iniciativas</b>.`:'';
+  $('#revTab').innerHTML=crit.length?`<table><thead><tr><th>Iniciativa</th><th>Líder</th><th style="width:24%">Avance real vs esperado</th><th>${ML}</th><th>Última revisión</th><th></th></tr></thead><tbody>${crit.map(i=>{const x=ritmo(actsOf(i)),r=revDe(i.id,y,m);
+    return `<tr><td><b>${esc(i.nombre)}</b><div class="muted" style="font-size:12px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</div></td><td>${esc(i.responsable||'—')}</td><td><div style="display:flex;align-items:center;gap:8px">${pbE(x.r,x.e)}<span class="nowrap" style="font-size:12px">${x.r}% / ${x.e}%</span></div></td>
+    <td>${r?`<span class="dv ${EC[r.estado]||'pend'}">✓ ${esc(r.estado)}</span>`:'<span class="dv pend">Pendiente</span>'}</td><td>${revTag(i.id)}</td>
+    <td style="text-align:right"><button type="button" class="btn ${r?'sec ':''}sm" data-rev="${i.id}">${r?'Ver / editar':'Registrar'}</button></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No hay iniciativas críticas en el año seleccionado.</div>';
+}
+/* ---- Indicadores: modo "Cargar mes" ---- */
+let KPI_MODO=(()=>{try{return localStorage.getItem('planKpiModo')||'mes'}catch(e){return 'mes'}})(),KPI_MES=0;
+function renderKpi(){
+  document.querySelectorAll('#kpiModo button').forEach(b=>b.classList.toggle('on',b.dataset.m===KPI_MODO));
+  const mes=KPI_MODO==='mes';
+  $('#kpiView').style.display=mes?'none':'';$('#kpiMesW').style.display=mes?'':'none';$('#btnKpiSave').style.display=mes?'none':'';
+  if(mes)renderKpiMes();else renderKpiAnio();
+}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#kpiModo button');if(!b)return;
+  if(document.querySelector('#kpiView input.dirty')){toast('Pulse Guardar valores antes de cambiar de vista');return}
+  KPI_MODO=b.dataset.m;try{localStorage.setItem('planKpiModo',KPI_MODO)}catch(x){}renderKpi()});
+function kmCtx(){const yr=Number(db.plan.anioActivo),hoy=today(),cy=hoy.getFullYear(),cm=hoy.getMonth()+1;
+  const lim=yr<cy?12:(yr>cy?0:cm);
+  let m=KPI_MES;if(!m||m>lim)m=yr===cy?(hoy.getDate()<=10&&cm>1?cm-1:cm):lim;
+  return{yr,lim,m}}
+const kmCargado=(ind,yr,m)=>{const v=valoresDe(ind,yr)[m];return !!(v&&!isNaN(numV(v.valor)))};
+function kmStats(ind,yr){const ev=evalInd(ind,yr);
+  return `<div><small class="l">Actual${ind.acumula==='ultimo'?'':' (acum.)'}</small><b>${fmtN(ev.actual)}</b></div><div><small class="l">Cumpl.</small><b>${ev.txt==='Sin datos'?'—':ev.txt}</b></div><span class="sem ${ev.sem}" title="${esc(ev.txt)}"></span>`}
+function kmProg(){const {yr,m}=kmCtx(),nums=indsAnio().filter(i=>!esHito(i)),c=nums.filter(i=>kmCargado(i,yr,m)).length,pc=nums.length?Math.round(c/nums.length*100):0;
+  const el=$('#kmProg');if(el)el.innerHTML=`<span><b>${MESL[m-1][0].toUpperCase()+MESL[m-1].slice(1)} ${yr}:</b> ${c} de ${nums.length} cargados</span><span class="bar"><i style="width:${pc}%"></i></span>${c===nums.length&&nums.length?'<span style="color:#15803d;font-weight:600">✓ Mes completo</span>':''}`}
+function renderKpiMes(){
+  const ae=document.activeElement;if(ae&&ae.closest&&ae.closest('#kpiMesW input'))return; // no interrumpir mientras escribe
+  const {yr,lim,m}=kmCtx(),inds=indsAnio(),W=$('#kpiMesW');
+  $('#kpiT').textContent='Indicadores '+yr;
+  if(!inds.length){$('#kpiHint').innerHTML='Cree un indicador con <b>Nuevo indicador</b>.';W.innerHTML='<div class="empty">Sin indicadores para '+yr+'.</div>';return}
+  if(!lim){$('#kpiHint').textContent='Año futuro: los valores se cargan cuando comience.';W.innerHTML='';return}
+  $('#kpiHint').innerHTML='Elija el mes, escriba cada valor y presione <b>Enter</b>. Se guarda solo.';
+  const nums=inds.filter(i=>!esHito(i));
+  const btns=MESES.slice(0,lim).map((n,k)=>{const mm=k+1,full=nums.length&&nums.every(i=>kmCargado(i,yr,mm));return `<button type="button" data-km="${mm}" class="${mm===m?'on':''}${full?' full':''}" title="${full?'Completo':''}">${n}${full?' ✓':''}</button>`}).join('');
+  const ML=MESL[m-1][0].toUpperCase()+MESL[m-1].slice(1);
+  const cards=inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId)||{};
+    const head=`<div class="kci"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b style="display:inline" title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}</b>`;
+    if(esHito(ind)){const h=evalHito(ind),ok=h.sem==='g';
+      return `<div class="kcard hito${ok?' done':''}">${head}<small>Hito · compromiso ${fmtD(ind.fechaCompromiso)}${ind.responsable?' · '+esc(ind.responsable):''}</small><small><b style="display:inline;font-size:11.5px">Criterio:</b> ${esc(corto(ind.criterio||'—'))}</small></div>
+        <div style="text-align:center">${ok?`<button type="button" class="hitook" data-deshito="${ind.id}" title="Clic para desmarcar">✓ Cumplido ${ind.fechaCumplido?fmtD(ind.fechaCumplido).slice(0,5):''}</button>`:`<button type="button" class="hitobtn" data-hito="${ind.id}">Marcar cumplido</button>`}</div>
+        <div class="kcst"><div><small class="l">Estado</small><b>${h.txt}</b></div><span class="sem ${h.sem}" title="${esc(h.det)}"></span></div></div>`}
+    const vals=valoresDe(ind,yr),v=vals[m],pv=m>1?vals[m-1]:null,has=!!(v&&!isNaN(numV(v.valor)));
+    return `<div class="kcard${has?' done':''}" data-card="${ind.id}">${head}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></div>
+      <div class="kcref"><small class="l">${m>1?MESES[m-2]:'Mes ant.'}</small>${pv&&!isNaN(numV(pv.valor))?esc(pv.valor):'—'}</div>
+      <div><small class="l" style="text-align:center">${ML}</small><input data-kmi="${ind.id}" data-mes="${m}" data-vid="${v?v.id:''}" data-last="${v?esc(v.valor):''}" value="${v?esc(v.valor):''}" inputmode="decimal" placeholder="Escriba aquí" autocomplete="off"><span class="kst${has?' ok':''}">${has?'✓ guardado':''}</span></div>
+      <div class="kcst">${kmStats(ind,yr)}</div></div>`}).join('');
+  W.innerHTML=`<div class="kmeses" id="kmMeses">${btns}</div><div class="kmprog" id="kmProg"></div><div class="kcards">${cards}</div>`;
+  kmProg();
+}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#kmMeses button');if(!b)return;KPI_MES=Number(b.dataset.km);renderKpiMes()});
+function kmGuardar(el){
+  const val=el.value.trim();if(val===(el.dataset.last||'')){el.classList.remove('dirty');return}
+  const card=el.closest('.kcard'),st=card.querySelector('.kst');
+  if(val!==''&&isNaN(numV(val))){el.classList.add('bad');st.textContent='Solo números';st.className='kst err';return}
+  el.classList.remove('bad','dirty');
+  const yr=Number(db.plan.anioActivo),mes=Number(el.dataset.mes),o={indicadorId:el.dataset.kmi,anio:String(yr),mes:String(mes),valor:val};if(el.dataset.vid)o.id=el.dataset.vid;
+  el.dataset.last=val;st.textContent='Guardando…';st.className='kst';
+  run('guardarLote','valores',[o]).then(()=>{
+    const ind=byId(db.indicadores,o.indicadorId);if(!ind)return;const v=valoresDe(ind,yr)[mes];if(v)el.dataset.vid=v.id;
+    st.textContent=val===''?'Borrado':'✓ guardado';st.className='kst ok';card.classList.toggle('done',val!=='');
+    const cs=card.querySelector('.kcst');if(cs)cs.innerHTML=kmStats(ind,yr);kmProg();
+    const ae=document.activeElement;if(!(ae&&ae.closest&&ae.closest('#kpiMesW input')))renderKpiMes();
+  }).catch(()=>{el.dataset.last='\u0000';el.classList.add('dirty');st.textContent='No se guardó · presione Enter de nuevo';st.className='kst err'});
+}
+document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.kmi){e.target.classList.add('dirty');e.target.classList.remove('bad')}});
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.kmi)kmGuardar(e.target)});
+document.addEventListener('keydown',e=>{const el=e.target;if(!(el.dataset&&el.dataset.kmi))return;
+  if(e.key==='Enter'){e.preventDefault();kmGuardar(el);const all=[...document.querySelectorAll('#kpiMesW input[data-kmi]')],i=all.indexOf(el);
+    if(all[i+1]){all[i+1].focus();all[i+1].select()}else el.blur()}
+  else if(e.key==='Escape'){el.value=el.dataset.last==='\u0000'?'':(el.dataset.last||'');el.classList.remove('dirty','bad');el.blur()}});
 document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.ind)e.target.classList.add('dirty')});
 $('#btnKpiSave').onclick=()=>{
   const yr=String(db.plan.anioActivo);
@@ -769,6 +898,7 @@ $('#revPer').onchange=cargarRevPeriodo;
 $('#fmRev').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(!d.estado){toast('Indique cómo va la iniciativa');return}
   const [y,m]=d.periodo.split('-');delete d.periodo;d.anio=y;d.mes=m;if(!d.id)delete d.id;
   cerrarModal('m-rev');e.target.reset();guardarSrv('rev',d)};
+const revTag=iniId=>{const r=ultRev(iniId);return r?`<span class="dv ${EC[r.estado]||'pend'}" title="Última revisión">${MESL[Number(r.mes)-1].slice(0,3)} · ${esc(r.estado)}</span>`:'<span class="dv pend">Sin revisión</span>'};
 const btnRev=iniId=>{const r=ultRev(iniId);return `<span class="revbtn">${r?`<span class="dv ${EC[r.estado]||'pend'}" title="Última revisión">${MESL[Number(r.mes)-1].slice(0,3)} · ${esc(r.estado)}</span>`:'<span class="dv pend">Sin revisión</span>'}<button type="button" class="btn sec sm" data-rev="${iniId}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg> Revisión</button></span>`};
 function renderDecisiones(){
   const h=today(),y=h.getFullYear(),m=h.getMonth()+1,ids=new Set(iniAnio().map(i=>i.id));
@@ -778,7 +908,7 @@ function renderDecisiones(){
   $('#resDec').innerHTML=`<p class="hint" style="margin:-4px 0 6px">Revisiones de ${MESL[m-1]}: <b>${hechas} de ${crit.length}</b> críticas registradas.</p>`+(dec.length?dec.map(r=>{const i=byId(db.iniciativas,r.iniciativaId);return `<div class="dec"><span class="dv ${EC[r.estado]||'pend'}" style="float:right">${esc(r.estado)}</span><b>${esc(r.decision)}</b><small>${esc(i?corto(i.nombre):'')} · ${esc(i&&i.responsable||'')}</small></div>`}).join(''):'<div class="empty">Sin decisiones pendientes este mes.</div>');
 }
 function actTable(list,o={}){
-  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td><input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}></td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
+  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td>${o.edit?`<input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}>`:(a.completada?'<span class="rochk on" title="Completada">✓</span>':'<span class="rochk" title="Pendiente"></span>')}</td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
 }
 document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.chk;if(!id)return;const c=e.target.checked;run('marcarActividad',id,c,iso(new Date())).then(ok(c?'Actividad completada':'Actividad reabierta')).catch(()=>{})});
 
@@ -807,7 +937,7 @@ function renderCriticas(){
   <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>`;
   $('#critView').innerHTML=crit.length?crit.map(i=>{const acts=actsOf(i).sort((a,b)=>(a.completada-b.completada)||(a.fechaEstimada||'').localeCompare(b.fechaEstimada||'')),st=stats(acts),[e,c]=estIni(i),t=byId(db.tacticos,i.tacticoId);
     const x=ritmo(acts);
-    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div>${btnRev(i.id)}</div>
+    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div>${revTag(i.id)}</div>
     <div class="irow" style="grid-template-columns:minmax(120px,2fr) 50px 50px 90px;padding-top:0"><div>${pbE(x.r,x.e)}</div><div class="num">${x.r}%<small>real</small></div><div class="num">${x.e}%<small>esperado</small></div><div>${bR(x)}</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
 }
 
@@ -921,7 +1051,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){const m=document.qu
 function guardarSrv(t,o,fm){if(pend>0)return;const nuevo=!o.id;run('guardar',COL[t],o).then(()=>{toast(nuevo?'Agregado':'Actualizado')}).catch(()=>{});return nuevo}
 const COL={est:'estrategicos',tac:'tacticos',pil:'pilares',ini:'iniciativas',act:'actividades',ind:'indicadores',rev:'revisiones'};
 const FM={est:'#fmEst',tac:'#fmTac',pil:'#fmPil',ini:'#fmIni',act:'#fmAct',ind:'#fmInd',rev:'#fmRev'};
-const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act',ind:'kpi',rev:'criticas'};
+const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act',ind:'c-ind',rev:'c-rev'};
 
 document.addEventListener('click',e=>{
   const bt=e.target.closest&&e.target.closest('[data-ed],[data-del]');const ed=bt&&bt.dataset.ed, del=bt&&bt.dataset.del;
