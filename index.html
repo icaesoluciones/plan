@@ -177,14 +177,14 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .kgrid th{text-align:center;padding:8px 4px}.kgrid th:first-child{text-align:left}
 .kgrid td{text-align:center;padding:8px 2px;border-bottom:1px solid #f1f4f7;font-size:12.5px}
 .kgrid td:first-child{text-align:left;padding-right:12px}
-.kgrid input{width:46px;text-align:center;padding:6px 3px;font-size:12.5px;border-radius:6px}
+.kgrid input{width:42px;text-align:center;padding:6px 3px;font-size:12.5px;border-radius:6px}
 .kgrid input.cur{background:#fffbea;border-color:#f5c451}
 .kgrid input.dirty{background:#eef4fb;border-color:var(--pri2);font-weight:600}
 .kgrid input:disabled{background:transparent;border-color:transparent;color:#cbd5e1}
 .sem{width:12px;height:12px;border-radius:50%;display:inline-block;vertical-align:middle}
 .sem.r{background:#dc2626}.sem.y{background:#f59e0b}.sem.g{background:#16a34a}.sem.n{background:#e2e8f0}
 .kn b{font-size:13px}.kn small{display:block;color:#94a3b8;font-size:11.5px;margin-top:2px}
-.krow{display:grid;grid-template-columns:16px minmax(0,1fr) auto 52px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #f1f4f7;font-size:13px}.krow:last-child{border:0}
+.krow{display:grid;grid-template-columns:16px minmax(0,1fr) auto 72px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #f1f4f7;font-size:13px}.krow:last-child{border:0}
 .krow small{display:block;color:#94a3b8;font-size:11.5px}
 .estado{display:flex;gap:8px}.estado label{flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:10px 6px;text-align:center;margin:0;color:var(--ink);font-weight:600;font-size:13px;cursor:pointer;background:#fff}
 .estado label.sel[data-e="En línea"]{border-color:#16a34a;background:#f0fdf4}.estado label.sel[data-e="En riesgo"]{border-color:#f59e0b;background:#fffbeb}.estado label.sel[data-e="Atrasada"]{border-color:#dc2626;background:#fef2f2}
@@ -197,6 +197,12 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .tli:hover h4{color:var(--pri2)}
 .dec{padding:10px 0;border-bottom:1px solid #f1f4f7;font-size:13px}.dec:last-child{border:0}.dec small{display:block;color:#94a3b8;font-size:11.5px;margin-top:2px}
 .revbtn{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.t-hito{display:none}form.hito .t-hito{display:block}form.hito .t-num{display:none}
+.hitocell{text-align:left!important;font-size:12.5px;color:#475569;padding-left:10px!important}
+.hitocell .ctx{display:block;font-size:11.5px;color:#94a3b8;margin-top:2px}
+.hitobtn{border:1px dashed #cbd5e1;background:#fff;border-radius:8px;padding:5px 10px;font:inherit;font-size:12px;cursor:pointer;color:var(--pri2);white-space:nowrap}
+.hitobtn:hover{border-color:var(--pri2);background:#eef4fb}
+.hitook{display:inline-flex;align-items:center;gap:5px;color:#15803d;font-weight:700;font-size:12px;white-space:nowrap;cursor:pointer;border:0;background:none;font-family:inherit}
 .selfull{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.35}
 .modal{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:flex-start;justify-content:center;z-index:40;padding:6vh 16px;overflow:auto}
 .modal.on{display:flex}
@@ -285,18 +291,34 @@ details.ot summary:hover .otn{color:var(--pri2)}
 <form class="f" id="fmInd">
       <input type="hidden" name="id">
       <div class="full"><label>Objetivo táctico *</label><select name="tacticoId" required data-full></select><div class="selfull"></div></div>
-      <div class="full"><label>Indicador *</label><input name="nombre" required placeholder="Ej.: Ventas firmadas"></div>
-      <div><label>Unidad</label><input name="unidad" placeholder="RD$ millones, %, # clientes"></div>
+      <div class="full"><label>Indicador *</label><input name="nombre" required placeholder="Ej.: Ventas firmadas · Capital mínimo definido"></div>
+      <input type="hidden" name="tipo" value="numerico">
+      <div class="full"><label>Tipo de indicador *</label><div class="opc" id="opTipo">
+        <label data-tipo="numerico"><b>Numérico</b><span>Se mide con un valor cada mes contra una meta (ventas, %, cantidad).</span></label>
+        <label data-tipo="hito"><b>Hito (Sí / No)</b><span>Se cumple o no en una fecha (definir, aprobar, implementar).</span></label></div></div>
       <div><label>Responsable del dato</label><input name="responsable" list="dlResp"></div>
-      <div><label>Sentido</label><select name="sentido"><option value="mas">Más es mejor</option><option value="menos">Menos es mejor</option></select></div>
-      <div><label>Cómo se acumula</label><select name="acumula"><option value="suma">Suma de los meses</option><option value="ultimo">Último valor registrado</option></select></div>
-      <div><label>Línea base</label><input name="base" inputmode="decimal"></div>
-      <div><label>Meta del año *</label><input name="meta" required inputmode="decimal"></div>
+      <div class="t-num"><label>Unidad</label><input name="unidad" placeholder="RD$ millones, %, # clientes"></div>
+      <div class="t-num"><label>Sentido</label><select name="sentido"><option value="mas">Más es mejor</option><option value="menos">Menos es mejor</option></select></div>
+      <div class="t-num"><label>Cómo se acumula</label><select name="acumula"><option value="suma">Suma de los meses</option><option value="ultimo">Último valor registrado</option></select></div>
+      <div class="t-num"><label>Línea base</label><input name="base" inputmode="decimal"></div>
+      <div class="t-num"><label>Meta del año *</label><input name="meta" inputmode="decimal"></div>
+      <div class="t-hito full"><label>Criterio de cumplimiento *</label><input name="criterio" placeholder="Ej.: Monto de capital mínimo aprobado en acta del consejo"></div>
+      <div class="t-hito"><label>Fecha compromiso *</label><input name="fechaCompromiso" type="date"></div>
+      <div class="t-hito"><label>Iniciativa vinculada <span style="font-weight:400">(opcional)</span></label><select name="iniciativaId" data-full></select><div class="selfull"></div></div>
       <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Guardar</button></div>
     </form>
 </div></div>
 </section>
 
+<div class="modal" id="m-hito"><div class="sheet"><div class="mhead"><h3 id="hitoT">Marcar hito cumplido</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+    <p class="hint" id="hitoCrit"></p>
+    <form class="f" id="fmHito">
+      <input type="hidden" name="id">
+      <div><label>Fecha de cumplimiento *</label><input name="fechaCumplido" type="date" required></div>
+      <div class="full"><label>Evidencia <span style="font-weight:400">(enlace o referencia al documento)</span></label><input name="evidencia" placeholder="Ej.: Acta del consejo 12/11/2026 o enlace a Drive"></div>
+      <div class="btns"><button type="button" class="btn sec" data-cancel>Cancelar</button><button class="btn">Marcar cumplido</button></div>
+    </form>
+</div></div>
 <section class="tab" id="pilares-v">
   <p class="hint">Barra vino: críticas · barra azul: general.</p>
   <div id="pilView"></div>
@@ -654,6 +676,20 @@ function evalInd(ind,yr){
   const sem=c===null?'n':(c>=0.95?'g':(c>=0.8?'y':'r'));
   return{vals,actual,m,c,sem,txt:c===null?'Sin meta':Math.round(c*100)+'%'};
 }
+function evalHito(ind){
+  const fc=parseD(ind.fechaCompromiso),hoy=today();
+  if(String(ind.cumplido).toLowerCase()==='true')return{sem:'g',txt:'Cumplido',det:ind.fechaCumplido?'el '+fmtD(ind.fechaCumplido):''};
+  if(!fc)return{sem:'n',txt:'Pendiente',det:'sin fecha compromiso'};
+  const dias=Math.round((fc-hoy)/864e5);
+  if(dias<0)return{sem:'r',txt:'Vencido',det:'hace '+(-dias)+' día'+(dias===-1?'':'s')};
+  if(dias<=30)return{sem:'y',txt:'Por vencer',det:'en '+dias+' día'+(dias===1?'':'s')};
+  return{sem:'n',txt:'Pendiente',det:'compromiso '+fmtD(ind.fechaCompromiso)};
+}
+const esHito=ind=>ind.tipo==='hito';
+function ajustarTipoInd(){const f=$('#fmInd'),t=f.elements.tipo.value||'numerico',h=t==='hito';
+  f.classList.toggle('hito',h);document.querySelectorAll('#opTipo label').forEach(l=>l.classList.toggle('sel',l.dataset.tipo===t));
+  f.elements.meta.required=!h;f.elements.criterio.required=h;f.elements.fechaCompromiso.required=h}
+document.addEventListener('click',e=>{const l=e.target.closest&&e.target.closest('#opTipo label');if(!l)return;$('#fmInd').elements.tipo.value=l.dataset.tipo;ajustarTipoInd()});
 const indsAnio=()=>{const yr=Number(db.plan.anioActivo);return db.indicadores.filter(ind=>{const t=byId(db.tacticos,ind.tacticoId);return t&&Number(t.anio)===yr}).sort((a,b)=>{const ta=byId(db.tacticos,a.tacticoId),tb=byId(db.tacticos,b.tacticoId);return numCod(ta.codigo)-numCod(tb.codigo)||String(a.nombre).localeCompare(b.nombre)})};
 function renderKpi(){
   if(document.querySelector('#kpiView input.dirty'))return; // no borrar lo que se está escribiendo
@@ -661,11 +697,17 @@ function renderKpi(){
   const lim=yr<cy?12:(yr>cy?0:cm);
   const inds=indsAnio();
   $('#kpiT').textContent='Indicadores '+yr;
-  const falt=lim&&yr===cy?inds.filter(ind=>!valoresDe(ind,yr)[cm]||isNaN(numV(valoresDe(ind,yr)[cm].valor))).length:0;
-  $('#kpiHint').innerHTML=inds.length?(yr===cy?`Escriba el valor real de cada mes y pulse <b>Guardar valores</b>. ${MESES[cm-1]} por completar: <b>${falt} de ${inds.length}</b>.`:(yr>cy?'Año futuro: los valores se cargan cuando comience.':'Año cerrado: puede corregir valores si hace falta.')):'Cree un indicador para cada objetivo táctico con <b>Nuevo indicador</b>.';
+  const falt=lim&&yr===cy?inds.filter(ind=>!esHito(ind)).filter(ind=>!valoresDe(ind,yr)[cm]||isNaN(numV(valoresDe(ind,yr)[cm].valor))).length:0;
+  $('#kpiHint').innerHTML=inds.length?(yr===cy?`Escriba el valor real de cada mes y pulse <b>Guardar valores</b>. ${MESES[cm-1]} por completar: <b>${falt} de ${inds.filter(i=>!esHito(i)).length}</b>.${inds.some(esHito)?' Los hitos se marcan con <b>Marcar cumplido</b>.':''}`:(yr>cy?'Año futuro: los valores se cargan cuando comience.':'Año cerrado: puede corregir valores si hace falta.')):'Cree un indicador para cada objetivo táctico con <b>Nuevo indicador</b>.';
   if(!inds.length){$('#kpiView').innerHTML='<div class="empty">Sin indicadores para '+yr+'.</div>';return}
   $('#kpiView').innerHTML=`<table class="kgrid"><thead><tr><th style="min-width:210px">Indicador</th>${MESES.map(m=>`<th>${m}</th>`).join('')}<th>Actual</th><th title="Cumplimiento contra lo esperado a la fecha">Cumpl.</th><th></th><th></th></tr></thead><tbody>${inds.map(ind=>{
-    const t=byId(db.tacticos,ind.tacticoId),ev=evalInd(ind,yr);
+    const t=byId(db.tacticos,ind.tacticoId);
+    if(esHito(ind)){const h=evalHito(ind),ini=byId(db.iniciativas,ind.iniciativaId),x=ini?ritmo(actsOf(ini)):null,ok=h.sem==='g';
+      return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>Hito · compromiso ${fmtD(ind.fechaCompromiso)}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>
+        <td colspan="12" class="hitocell"><b>Criterio:</b> ${esc(ind.criterio||'—')}${ok&&ind.evidencia?`<span class="ctx">Evidencia: ${/^https?:\/\//.test(ind.evidencia)?`<a href="${esc(ind.evidencia)}" target="_blank" rel="noopener">${esc(corto(ind.evidencia))}</a>`:esc(ind.evidencia)}</span>`:''}${!ok&&ini?`<span class="ctx">Iniciativa: ${esc(corto(ini.nombre))} · ${x.r}% (esperado ${x.e}%) · ${x.est}</span>`:''}</td>
+        <td>${ok?`<button type="button" class="hitook" data-deshito="${ind.id}" title="Clic para desmarcar">✓ ${ind.fechaCumplido?fmtD(ind.fechaCumplido).slice(0,5):'Sí'}</button>`:`<button type="button" class="hitobtn" data-hito="${ind.id}">Marcar cumplido</button>`}</td>
+        <td title="${esc(h.det)}">${h.txt}</td><td><span class="sem ${h.sem}" title="${esc(h.txt+' '+h.det)}"></span></td>${rowBtns('ind',ind.id)}</tr>`}
+    const ev=evalInd(ind,yr);
     const cells=MESES.map((_,k)=>{const mes=k+1,v=ev.vals[mes];const dis=mes>lim?' disabled':'';const cur=(yr===cy&&mes===cm)?' cur':'';
       return `<td><input data-ind="${ind.id}" data-mes="${mes}" data-vid="${v?v.id:''}" value="${v?esc(v.valor):''}" class="${cur.trim()}"${dis} inputmode="decimal"></td>`}).join('');
     return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${esc(ind.base||'—')} · meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(ev.actual)}</b></td><td>${ev.txt}</td><td><span class="sem ${ev.sem}" title="${ev.txt}"></span></td>${rowBtns('ind',ind.id)}</tr>`}).join('')}</tbody></table>`;
@@ -681,11 +723,20 @@ $('#btnKpiSave').onclick=()=>{
 };
 function fillIndSelect(){const s=$('#fmInd').elements.tacticoId,v=s.value,yr=Number(db.plan.anioActivo);
   const ts=[...db.tacticos].sort((a,b)=>(Number(b.anio)===yr)-(Number(a.anio)===yr)||b.anio-a.anio||numCod(a.codigo)-numCod(b.codigo));
-  s.innerHTML=opts(ts.map(t=>[t.id,tacLbl(t)]),v,'— Seleccione —')}
-$('#fmInd').onsubmit=e=>{e.preventDefault();const d=formData(e.target);if(isNaN(numV(d.meta))){toast('La meta debe ser un número');return}if(d.base&&isNaN(numV(d.base))){toast('La línea base debe ser un número');return}resetF(e.target);guardarSrv('ind',d)};
+  s.innerHTML=opts(ts.map(t=>[t.id,tacLbl(t)]),v,'— Seleccione —');
+  const si=$('#fmInd').elements.iniciativaId,vi=si.value;si.innerHTML=opts(iniOptsSorted(''),vi,'— Ninguna —');ajustarTipoInd()}
+$('#fmInd').onsubmit=e=>{e.preventDefault();const d=formData(e.target);
+  if(d.tipo==='hito'){if(!d.criterio||!d.fechaCompromiso){toast('Indique el criterio de cumplimiento y la fecha compromiso');return}}
+  else{if(isNaN(numV(d.meta))){toast('La meta debe ser un número');return}if(d.base&&isNaN(numV(d.base))){toast('La línea base debe ser un número');return}}
+  resetF(e.target);guardarSrv('ind',d)};
+$('#fmHito').onsubmit=e=>{e.preventDefault();const d=formData(e.target);resetF(e.target);guardarSrv('ind',{id:d.id,cumplido:'true',fechaCumplido:d.fechaCumplido,evidencia:d.evidencia})};
+document.addEventListener('click',e=>{
+  const b=e.target.closest&&e.target.closest('[data-hito]');if(b){const ind=byId(db.indicadores,b.dataset.hito);if(!ind)return;const f=$('#fmHito');f.reset();f.elements.id.value=ind.id;f.elements.fechaCumplido.value=iso(today());$('#hitoT').textContent='Marcar cumplido · '+corto(ind.nombre);$('#hitoCrit').innerHTML='<b>Criterio:</b> '+esc(ind.criterio||'—');abrirModal('m-hito',false);return}
+  const u=e.target.closest&&e.target.closest('[data-deshito]');if(u){const ind=byId(db.indicadores,u.dataset.deshito);if(ind&&confirm('¿Marcar "'+ind.nombre+'" como NO cumplido?'))guardarSrv('ind',{id:ind.id,cumplido:'',fechaCumplido:'',evidencia:''});}
+});
 function renderResKpi(){
   const yr=Number(db.plan.anioActivo),inds=indsAnio();
-  $('#resKpi').innerHTML=inds.length?inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId),ev=evalInd(ind,yr);return `<div class="krow"><span class="sem ${ev.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · actual ${fmtN(ev.actual)} de meta ${esc(ind.meta||'—')} ${esc(ind.unidad||'')}</small></div><span class="muted" style="font-size:11.5px">${ev.m?'hasta '+MESES[ev.m-1]:''}</span><b style="text-align:right">${ev.txt==='Sin datos'?'—':ev.txt}</b></div>`}).join(''):'<div class="empty">Sin indicadores para este año.</div>';
+  $('#resKpi').innerHTML=inds.length?inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId);if(esHito(ind)){const h=evalHito(ind);return `<div class="krow"><span class="sem ${h.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · Hito · compromiso ${fmtD(ind.fechaCompromiso)}</small></div><span class="muted" style="font-size:11.5px">${esc(h.det)}</span><b style="text-align:right;white-space:nowrap">${h.txt}</b></div>`}const ev=evalInd(ind,yr);return `<div class="krow"><span class="sem ${ev.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · actual ${fmtN(ev.actual)} de meta ${esc(ind.meta||'—')} ${esc(ind.unidad||'')}</small></div><span class="muted" style="font-size:11.5px">${ev.m?'hasta '+MESES[ev.m-1]:''}</span><b style="text-align:right">${ev.txt==='Sin datos'?'—':ev.txt}</b></div>`}).join(''):'<div class="empty">Sin indicadores para este año.</div>';
 }
 /* ---------- REVISIONES ---------- */
 const EC={'En línea':'g','En riesgo':'y','Atrasada':'r'};
@@ -858,7 +909,7 @@ document.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{resetF(b.cl
 document.addEventListener('click',e=>{
   const nw=e.target.closest&&e.target.closest('[data-new]');
   if(nw){const t=nw.dataset.new,fm=$(FM[t]);resetF(fm,true);
-    if(t==='ini')fillIniSelects();if(t==='ind')fillIndSelect();if(t==='tac'){fillTacSelect();fm.elements.anio.value=db.plan.anioActivo}
+    if(t==='ini')fillIniSelects();if(t==='ind'){fillIndSelect();fm.elements.tipo.value='numerico';ajustarTipoInd()}if(t==='tac'){fillTacSelect();fm.elements.anio.value=db.plan.anioActivo}
     if(t==='act'){fillActSelect();if($('#fActIni').value)fm.elements.iniciativaId.value=$('#fActIni').value}
     abrirModal(fm.closest('.modal'),false);hintsSel();return}
   const op=e.target.closest&&e.target.closest('[data-open]');if(op){abrirModal(op.dataset.open,false);return}
@@ -874,7 +925,7 @@ const TAB={est:'c-plan',tac:'c-plan',pil:'c-pilares',ini:'c-ini',act:'c-act',ind
 
 document.addEventListener('click',e=>{
   const bt=e.target.closest&&e.target.closest('[data-ed],[data-del]');const ed=bt&&bt.dataset.ed, del=bt&&bt.dataset.del;
-  if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();if(t==='ind')fillIndSelect();fill(fm,o);if(t==='ini'){$('#opHor').dataset.h=horDe(o.prioridad);pintarPrio()}}
+  if(ed){const[t,id]=ed.split(':');const o=byId(db[COL[t]],id);if(!o)return;goTab(TAB[t]);const fm=$(FM[t]);if(t==='ini')fillIniSelects();if(t==='act')fillActSelect();if(t==='tac')fillTacSelect();if(t==='ind')fillIndSelect();fill(fm,o);if(t==='ind'){if(!o.tipo)fm.elements.tipo.value='numerico';ajustarTipoInd()}if(t==='ini'){$('#opHor').dataset.h=horDe(o.prioridad);pintarPrio()}}
   if(del){const[t,id]=del.split(':');borrar(t,id)}
 });
 function borrar(t,id){
