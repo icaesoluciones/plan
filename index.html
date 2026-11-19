@@ -696,8 +696,12 @@ function curva(acts,yr){
 }
 /* ---------- INDICADORES ---------- */
 const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const numV=v=>{if(v===undefined||v===null)return NaN;let s=String(v).trim().replace(/[%\s$]/g,'');if(!s)return NaN;if(s.includes(',')&&!s.includes('.'))s=s.replace(',','.');else s=s.replace(/,/g,'');return Number(s)};
-const fmtN=v=>isNaN(v)?'—':(Math.abs(v)>=100?Math.round(v).toLocaleString('es-DO'):(Math.round(v*100)/100).toLocaleString('es-DO'));
+const numV=v=>{if(v===undefined||v===null)return NaN;if(typeof v==='number')return v;let s=String(v).trim().replace(/RD|[%\s$]/gi,'');if(!s)return NaN;
+  if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s))s=s.replace(/,/g,'');else if(/^-?\d+,\d+$/.test(s))s=s.replace(',','.');else s=s.replace(/,/g,'');return Number(s)};
+const sepMil=n=>{const neg=n<0,[a,d]=String(Math.abs(n)).split('.');return (neg?'-':'')+a.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(d?'.'+d:'')};
+const fmtN=v=>{v=numV(v);return isNaN(v)?'—':sepMil(Math.abs(v)>=100?Math.round(v):Math.round(v*100)/100)};
+const fmtC=v=>{v=numV(v);if(isNaN(v))return '—';if(Math.abs(v)>=1e6){const x=v/1e6;return sepMil(Math.abs(x)>=100?Math.round(x):Math.round(x*10)/10)+' MM'}return fmtN(v)};
+const fmtNum=v=>{const x=numV(v);return isNaN(x)?esc(v??''):`<span title="${fmtN(x)}">${fmtC(x)}</span>`};
 function valoresDe(ind,yr){const m={};db.valores.filter(v=>v.indicadorId===ind.id&&Number(v.anio)===yr).sort((a,b)=>String(a.actualizado||'').localeCompare(String(b.actualizado||''))).forEach(v=>{m[Number(v.mes)]=v});return m}
 function evalInd(ind,yr){
   const vals=valoresDe(ind,yr),meses=Object.keys(vals).map(Number).filter(k=>!isNaN(numV(vals[k].valor))).sort((a,b)=>a-b);
@@ -746,8 +750,8 @@ function renderKpiAnio(){
         <td title="${esc(h.det)}">${h.txt}</td><td><span class="sem ${h.sem}" title="${esc(h.txt+' '+h.det)}"></span></td>${rowBtns('ind',ind.id)}</tr>`}
     const ev=evalInd(ind,yr);
     const cells=MESES.map((_,k)=>{const mes=k+1,v=ev.vals[mes];const dis=mes>lim?' disabled':'';const cur=(yr===cy&&mes===cm)?' cur':'';
-      return `<td><input data-ind="${ind.id}" data-mes="${mes}" data-vid="${v?v.id:''}" value="${v?esc(v.valor):''}" class="${cur.trim()}"${dis} inputmode="decimal"></td>`}).join('');
-    return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${esc(ind.base||'—')} · meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(ev.actual)}</b></td><td>${ev.txt}</td><td><span class="sem ${ev.sem}" title="${ev.txt}"></span></td>${rowBtns('ind',ind.id)}</tr>`}).join('')}</tbody></table>`;
+      return `<td><input data-ind="${ind.id}" data-mes="${mes}" data-vid="${v?v.id:''}" data-raw="${v?esc(v.valor):''}" value="${v?(isNaN(numV(v.valor))?esc(v.valor):fmtC(v.valor)):''}" title="${v&&!isNaN(numV(v.valor))?fmtN(v.valor):''}" class="${cur.trim()}"${dis} inputmode="decimal"></td>`}).join('');
+    return `<tr><td class="kn"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b>${esc(corto(ind.nombre))}</b><small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${ind.base?fmtN(ind.base):'—'} · meta ${ind.meta?fmtN(ind.meta):'—'} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(ev.actual)}</b></td><td>${ev.txt}</td><td><span class="sem ${ev.sem}" title="${ev.txt}"></span></td>${rowBtns('ind',ind.id)}</tr>`}).join('')}</tbody></table>`;
 }
 /* ---- Ver › Indicadores (solo lectura) ---- */
 function renderKpiRO(){
@@ -762,8 +766,8 @@ function renderKpiRO(){
     if(esHito(ind)){const h=evalHito(ind),ok=h.sem==='g';
       return `<tr>${hd}<small>Hito · compromiso ${fmtD(ind.fechaCompromiso)}${ind.responsable?' · '+esc(ind.responsable):''}</small></td><td colspan="12" class="hitocell"><b>Criterio:</b> ${esc(ind.criterio||'—')}${ok&&ind.evidencia?`<span class="ctx">Evidencia: ${/^https?:\/\//.test(ind.evidencia)?`<a href="${esc(ind.evidencia)}" target="_blank" rel="noopener">${esc(corto(ind.evidencia))}</a>`:esc(ind.evidencia)}</span>`:''}</td><td>${ok?'Sí':'No'}</td><td>Sí</td><td title="${esc(h.det)}">${h.txt}</td><td><span class="sem ${h.sem}" title="${esc(h.det)}"></span></td></tr>`}
     const e=evalInd(ind,yr);
-    const cells=MESES.map((_,k)=>{const v=e.vals[k+1],x=v?numV(v.valor):NaN;return `<td${k+1>lim?' style="color:#cbd5e1"':''}>${!isNaN(x)?esc(v.valor):(k+1>lim?'':'<span style="color:#cbd5e1">—</span>')}</td>`}).join('');
-    return `<tr>${hd}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtN(e.actual)}</b></td><td>${esc(ind.meta||'—')}</td><td>${e.txt==='Sin datos'?'—':e.txt}</td><td><span class="sem ${e.sem}" title="${esc(e.txt)}"></span></td></tr>`}).join('')}</tbody></table>`;
+    const cells=MESES.map((_,k)=>{const v=e.vals[k+1],x=v?numV(v.valor):NaN;return `<td${k+1>lim?' style="color:#cbd5e1"':''}>${!isNaN(x)?fmtNum(x):(k+1>lim?'':'<span style="color:#cbd5e1">—</span>')}</td>`}).join('');
+    return `<tr>${hd}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></td>${cells}<td><b>${fmtNum(e.actual)}</b></td><td>${ind.meta?fmtNum(ind.meta):'—'}</td><td>${e.txt==='Sin datos'?'—':e.txt}</td><td><span class="sem ${e.sem}" title="${esc(e.txt)}"></span></td></tr>`}).join('')}</tbody></table>`;
 }
 /* ---- Gestionar › Revisión mensual ---- */
 function renderRevTab(){
@@ -793,7 +797,7 @@ function kmCtx(){const yr=Number(db.plan.anioActivo),hoy=today(),cy=hoy.getFullY
   return{yr,lim,m}}
 const kmCargado=(ind,yr,m)=>{const v=valoresDe(ind,yr)[m];return !!(v&&!isNaN(numV(v.valor)))};
 function kmStats(ind,yr){const ev=evalInd(ind,yr);
-  return `<div><small class="l">Actual${ind.acumula==='ultimo'?'':' (acum.)'}</small><b>${fmtN(ev.actual)}</b></div><div><small class="l">Cumpl.</small><b>${ev.txt==='Sin datos'?'—':ev.txt}</b></div><span class="sem ${ev.sem}" title="${esc(ev.txt)}"></span>`}
+  return `<div><small class="l">Actual${ind.acumula==='ultimo'?'':' (acum.)'}</small><b>${fmtNum(ev.actual)}</b></div><div><small class="l">Cumpl.</small><b>${ev.txt==='Sin datos'?'—':ev.txt}</b></div><span class="sem ${ev.sem}" title="${esc(ev.txt)}"></span>`}
 function kmProg(){const {yr,m}=kmCtx(),nums=indsAnio().filter(i=>!esHito(i)),c=nums.filter(i=>kmCargado(i,yr,m)).length,pc=nums.length?Math.round(c/nums.length*100):0;
   const el=$('#kmProg');if(el)el.innerHTML=`<span><b>${MESL[m-1][0].toUpperCase()+MESL[m-1].slice(1)} ${yr}:</b> ${c} de ${nums.length} cargados</span><span class="bar"><i style="width:${pc}%"></i></span>${c===nums.length&&nums.length?'<span style="color:#15803d;font-weight:600">✓ Mes completo</span>':''}`}
 function renderKpiMes(){
@@ -813,21 +817,21 @@ function renderKpiMes(){
         <div style="text-align:center">${ok?`<button type="button" class="hitook" data-deshito="${ind.id}" title="Clic para desmarcar">✓ Cumplido ${ind.fechaCumplido?fmtD(ind.fechaCumplido).slice(0,5):''}</button>`:`<button type="button" class="hitobtn" data-hito="${ind.id}">Marcar cumplido</button>`}</div>
         <div class="kcst"><div><small class="l">Estado</small><b>${h.txt}</b></div><span class="sem ${h.sem}" title="${esc(h.det)}"></span></div></div>`}
     const vals=valoresDe(ind,yr),v=vals[m],pv=m>1?vals[m-1]:null,has=!!(v&&!isNaN(numV(v.valor)));
-    return `<div class="kcard${has?' done':''}" data-card="${ind.id}">${head}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}meta ${esc(ind.meta||'—')} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></div>
-      <div class="kcref"><small class="l">${m>1?MESES[m-2]:'Mes ant.'}</small>${pv&&!isNaN(numV(pv.valor))?esc(pv.valor):'—'}</div>
-      <div><small class="l" style="text-align:center">${ML}</small><input data-kmi="${ind.id}" data-mes="${m}" data-vid="${v?v.id:''}" data-last="${v?esc(v.valor):''}" value="${v?esc(v.valor):''}" inputmode="decimal" placeholder="Escriba aquí" autocomplete="off"><span class="kst${has?' ok':''}">${has?'✓ guardado':''}</span></div>
+    return `<div class="kcard${has?' done':''}" data-card="${ind.id}">${head}<small>${esc(ind.unidad||'')}${ind.unidad?' · ':''}meta ${ind.meta?fmtN(ind.meta):'—'} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}${ind.responsable?' · '+esc(ind.responsable):''}</small></div>
+      <div class="kcref"><small class="l">${m>1?MESES[m-2]:'Mes ant.'}</small>${pv&&!isNaN(numV(pv.valor))?fmtN(pv.valor):'—'}</div>
+      <div><small class="l" style="text-align:center">${ML}</small><input data-kmi="${ind.id}" data-mes="${m}" data-vid="${v?v.id:''}" data-last="${v?(isNaN(numV(v.valor))?esc(v.valor):fmtN(v.valor)):''}" value="${v?(isNaN(numV(v.valor))?esc(v.valor):fmtN(v.valor)):''}" inputmode="decimal" placeholder="Escriba aquí" autocomplete="off"><span class="kst${has?' ok':''}">${has?'✓ guardado':''}</span></div>
       <div class="kcst">${kmStats(ind,yr)}</div></div>`}).join('');
   W.innerHTML=`<div class="kmeses" id="kmMeses">${btns}</div><div class="kmprog" id="kmProg"></div><div class="kcards">${cards}</div>`;
   kmProg();
 }
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#kmMeses button');if(!b)return;KPI_MES=Number(b.dataset.km);renderKpiMes()});
 function kmGuardar(el){
-  const val=el.value.trim();if(val===(el.dataset.last||'')){el.classList.remove('dirty');return}
+  const val=el.value.trim(),last=el.dataset.last||'',nv=val===''?'':numV(val),lv=last===''?'':numV(last);if(nv===lv){el.classList.remove('dirty');if(val!=='')el.value=fmtN(nv);return}
   const card=el.closest('.kcard'),st=card.querySelector('.kst');
   if(val!==''&&isNaN(numV(val))){el.classList.add('bad');st.textContent='Solo números';st.className='kst err';return}
   el.classList.remove('bad','dirty');
-  const yr=Number(db.plan.anioActivo),mes=Number(el.dataset.mes),o={indicadorId:el.dataset.kmi,anio:String(yr),mes:String(mes),valor:val};if(el.dataset.vid)o.id=el.dataset.vid;
-  el.dataset.last=val;st.textContent='Guardando…';st.className='kst';
+  const yr=Number(db.plan.anioActivo),mes=Number(el.dataset.mes),o={indicadorId:el.dataset.kmi,anio:String(yr),mes:String(mes),valor:val===''?'':String(nv)};if(val!=='')el.value=fmtN(nv);if(el.dataset.vid)o.id=el.dataset.vid;
+  el.dataset.last=el.value;st.textContent='Guardando…';st.className='kst';
   run('guardarLote','valores',[o]).then(()=>{
     const ind=byId(db.indicadores,o.indicadorId);if(!ind)return;const v=valoresDe(ind,yr)[mes];if(v)el.dataset.vid=v.id;
     st.textContent=val===''?'Borrado':'✓ guardado';st.className='kst ok';card.classList.toggle('done',val!=='');
@@ -842,9 +846,11 @@ document.addEventListener('keydown',e=>{const el=e.target;if(!(el.dataset&&el.da
     if(all[i+1]){all[i+1].focus();all[i+1].select()}else el.blur()}
   else if(e.key==='Escape'){el.value=el.dataset.last==='\u0000'?'':(el.dataset.last||'');el.classList.remove('dirty','bad');el.blur()}});
 document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.ind)e.target.classList.add('dirty')});
+document.addEventListener('focusin',e=>{const el=e.target;if(el.dataset&&el.dataset.ind&&!el.classList.contains('dirty')){el.value=el.dataset.raw||'';el.select&&el.select()}});
+document.addEventListener('focusout',e=>{const el=e.target;if(el.dataset&&el.dataset.ind&&!el.classList.contains('dirty')&&el.dataset.raw&&!isNaN(numV(el.dataset.raw)))el.value=fmtC(el.dataset.raw)});
 $('#btnKpiSave').onclick=()=>{
   const yr=String(db.plan.anioActivo);
-  const lista=[...document.querySelectorAll('#kpiView input.dirty')].map(el=>{const o={indicadorId:el.dataset.ind,anio:yr,mes:el.dataset.mes,valor:el.value.trim()};if(el.dataset.vid)o.id=el.dataset.vid;return o});
+  const lista=[...document.querySelectorAll('#kpiView input.dirty')].map(el=>{const o={indicadorId:el.dataset.ind,anio:yr,mes:el.dataset.mes,valor:(v=>v===''||isNaN(numV(v))?v:String(numV(v)))(el.value.trim())};if(el.dataset.vid)o.id=el.dataset.vid;return o});
   if(!lista.length){toast('No hay valores nuevos para guardar');return}
   const malos=lista.filter(o=>o.valor!==''&&isNaN(numV(o.valor)));if(malos.length){toast('Revise los valores: solo números');return}
   document.querySelectorAll('#kpiView input.dirty').forEach(el=>el.classList.remove('dirty'));
@@ -856,7 +862,7 @@ function fillIndSelect(){const s=$('#fmInd').elements.tacticoId,v=s.value,yr=Num
   const si=$('#fmInd').elements.iniciativaId,vi=si.value;si.innerHTML=opts(iniOptsSorted(''),vi,'— Ninguna —');ajustarTipoInd()}
 $('#fmInd').onsubmit=e=>{e.preventDefault();const d=formData(e.target);
   if(d.tipo==='hito'){if(!d.criterio||!d.fechaCompromiso){toast('Indique el criterio de cumplimiento y la fecha compromiso');return}}
-  else{if(isNaN(numV(d.meta))){toast('La meta debe ser un número');return}if(d.base&&isNaN(numV(d.base))){toast('La línea base debe ser un número');return}}
+  else{if(isNaN(numV(d.meta))){toast('La meta debe ser un número');return}if(d.base&&isNaN(numV(d.base))){toast('La línea base debe ser un número');return}d.meta=String(numV(d.meta));if(d.base)d.base=String(numV(d.base))}
   resetF(e.target);guardarSrv('ind',d)};
 $('#fmHito').onsubmit=e=>{e.preventDefault();const d=formData(e.target);resetF(e.target);guardarSrv('ind',{id:d.id,cumplido:'true',fechaCumplido:d.fechaCumplido,evidencia:d.evidencia})};
 document.addEventListener('click',e=>{
@@ -865,7 +871,7 @@ document.addEventListener('click',e=>{
 });
 function renderResKpi(){
   const yr=Number(db.plan.anioActivo),inds=indsAnio();
-  $('#resKpi').innerHTML=inds.length?inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId);if(esHito(ind)){const h=evalHito(ind);return `<div class="krow"><span class="sem ${h.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · Hito · compromiso ${fmtD(ind.fechaCompromiso)}</small></div><span class="muted" style="font-size:11.5px">${esc(h.det)}</span><b style="text-align:right;white-space:nowrap">${h.txt}</b></div>`}const ev=evalInd(ind,yr);return `<div class="krow"><span class="sem ${ev.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · actual ${fmtN(ev.actual)} de meta ${esc(ind.meta||'—')} ${esc(ind.unidad||'')}</small></div><span class="muted" style="font-size:11.5px">${ev.m?'hasta '+MESES[ev.m-1]:''}</span><b style="text-align:right">${ev.txt==='Sin datos'?'—':ev.txt}</b></div>`}).join(''):'<div class="empty">Sin indicadores para este año.</div>';
+  $('#resKpi').innerHTML=inds.length?inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId);if(esHito(ind)){const h=evalHito(ind);return `<div class="krow"><span class="sem ${h.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · Hito · compromiso ${fmtD(ind.fechaCompromiso)}</small></div><span class="muted" style="font-size:11.5px">${esc(h.det)}</span><b style="text-align:right;white-space:nowrap">${h.txt}</b></div>`}const ev=evalInd(ind,yr);return `<div class="krow"><span class="sem ${ev.sem}"></span><div title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}<small>${esc(t.codigo||'')} · actual ${fmtN(ev.actual)} de meta ${ind.meta?fmtN(ind.meta):'—'} ${esc(ind.unidad||'')}</small></div><span class="muted" style="font-size:11.5px">${ev.m?'hasta '+MESES[ev.m-1]:''}</span><b style="text-align:right">${ev.txt==='Sin datos'?'—':ev.txt}</b></div>`}).join(''):'<div class="empty">Sin indicadores para este año.</div>';
 }
 /* ---------- REVISIONES ---------- */
 const EC={'En línea':'g','En riesgo':'y','Atrasada':'r'};
