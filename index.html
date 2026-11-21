@@ -278,7 +278,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
       <div class="card"><h3>Iniciativas críticas · real vs esperado</h3><div id="resCrit"></div></div>
       <div class="card"><h3>Por pilar</h3><div id="cPil"></div></div>
       <div class="card"><h3>Por objetivo táctico</h3><div id="cTac"></div></div>
-      <div class="card"><h3>Por responsable</h3><div id="cResp"></div></div>
+      <div class="card"><h3>Por líder de iniciativa</h3><div id="cResp"></div></div>
       <div class="card"><h3>Decisiones pendientes <span class="muted" style="font-weight:400;font-size:12px">· de las revisiones del mes</span></h3><div id="resDec"></div></div>
     </div>
   </div>
@@ -290,7 +290,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
       <div class="card"><h3>Por pilar</h3><div id="gPil"></div></div>
       <div class="card"><h3>Por objetivo táctico</h3><div id="gTac"></div></div>
       <div class="card"><h3>Por prioridad</h3><div id="resPrio"></div></div>
-      <div class="card"><h3>Por responsable</h3><div id="gResp"></div></div>
+      <div class="card"><h3>Por líder de iniciativa</h3><div id="gResp"></div></div>
     </div>
   </div>
 
@@ -602,7 +602,17 @@ function ritmo(acts){const r=stats(acts).pct,e=esperadoAl(acts,today()),d=r-e;co
 const pbE=(r,e,cls)=>`<div class="pbar ${cls||''}"><i style="width:${r}%"></i><em style="left:${e}%" title="Esperado a hoy: ${e}%"></em></div>`;
 const bR=x=>`<span class="dv ${x.cls}">${x.est}</span>`;
 const fmtD2=v=>(v>0?'+':v<0?'−':'')+Math.abs(v);
-function statsInis(inis){return stats(inis.flatMap(actsOf))}
+/* Avance agregado = promedio simple de las iniciativas; una iniciativa sin actividades cuenta 0% */
+function statsInis(inis){const a=stats(inis.flatMap(actsOf)),ps=inis.map(i=>stats(actsOf(i)));
+  return{total:a.total,done:a.done,venc:a.venc,n:inis.length,sin:ps.filter(x=>!x.total).length,pct:inis.length?Math.round(ps.reduce((s,x)=>s+x.pct,0)/inis.length):0}}
+const linAnio=(y,f)=>{const a=new Date(y,0,1),b=new Date(y+1,0,1);return f<=a?0:(f>=b?100:Math.round((f-a)*100/(b-a)))};
+const espIni=(i,f)=>{const ac=actsOf(i);return ac.length?esperadoAl(ac,f):linAnio(anioIni(i),f)}; // sin actividades: se espera avance proporcional al tiempo
+const realIni=(i,f)=>{const ac=actsOf(i);return ac.length?realAl(ac,f):0};
+const espInis=(inis,f)=>inis.length?Math.round(inis.reduce((s,i)=>s+espIni(i,f),0)/inis.length):0;
+const realInis=(inis,f)=>inis.length?Math.round(inis.reduce((s,i)=>s+realIni(i,f),0)/inis.length):0;
+function ritmoInis(inis){const r=statsInis(inis).pct,e=espInis(inis,today()),d=r-e;const est=!inis.length?['Sin iniciativas','pend']:(d>=-5?['En línea','g']:(d>=-15?['En riesgo','y']:['Atrasada','r']));return{r,e,d,est:est[0],cls:est[1]}}
+const ritIni=i=>{const x=ritmoInis([i]);if(!actsOf(i).length){x.est='Sin actividades';x.cls='pend'}return x};
+const sinTxt=st=>st.sin?` · <b style="color:#b45309" title="Cuentan como 0% en el avance">⚠ ${st.sin} sin actividades</b>`:'';
 function estIni(i){const s=stats(actsOf(i));if(!s.total)return['Sin actividades','s-pend'];if(s.done===s.total)return['Completada','s-ok'];if(s.venc)return['Con atraso','s-venc'];if(s.done)return['En curso','s-prox'];return['No iniciada','s-pend']}
 const pb=(pct,cls='')=>`<div class="bar ${cls}"><i style="width:${pct}%"></i></div>`;
 const prowE=(name,sub,pct,e,cls)=>`<div class="prow"><div class="n" title="${esc(name)}">${esc(corto(name))}${sub?`<small>${sub}</small>`:''}</div>${pbE(pct,e,cls==='c'?'':'g')}<div class="pc" title="Esperado ${e}%">${pct}%</div></div>`;
@@ -640,53 +650,53 @@ $('#btnRef').onclick=()=>run('obtenerDatos').then(ok('Datos actualizados'));
 
 /* ---------- RESUMEN ---------- */
 function bloqueAvance(inis,pre,cls){
-  const acts=inis.flatMap(actsOf),s=stats(acts);
-  $('#'+pre+'Pil').innerHTML=db.pilares.length?db.pilares.map(pl=>{const pi=inis.filter(i=>i.pilarId===pl.id),acts=pi.flatMap(actsOf),st=stats(acts);return prowE(pl.nombre,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct,esperadoAl(acts,today()),cls)}).join(''):'<div class="empty">Sin pilares cargados.</div>';
+  const acts=inis.flatMap(actsOf),s=statsInis(inis);
+  $('#'+pre+'Pil').innerHTML=db.pilares.length?db.pilares.map(pl=>{const pi=inis.filter(i=>i.pilarId===pl.id),st=statsInis(pi);return prowE(pl.nombre,`${pi.length} iniciativas · ${st.done}/${st.total} actividades${sinTxt(st)}`,st.pct,espInis(pi,today()),cls)}).join(''):'<div class="empty">Sin pilares cargados.</div>';
   const tacs=db.tacticos.filter(t=>Number(t.anio)===Number(db.plan.anioActivo));
-  $('#'+pre+'Tac').innerHTML=tacs.length?tacs.map(t=>{const ti=inis.filter(i=>i.tacticoId===t.id),acts=ti.flatMap(actsOf),st=stats(acts);return prowE((t.codigo?t.codigo+' · ':'')+t.nombre,`${ti.length} iniciativas`,st.pct,esperadoAl(acts,today()),cls)}).join(''):'<div class="empty">Sin objetivos tácticos para este año.</div>';
-  const rs={};acts.forEach(a=>{const r=a.responsable||'(sin responsable)';(rs[r]=rs[r]||[]).push(a)});
-  const rk=Object.keys(rs).sort((a,b)=>rs[b].length-rs[a].length);
-  $('#'+pre+'Resp').innerHTML=rk.length?rk.map(r=>{const st=stats(rs[r]);return prowE(r,`${st.done}/${st.total} actividades${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}`,st.pct,esperadoAl(rs[r],today()),cls)}).join(''):'<div class="empty">Sin actividades.</div>';
+  $('#'+pre+'Tac').innerHTML=tacs.length?tacs.map(t=>{const ti=inis.filter(i=>i.tacticoId===t.id),st=statsInis(ti);return prowE((t.codigo?t.codigo+' · ':'')+t.nombre,`${ti.length} iniciativas${sinTxt(st)}`,st.pct,espInis(ti,today()),cls)}).join(''):'<div class="empty">Sin objetivos tácticos para este año.</div>';
+  const rs={};inis.forEach(i=>{const r=(i.responsable||'').trim()||'(sin líder)';(rs[r]=rs[r]||[]).push(i)});
+  const rk=Object.keys(rs).sort((a,b)=>rs[b].length-rs[a].length||a.localeCompare(b));
+  $('#'+pre+'Resp').innerHTML=rk.length?rk.map(r=>{const st=statsInis(rs[r]);return prowE(r,`${st.n} iniciativa${st.n===1?'':'s'} · ${st.done}/${st.total} actividades${st.venc?` · <b style="color:var(--bad)">${st.venc} vencida(s)</b>`:''}${sinTxt(st)}`,st.pct,espInis(rs[r],today()),cls)}).join(''):'<div class="empty">Sin iniciativas.</div>';
   return s;
 }
 function renderResumen(){
   const inis=iniAnio(),crit=inis.filter(CUENTA),acts=inis.flatMap(actsOf);
   $('#resHint').textContent=`Año ${db.plan.anioActivo} · ${inis.length} iniciativas activas (${crit.length} críticas) en ${new Set(inis.map(i=>i.pilarId)).size} pilares · Corte al ${today().toLocaleDateString('es-DO')}`;
   const sc=bloqueAvance(crit,'c','c'),sg=bloqueAvance(inis,'g','');
-  const cActs=crit.flatMap(actsOf),gActs=acts,rc=ritmo(cActs),rg=ritmo(gActs);
-  const rit=crit.map(i=>({i,x:ritmo(actsOf(i))}));
+  const rc=ritmoInis(crit),rg=ritmoInis(inis);
+  const rit=crit.map(i=>({i,x:ritIni(i)}));
   const malas=rit.filter(o=>o.x.cls==='r'||o.x.cls==='y').length;
   const prox=acts.filter(a=>estAct(a)==='prox').length;
   const dcls=d=>d<-5?'neg':(d>=0?'pos':'');
   $('#kpisC').innerHTML=`
-   <div class="kpi crit"><div class="v">${rc.r}%</div><div class="t">Avance real · ${sc.done}/${sc.total} actividades</div>${pbE(rc.r,rc.e)}</div>
+   <div class="kpi crit"><div class="v">${rc.r}%</div><div class="t">Avance real · ${sc.done}/${sc.total} actividades${sinTxt(sc)}</div>${pbE(rc.r,rc.e)}</div>
    <div class="kpi"><div class="v" style="color:#64748b">${rc.e}%</div><div class="t">Esperado a hoy, según fechas</div></div>
    <div class="kpi"><div class="v ${dcls(rc.d)}">${fmtD2(rc.d)} pts</div><div class="t">Desvío</div></div>
    <div class="kpi bad"><div class="v">${malas} <span style="font-size:14px;color:var(--muted)">de ${crit.length}</span></div><div class="t">Críticas atrasadas o en riesgo</div></div>
    <div class="kpi bad"><div class="v">${sc.venc}</div><div class="t">Actividades críticas vencidas</div></div>`;
   $('#kpisG').innerHTML=`
-   <div class="kpi"><div class="v">${rg.r}%</div><div class="t">Avance general · ${sg.done}/${sg.total} actividades</div>${pbE(rg.r,rg.e,'g')}</div>
+   <div class="kpi"><div class="v">${rg.r}%</div><div class="t">Avance general · ${sg.done}/${sg.total} actividades${sinTxt(sg)}</div>${pbE(rg.r,rg.e,'g')}</div>
    <div class="kpi"><div class="v" style="color:#64748b">${rg.e}%</div><div class="t">Esperado a hoy</div></div>
    <div class="kpi"><div class="v ${dcls(rg.d)}">${fmtD2(rg.d)} pts</div><div class="t">Desvío</div></div>
    <div class="kpi bad"><div class="v">${sg.venc}</div><div class="t">Actividades vencidas</div></div>
    <div class="kpi"><div class="v">${prox}</div><div class="t">Vencen en los próximos 15 días</div></div>`;
   $('#resCrit').innerHTML=rit.length?rit.sort((a,b)=>a.x.d-b.x.d).map(({i,x})=>`<div class="irow"><div class="n" title="${esc(i.nombre)}">${esc(corto(i.nombre))}<small>${esc(i.responsable||'—')}</small></div>${pbE(x.r,x.e)}<div class="num">${x.r}%<small>real</small></div><div class="num">${fmtD2(x.d)}<small>pts</small></div><div>${bR(x)}</div></div>`).join(''):'<div class="empty">No hay iniciativas críticas este año.</div>';
   $('#evoT').textContent='Evolución del avance '+db.plan.anioActivo;
-  $('#evo').innerHTML=curva(cActs,Number(db.plan.anioActivo));
+  $('#evo').innerHTML=curva(crit,Number(db.plan.anioActivo));
   renderDecisiones();renderResKpi();
-  $('#resPrio').innerHTML=PRIOS.filter(p=>p!==REV).map(p=>{const pi=inis.filter(i=>i.prioridad===p),st=statsInis(pi);return prow((AHORA.includes(p)?'Ahora · ':'')+p,`${pi.length} iniciativas · ${st.done}/${st.total} actividades`,st.pct,p==='Crítica'?'c':'')}).join('');
+  $('#resPrio').innerHTML=PRIOS.filter(p=>p!==REV).map(p=>{const pi=inis.filter(i=>i.prioridad===p),st=statsInis(pi);return prow((AHORA.includes(p)?'Ahora · ':'')+p,`${pi.length} iniciativas · ${st.done}/${st.total} actividades${sinTxt(st)}`,st.pct,p==='Crítica'?'c':'')}).join('');
   const rev=iniAnioTodas().filter(i=>i.prioridad===REV);
   $('#resRev').innerHTML=rev.length?`<table><tbody>${rev.map(i=>`<tr><td>${esc(i.nombre)}</td><td class="muted">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td class="muted">${esc(i.responsable||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Ninguna.</div>';
   const al=acts.filter(a=>['venc','prox'].includes(estAct(a))).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
   $('#resAlert').innerHTML=al.length?actTable(al,{ini:true}):'<div class="empty">Sin actividades vencidas ni próximas a vencer.</div>';
 }
 
-function curva(acts,yr){
-  if(!acts.length)return '<div class="empty">Sin actividades críticas.</div>';
+function curva(inis,yr){
+  if(!inis.length)return '<div class="empty">Sin iniciativas críticas.</div>';
   const W=640,H=230,L=38,R=14,T=16,B=200,MES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   const hoy=today(),x=k=>L+k*(W-L-R)/11,y=v=>B-v*(B-T)/100;
-  const esp=MES.map((_,k)=>esperadoAl(acts,finMes(yr,k+1)));
-  const real=[];for(let k=0;k<12;k++){const fm=finMes(yr,k+1);if(fm<=hoy)real.push(realAl(acts,fm));else{if(new Date(yr,k,1)<=hoy)real.push(realAl(acts,hoy));break}}
+  const esp=MES.map((_,k)=>espInis(inis,finMes(yr,k+1)));
+  const real=[];for(let k=0;k<12;k++){const fm=finMes(yr,k+1);if(fm<=hoy)real.push(realInis(inis,fm));else{if(new Date(yr,k,1)<=hoy)real.push(realInis(inis,hoy));break}}
   let g='';[0,25,50,75,100].forEach(v=>{g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#eef1f5"/><text x="${L-7}" y="${y(v)+4}" font-size="10" fill="#94a3b8" text-anchor="end">${v}%</text>`});
   MES.forEach((m,k)=>{g+=`<text x="${x(k)}" y="${B+17}" font-size="10" fill="#94a3b8" text-anchor="middle">${m}</text>`});
   const pe=esp.map((v,k)=>`${x(k).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
@@ -776,7 +786,7 @@ function renderRevTab(){
   const crit=iniAnio().filter(CUENTA).sort((a,b)=>String(a.nombre).localeCompare(b.nombre)),hechas=crit.filter(i=>revDe(i.id,y,m)).length;
   $('#revTabT').textContent='Revisión mensual · '+ML+' '+y;
   $('#revTabHint').innerHTML=crit.length?`Registre cómo va cada iniciativa crítica este mes. Registradas: <b>${hechas} de ${crit.length}</b>. Las demás iniciativas se revisan desde <b>Gestionar › Iniciativas</b>.`:'';
-  $('#revTab').innerHTML=crit.length?`<table><thead><tr><th>Iniciativa</th><th>Líder</th><th style="width:24%">Avance real vs esperado</th><th>${ML}</th><th>Última revisión</th><th></th></tr></thead><tbody>${crit.map(i=>{const x=ritmo(actsOf(i)),r=revDe(i.id,y,m);
+  $('#revTab').innerHTML=crit.length?`<table><thead><tr><th>Iniciativa</th><th>Líder</th><th style="width:24%">Avance real vs esperado</th><th>${ML}</th><th>Última revisión</th><th></th></tr></thead><tbody>${crit.map(i=>{const x=ritIni(i),r=revDe(i.id,y,m);
     return `<tr><td><b>${esc(i.nombre)}</b><div class="muted" style="font-size:12px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</div></td><td>${esc(i.responsable||'—')}</td><td><div style="display:flex;align-items:center;gap:8px">${pbE(x.r,x.e)}<span class="nowrap" style="font-size:12px">${x.r}% / ${x.e}%</span></div></td>
     <td>${r?`<span class="dv ${EC[r.estado]||'pend'}">✓ ${esc(r.estado)}</span>`:'<span class="dv pend">Pendiente</span>'}</td><td>${revTag(i.id)}</td>
     <td style="text-align:right"><button type="button" class="btn ${r?'sec ':''}sm" data-rev="${i.id}">${r?'Ver / editar':'Registrar'}</button></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">No hay iniciativas críticas en el año seleccionado.</div>';
@@ -940,14 +950,14 @@ function renderCriticas(){
   const crit=iniAnio().filter(i=>i.prioridad==='Crítica'),s=statsInis(crit);
   const comp=crit.filter(i=>{const x=stats(actsOf(i));return x.total&&x.done===x.total}).length;
   const atr=crit.filter(i=>stats(actsOf(i)).venc>0).length;
-  const xr=ritmo(crit.flatMap(actsOf));
-  $('#critKpis').innerHTML=`<div class="kpi crit"><div class="v">${xr.r}%</div><div class="t">Avance real · esperado ${xr.e}%</div>${pbE(xr.r,xr.e)}</div>
+  const xr=ritmoInis(crit);
+  $('#critKpis').innerHTML=`<div class="kpi crit"><div class="v">${xr.r}%</div><div class="t">Avance real · esperado ${xr.e}%${sinTxt(s)}</div>${pbE(xr.r,xr.e)}</div>
   <div class="kpi"><div class="v">${crit.length}</div><div class="t">Iniciativas críticas</div></div>
   <div class="kpi ok"><div class="v">${comp}</div><div class="t">Completadas</div></div>
   <div class="kpi bad"><div class="v">${atr}</div><div class="t">Con atraso</div></div>
   <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>`;
   $('#critView').innerHTML=crit.length?crit.map(i=>{const acts=actsOf(i).sort((a,b)=>(a.completada-b.completada)||(a.fechaEstimada||'').localeCompare(b.fechaEstimada||'')),st=stats(acts),[e,c]=estIni(i),t=byId(db.tacticos,i.tacticoId);
-    const x=ritmo(acts);
+    const x=ritIni(i);
     return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div>${revTag(i.id)}</div>
     <div class="irow" style="grid-template-columns:minmax(120px,2fr) 50px 50px 90px;padding-top:0"><div>${pbE(x.r,x.e)}</div><div class="num">${x.r}%<small>real</small></div><div class="num">${x.e}%<small>esperado</small></div><div>${bR(x)}</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
 }
