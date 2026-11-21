@@ -180,6 +180,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .kmprog{display:flex;align-items:center;gap:12px;font-size:13px;margin-bottom:14px}.kmprog .bar{flex:1;max-width:260px;height:8px;background:#eef1f5;border-radius:6px;overflow:hidden}.kmprog .bar i{display:block;height:100%;background:#16a34a;border-radius:6px;transition:width .3s}
 .kcards{display:flex;flex-direction:column;gap:8px}
 .kcard{display:grid;grid-template-columns:minmax(0,1fr) 90px 170px 190px;gap:14px;align-items:center;border:1px solid #e8edf3;border-left:4px solid #e2e8f0;border-radius:10px;padding:10px 14px;background:#fff}
+.kcard.fut{grid-template-columns:minmax(0,1fr) auto auto}.kmgo{display:flex;align-items:center;gap:12px;background:#fffbea;border:1px solid #f5e1a4;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:13px}
 .kcard.done{border-left-color:#16a34a}.kcard.hito{grid-template-columns:minmax(0,1fr) 170px 190px}
 .kcard .kci b{display:block;font-size:13.5px}.kcard .kci small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
 .kcard .kcref,.kcard .kcst div{font-size:12.5px}.kcard small.l{display:block;color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
@@ -805,7 +806,10 @@ function renderKpiMes(){
   const {yr,lim,m}=kmCtx(),inds=indsAnio(),W=$('#kpiMesW');
   $('#kpiT').textContent='Indicadores '+yr;
   if(!inds.length){$('#kpiHint').innerHTML='Cree un indicador con <b>Nuevo indicador</b>.';W.innerHTML='<div class="empty">Sin indicadores para '+yr+'.</div>';return}
-  if(!lim){$('#kpiHint').textContent='Año futuro: los valores se cargan cuando comience.';W.innerHTML='';return}
+  if(!lim){const cy=today().getFullYear(),hay=[...$('#selAnio').options].some(o=>Number(o.value)===cy);
+    $('#kpiHint').innerHTML=`${yr} todavía no comienza: aquí ve los indicadores definidos para ese año. Los valores se cargan desde enero ${yr}.`;
+    W.innerHTML=(hay?`<div class="kmgo"><span>Para cargar los datos de este mes cambie a <b>${cy}</b>.</span><button type="button" class="btn sm" data-goyr="${cy}">Ir a ${cy}</button></div>`:'')+
+      `<div class="kcards">${inds.map(ind=>{const t=byId(db.tacticos,ind.tacticoId)||{};return `<div class="kcard fut"><div class="kci"><span class="code t" style="margin-right:6px">${esc(t.codigo||'OT')}</span><b style="display:inline" title="${esc(ind.nombre)}">${esc(corto(ind.nombre))}</b><small>${esHito(ind)?`Hito · compromiso ${fmtD(ind.fechaCompromiso)} · Criterio: ${esc(corto(ind.criterio||'—'))}`:`${esc(ind.unidad||'')}${ind.unidad?' · ':''}base ${ind.base?fmtN(ind.base):'—'} · meta ${ind.meta?fmtN(ind.meta):'—'} · ${ind.acumula==='ultimo'?'último valor':'suma'}${ind.sentido==='menos'?' · menos es mejor':''}`}${ind.responsable?' · '+esc(ind.responsable):''}</small></div><span class="rtag">Desde ene ${yr}</span><span class="acts"><button class="ib sm" title="Editar" data-ed="ind:${ind.id}">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="ind:${ind.id}">${IC.trash}</button></span></div>`}).join('')}</div>`;return}
   $('#kpiHint').innerHTML='Elija el mes, escriba cada valor y presione <b>Enter</b>. Se guarda solo.';
   const nums=inds.filter(i=>!esHito(i));
   const btns=MESES.slice(0,lim).map((n,k)=>{const mm=k+1,full=nums.length&&nums.every(i=>kmCargado(i,yr,mm));return `<button type="button" data-km="${mm}" class="${mm===m?'on':''}${full?' full':''}" title="${full?'Completo':''}">${n}${full?' ✓':''}</button>`}).join('');
@@ -824,6 +828,7 @@ function renderKpiMes(){
   W.innerHTML=`<div class="kmeses" id="kmMeses">${btns}</div><div class="kmprog" id="kmProg"></div><div class="kcards">${cards}</div>`;
   kmProg();
 }
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-goyr]');if(!b)return;const sel=$('#selAnio');sel.value=b.dataset.goyr;sel.dispatchEvent(new Event('change'))});
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('#kmMeses button');if(!b)return;KPI_MES=Number(b.dataset.km);renderKpiMes()});
 function kmGuardar(el){
   const val=el.value.trim(),last=el.dataset.last||'',nv=val===''?'':numV(val),lv=last===''?'':numV(last);if(nv===lv){el.classList.remove('dirty');if(val!=='')el.value=fmtN(nv);return}
