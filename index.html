@@ -231,6 +231,48 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .x{border:0;background:none;font-size:26px;line-height:1;color:#94a3b8;cursor:pointer;padding:0 4px}.x:hover{color:var(--ink)}
 .warn{border:1px solid #fecaca;background:#fef2f2;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px}
 @media (max-width:900px){.app{display:block}.side{position:static;width:auto;height:auto;padding:10px 10px 6px}.brand{border:0;padding:2px 6px 8px;margin:0}nav{display:flex;overflow-x:auto;gap:2px}nav .lbl{display:none}nav button{width:auto;white-space:nowrap;padding:8px 10px}main{padding:16px}.topbar{padding:10px 16px;position:static}.g2{grid-template-columns:1fr}.prow{grid-template-columns:1fr 2fr 40px}}
+.mbar,.mshade,.monly{display:none}
+@media (max-width:760px){
+  body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .side{padding:10px 14px;position:static}.brand{padding:0}.brand h1{font-size:14px}.brand .sub{font-size:11px;margin-top:1px}
+  .side nav{display:none;position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom));z-index:60;background:var(--side);padding:12px 12px 14px;border-radius:16px 16px 0 0;max-height:70vh;overflow:auto;box-shadow:0 -8px 24px rgba(0,0,0,.25)}
+  body.mopen .side nav{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  body.mopen .mshade{display:block;position:fixed;inset:0;background:rgba(15,23,42,.4);z-index:55}
+  .side nav .lbl{display:block;grid-column:1/-1;margin:6px 4px 2px}.side nav button{width:auto;white-space:normal;padding:10px;font-size:13.5px}
+  .mbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:58;background:#fff;border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .mbar button{all:unset;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#64748b;cursor:pointer;padding:4px 0}
+  .mbar button svg{width:22px;height:22px}.mbar button.on{color:var(--pri2,#1e3a5f);font-weight:600}
+  .topbar{padding:8px 14px;gap:8px;position:sticky;top:0;flex-wrap:nowrap}.topbar h2{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar .ctl{gap:6px;flex-shrink:0}.topbar .ctl label,#sync,.topbar .ctl button[title^="Imprimir"]{display:none}.topbar .ctl .ib{width:36px;height:36px}
+  main{padding:12px}.card{padding:14px}
+  .monly{display:block}#btnFiltros.monly{display:inline-flex;margin-bottom:10px}
+  #c-act .chead .btns [data-open="m-bulk"]{display:none}
+  #c-act:not(.fopen) #actTipo,#c-act:not(.fopen) .filters{display:none}
+  #c-act .chead{margin-bottom:8px}
+  .filters>div{flex:1 1 100%}
+  /* actividades en tarjetas */
+  .atable thead{display:none}.atable,.atable tbody{display:block}
+  .atable tr{display:grid;grid-template-columns:34px minmax(0,1fr) minmax(0,1fr) auto;column-gap:8px;row-gap:3px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .atable td{display:block;border:0!important;padding:0!important}
+  .atable .c-chk{grid-column:1;grid-row:1/span 4;padding-top:2px!important}
+  .atable .c-chk .chk{width:22px;height:22px}
+  .atable .nm{grid-column:2/4;font-weight:600;font-size:14px}
+  .atable .c-ini{grid-column:2/4;font-size:12px;color:#64748b}
+  .atable .c-resp{grid-column:2;font-size:12.5px;color:#475569}
+  .atable .c-fec{grid-column:3;font-size:12.5px;color:#475569;white-space:normal}
+  .atable .c-est{grid-column:2/4}
+  .atable .acts{grid-column:4;grid-row:1/span 4;display:flex!important;flex-direction:column;gap:6px}
+  /* resumen */
+  .krow{grid-template-columns:14px minmax(0,1fr) 64px}.krow>:nth-child(3){grid-column:2/-1;grid-row:2;white-space:normal}.krow>:nth-child(4){grid-row:1;grid-column:3}
+  /* cargar mes */
+  .kmeses{flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}.kmeses button{flex-shrink:0}
+  .kcard{grid-template-columns:70px 1fr;gap:8px 12px;padding:10px 12px}.kcard .kci{grid-column:1/-1}
+  .kcard .kcst{grid-column:1/-1;justify-content:flex-start}
+  .kcard.hito{grid-template-columns:1fr auto}.kcard.fut{grid-template-columns:1fr auto auto}
+  main .card{overflow-x:auto}main table:not(.atable):not(.kgrid){display:block;overflow-x:auto}
+  #toast,.toast{bottom:calc(76px + env(safe-area-inset-bottom))!important}
+  .modal{padding:0;align-items:flex-end}.modal .mbox,.modal>div{max-width:100%!important;width:100%!important;border-radius:16px 16px 0 0;max-height:92vh;overflow:auto}
+}
 @media print{.side,.topbar .ctl,.btn,.ib,.noprint,.modal,.chips,.filters{display:none!important}section.tab{display:none!important}section.tab.on{display:block!important}body{background:#fff}.card,.blk{break-inside:avoid}.app{display:block}}
 </style>
 </head>
@@ -255,6 +297,8 @@ details.ot summary:hover .otn{color:var(--pri2)}
     <button data-t="c-datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg><span>Respaldo</span></button>
   </nav>
 </aside>
+<div class="mbar" id="mbar"><button type="button" data-mt="resumen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="M9 21v-6h6v6"/></svg><span>Resumen</span></button><button type="button" data-mt="c-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span>Actividades</span></button><button type="button" data-mt="c-ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Indicadores</span></button><button type="button" data-mt="mas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Más</span></button></div>
+<div class="mshade" id="mshade"></div>
 <div class="mainwrap">
 <div class="topbar">
   <h2 id="pgTitle">Resumen</h2>
@@ -468,7 +512,8 @@ details.ot summary:hover .otn{color:var(--pri2)}
 <section class="tab" id="c-act">
   <div class="card">
     <div class="chead"><div class="chips" id="actTipo"></div><div class="btns"><button type="button" class="btn sec sm" data-open="m-bulk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0-4 4m4-4 4 4"/><path d="M4 17v3h16v-3"/></svg>Desde Excel</button><button type="button" class="btn sm" data-new="act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>Nueva actividad</button></div></div>
-    <div class="filters"><div style="flex:2"><label>Iniciativa</label><select id="fActIni"></select></div><div><label>Responsable</label><select id="fActResp"></select></div><div><label>Estado</label><select id="fActEst"></select></div></div>
+    <button type="button" class="btn sec sm monly" id="btnFiltros">Filtros</button>
+    <div class="filters"><div class="monly" style="flex-basis:100%"><label>Ordenar por</label><select id="mSort"><option value="fecha:1">Fecha estimada</option><option value="est:1">Estado (vencidas primero)</option><option value="resp:1">Responsable</option><option value="ini:1">Iniciativa</option><option value="nom:1">Actividad (A–Z)</option><option value="chk:1">Pendientes primero</option></select></div><div style="flex:2"><label>Iniciativa</label><select id="fActIni"></select></div><div><label>Responsable</label><select id="fActResp"></select></div><div><label>Estado</label><select id="fActEst"></select></div></div>
     <div id="tbAct"></div>
   </div>
   <div class="modal" id="m-act"><div class="sheet"><div class="mhead"><h3 data-tn="Nueva actividad" data-te="Editar actividad">Nueva actividad</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
@@ -936,9 +981,23 @@ function ordenarActs(list){const cmp=(a,b)=>String(a||'').localeCompare(String(b
   return list.slice().sort((a,b)=>key(a,b)*ACT_SORT.d||f(a).localeCompare(f(b))||cmp(a.nombre,b.nombre))}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sort]');if(!b)return;const k=b.dataset.sort;
   ACT_SORT=ACT_SORT.k===k?{k,d:-ACT_SORT.d}:{k,d:1};try{localStorage.setItem('planActSort',JSON.stringify(ACT_SORT))}catch(x){}renderCargaAct()});
+/* ---- celular: barra inferior, menú "Más", filtros ---- */
+(function(){
+  const MB=['resumen','c-act','c-ind'];
+  const sync=()=>{const t=(document.querySelector('nav button.on')||{}).dataset?.t;document.querySelectorAll('#mbar button').forEach(b=>b.classList.toggle('on',b.dataset.mt===t||(b.dataset.mt==='mas'&&!MB.includes(t))))};
+  document.addEventListener('click',e=>{
+    const b=e.target.closest&&e.target.closest('#mbar button');
+    if(b){const t=b.dataset.mt;if(t==='mas'){document.body.classList.toggle('mopen')}else{document.body.classList.remove('mopen');goTab(t);window.scrollTo(0,0)}sync();return}
+    if(e.target.closest&&(e.target.closest('nav button')||e.target.id==='mshade')){document.body.classList.remove('mopen');setTimeout(sync,0);window.scrollTo(0,0)}
+    if(e.target.closest&&e.target.closest('#btnFiltros')){$('#c-act').classList.toggle('fopen')}
+  });
+  document.addEventListener('change',e=>{if(e.target.id==='mSort'){const [k,d]=e.target.value.split(':');ACT_SORT={k,d:Number(d)};try{localStorage.setItem('planActSort',JSON.stringify(ACT_SORT))}catch(x){}renderCargaAct()}});
+  setTimeout(sync,0);
+})();
+function mFiltrosTxt(){const n=(ACT_TIPO?1:0)+['#fActIni','#fActResp','#fActEst'].filter(q=>$(q)&&$(q).value).length;const b=$('#btnFiltros');if(b)b.textContent=n?`Filtros y orden (${n})`:'Filtros y orden';const ms=$('#mSort');if(ms){const v=ACT_SORT.k+':1';if([...ms.options].some(o=>o.value===v))ms.value=v}}
 function actTable(list,o={}){
   const H=(k,t,st)=>o.sort?`<th${st?` style="${st}"`:''}><button type="button" class="thsort${ACT_SORT.k===k?' on':''}" data-sort="${k}" title="Ordenar">${t}<i>${ACT_SORT.k===k?(ACT_SORT.d>0?'▲':'▼'):'↕'}</i></button></th>`:`<th${st?` style="${st}"`:''}>${t}</th>`;
-  return `<table><thead><tr>${H('chk','✓','width:44px')}${H('nom','Actividad')}${o.ini?H('ini','Iniciativa'):''}${H('resp','Responsable')}${H('fecha','Fecha est.')}${H('est','Estado')}${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td>${o.edit?`<input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}>`:(a.completada?'<span class="rochk on" title="Completada">✓</span>':'<span class="rochk" title="Pendiente"></span>')}</td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
+  return `<table class="atable"><thead><tr>${H('chk','✓','width:44px')}${H('nom','Actividad')}${o.ini?H('ini','Iniciativa'):''}${H('resp','Responsable')}${H('fecha','Fecha est.')}${H('est','Estado')}${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td class="c-chk">${o.edit?`<input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}>`:(a.completada?'<span class="rochk on" title="Completada">✓</span>':'<span class="rochk" title="Pendiente"></span>')}</td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td class="c-ini">${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td class="c-resp">${esc(a.responsable)}</td><td class="nowrap c-fec">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td class="c-est">${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
 }
 document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.chk;if(!id)return;const c=e.target.checked;run('marcarActividad',id,c,iso(new Date())).then(ok(c?'Actividad completada':'Actividad reabierta')).catch(()=>{})});
 
@@ -1196,6 +1255,7 @@ function renderCargaAct(){
   const vr=$('#fActResp').value;$('#fActResp').innerHTML=opts([...new Set(base.map(a=>a.responsable).filter(Boolean))].sort((a,b)=>a.localeCompare(b)).map(r=>[r,r]),vr,'Todos');
   const ve=$('#fActEst').value;$('#fActEst').innerHTML=opts(Object.entries(EST),ve,'Todos');
   const list=base.filter(a=>(!$('#fActResp').value||a.responsable===$('#fActResp').value)&&(!$('#fActEst').value||estAct(a)===$('#fActEst').value));
+  mFiltrosTxt();
   $('#tbAct').innerHTML=list.length?actTable(ordenarActs(list),{ini:true,edit:true,sort:true}):'<div class="empty">Sin actividades.</div>';
 }
 $('#fActIni').onchange=()=>{renderCargaAct()};
