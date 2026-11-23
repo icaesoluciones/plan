@@ -252,7 +252,6 @@ details.ot summary:hover .otn{color:var(--pri2)}
     <button data-t="c-ini"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg><span>Iniciativas</span></button>
     <button data-t="c-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg><span>Actividades</span></button>
     <button data-t="c-ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>Indicadores</span></button>
-    <button data-t="c-rev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h6M9 18h3"/></svg><span>Revisión mensual</span></button>
     <button data-t="c-datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 17v3h16v-3"/></svg><span>Respaldo</span></button>
   </nav>
 </aside>
@@ -279,8 +278,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
       <div class="card"><h3>Iniciativas críticas · real vs esperado</h3><div id="resCrit"></div></div>
       <div class="card"><h3>Por pilar</h3><div id="cPil"></div></div>
       <div class="card"><h3>Por objetivo táctico</h3><div id="cTac"></div></div>
-      <div class="card"><h3>Por líder de iniciativa</h3><div id="cResp"></div></div>
-      <div class="card"><h3>Decisiones pendientes <span class="muted" style="font-weight:400;font-size:12px">· de las revisiones del mes</span></h3><div id="resDec"></div></div>
+      <div class="card" style="grid-column:1/-1"><h3>Por líder de iniciativa</h3><div id="cResp"></div></div>
     </div>
   </div>
 
@@ -642,7 +640,7 @@ function render(){
   const yrs=new Set();for(let y=Number(p.anioInicio);y<=Number(p.anioHorizonte);y++)yrs.add(y);db.tacticos.forEach(t=>yrs.add(Number(t.anio)));yrs.add(Number(p.anioActivo));
   $('#selAnio').innerHTML=opts([...yrs].sort().map(y=>[y,y]),p.anioActivo);
   $('#dlResp').innerHTML=responsables().map(r=>`<option value="${esc(r)}">`).join('');
-  renderKpi();renderKpiRO();renderRevTab();renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
+  renderKpi();renderKpiRO();renderResumen();renderPilares();renderCriticas();renderMapa();renderSeg();
   renderCargaPlan();renderCargaPil();renderCargaIni();renderCargaAct();
   hintsSel();
 }
@@ -684,7 +682,7 @@ function renderResumen(){
   $('#resCrit').innerHTML=rit.length?rit.sort((a,b)=>a.x.d-b.x.d).map(({i,x})=>`<div class="irow"><div class="n" title="${esc(i.nombre)}">${esc(corto(i.nombre))}<small>${esc(i.responsable||'—')}</small></div>${pbE(x.r,x.e)}<div class="num">${x.r}%<small>real</small></div><div class="num">${fmtD2(x.d)}<small>pts</small></div><div>${bR(x)}</div></div>`).join(''):'<div class="empty">No hay iniciativas críticas este año.</div>';
   $('#evoT').textContent='Evolución del avance '+db.plan.anioActivo;
   $('#evo').innerHTML=curva(crit,Number(db.plan.anioActivo));
-  renderDecisiones();renderResKpi();
+  renderResKpi();
   $('#resPrio').innerHTML=PRIOS.filter(p=>p!==REV).map(p=>{const pi=inis.filter(i=>i.prioridad===p),st=statsInis(pi);return prow((AHORA.includes(p)?'Ahora · ':'')+p,`${pi.length} iniciativas · ${st.done}/${st.total} actividades${sinTxt(st)}`,st.pct,p==='Crítica'?'c':'')}).join('');
   const rev=iniAnioTodas().filter(i=>i.prioridad===REV);
   $('#resRev').innerHTML=rev.length?`<table><tbody>${rev.map(i=>`<tr><td>${esc(i.nombre)}</td><td class="muted">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td class="muted">${esc(i.responsable||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Ninguna.</div>';
@@ -969,7 +967,7 @@ function renderCriticas(){
   <div class="kpi bad"><div class="v">${s.venc}</div><div class="t">Actividades vencidas</div></div>`;
   $('#critView').innerHTML=crit.length?crit.map(i=>{const acts=actsOf(i).sort((a,b)=>(a.completada-b.completada)||(a.fechaEstimada||'').localeCompare(b.fechaEstimada||'')),st=stats(acts),[e,c]=estIni(i),t=byId(db.tacticos,i.tacticoId);
     const x=ritIni(i);
-    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div>${revTag(i.id)}</div>
+    return `<div class="card" style="border-left:4px solid var(--crit)"><div class="chead" style="align-items:flex-start"><div style="flex:1;min-width:0"><b style="font-size:14px">${esc(i.nombre)}</b><div class="muted" style="font-size:12px;margin-top:2px">${esc(byId(db.pilares,i.pilarId)?.nombre||'')}${t?' · '+esc(t.codigo||''):''} · Líder: ${esc(i.responsable||'—')}</div></div></div>
     <div class="irow" style="grid-template-columns:minmax(120px,2fr) 50px 50px 90px;padding-top:0"><div>${pbE(x.r,x.e)}</div><div class="num">${x.r}%<small>real</small></div><div class="num">${x.e}%<small>esperado</small></div><div>${bR(x)}</div></div>${acts.length?actTable(acts):'<div class="empty">Sin actividades cargadas.</div>'}</div>`}).join(''):'<div class="card empty">No hay iniciativas críticas en el año seleccionado.</div>';
 }
 
@@ -1176,7 +1174,7 @@ function renderCargaIni(){
   fillIniSelects();
   const v=$('#fIniPil').value;$('#fIniPil').innerHTML=opts(db.pilares.map(p=>[p.id,p.nombre]),v,'Todos');
   const list=db.iniciativas.filter(i=>!$('#fIniPil').value||i.pilarId===$('#fIniPil').value).sort((a,b)=>anioIni(b)-anioIni(a)||prioOrd(a.prioridad)-prioOrd(b.prioridad));
-  $('#tbIni').innerHTML=list.length?`<table><thead><tr><th>Año</th><th>Pilar</th><th>Iniciativa</th><th>Prioridad</th><th>Objetivo táctico</th><th>Líder</th><th>Activ.</th><th></th></tr></thead><tbody>${list.map(i=>{const t=byId(db.tacticos,i.tacticoId),s=stats(actsOf(i));return `<tr><td>${anioIni(i)}</td><td>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td><b>${esc(i.nombre)}</b></td><td>${bP(i.prioridad)}</td><td>${t?esc(tacLbl(t)):'<span class="muted">—</span>'}</td><td>${esc(i.responsable||'—')}</td><td>${s.done}/${s.total}</td>${rowBtnsRev(i.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas.</div>';
+  $('#tbIni').innerHTML=list.length?`<table><thead><tr><th>Año</th><th>Pilar</th><th>Iniciativa</th><th>Prioridad</th><th>Objetivo táctico</th><th>Líder</th><th>Activ.</th><th></th></tr></thead><tbody>${list.map(i=>{const t=byId(db.tacticos,i.tacticoId),s=stats(actsOf(i));return `<tr><td>${anioIni(i)}</td><td>${esc(byId(db.pilares,i.pilarId)?.nombre||'')}</td><td><b>${esc(i.nombre)}</b></td><td>${bP(i.prioridad)}</td><td>${t?esc(tacLbl(t)):'<span class="muted">—</span>'}</td><td>${esc(i.responsable||'—')}</td><td>${s.done}/${s.total}</td>${rowBtns('ini',i.id)}</tr>`}).join('')}</tbody></table>`:'<div class="empty">Sin iniciativas.</div>';
 }
 $('#fIniPil').onchange=renderCargaIni;
 $('#fmIni').elements.tacticoId.onchange=e=>{const t=byId(db.tacticos,e.target.value);if(t)$('#fmIni').elements.anio.value=t.anio;pintarPrio()};
