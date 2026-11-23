@@ -713,7 +713,7 @@ const numV=v=>{if(v===undefined||v===null)return NaN;if(typeof v==='number')retu
 const sepMil=n=>{const neg=n<0,[a,d]=String(Math.abs(n)).split('.');return (neg?'-':'')+a.replace(/\B(?=(\d{3})+(?!\d))/g,',')+(d?'.'+d:'')};
 const fmtN=v=>{v=numV(v);return isNaN(v)?'—':sepMil(Math.abs(v)>=100?Math.round(v):Math.round(v*100)/100)};
 const fmtC=v=>{v=numV(v);if(isNaN(v))return '—';if(Math.abs(v)>=1e6){const x=v/1e6;return sepMil(Math.abs(x)>=100?Math.round(x):Math.round(x*10)/10)+' MM'}return fmtN(v)};
-const fmtNum=v=>{const x=numV(v);return isNaN(x)?esc(v??''):`<span title="${fmtN(x)}">${fmtC(x)}</span>`};
+const fmtNum=v=>{const x=numV(v);return isNaN(x)?((typeof v==='number'||v===''||v==null)?'—':esc(v)):`<span title="${fmtN(x)}">${fmtC(x)}</span>`};
 function valoresDe(ind,yr){const m={};db.valores.filter(v=>v.indicadorId===ind.id&&Number(v.anio)===yr).sort((a,b)=>String(a.actualizado||'').localeCompare(String(b.actualizado||''))).forEach(v=>{m[Number(v.mes)]=v});return m}
 function evalInd(ind,yr){
   const vals=valoresDe(ind,yr),meses=Object.keys(vals).map(Number).filter(k=>!isNaN(numV(vals[k].valor))).sort((a,b)=>a-b);
