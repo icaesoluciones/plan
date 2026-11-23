@@ -60,6 +60,7 @@ form.f .btns{grid-column:1/-1;justify-content:flex-end;border-top:1px solid var(
 .btn.dan{background:#fff;color:var(--bad);border:1px solid #fecaca}
 .btn.sm{padding:6px 11px;font-size:12.5px;font-weight:500}
 table{width:100%;border-collapse:collapse;font-size:13px}
+th .thsort{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;white-space:nowrap}th .thsort:hover,th .thsort.on{color:var(--pri2,#1e3a5f)}th .thsort i{font-style:normal;font-size:9px;opacity:.55}th .thsort.on i{opacity:1}
 th{text-align:left;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--line);padding:8px 10px;font-weight:600}
 td{border-bottom:1px solid #f1f4f7;padding:10px;vertical-align:middle}
 tbody tr:last-child td{border-bottom:0}
@@ -928,8 +929,18 @@ function renderDecisiones(){
   const dec=del.filter(r=>String(r.decision||'').trim());
   $('#resDec').innerHTML=`<p class="hint" style="margin:-4px 0 6px">Revisiones de ${MESL[m-1]}: <b>${hechas} de ${crit.length}</b> críticas registradas.</p>`+(dec.length?dec.map(r=>{const i=byId(db.iniciativas,r.iniciativaId);return `<div class="dec"><span class="dv ${EC[r.estado]||'pend'}" style="float:right">${esc(r.estado)}</span><b>${esc(r.decision)}</b><small>${esc(i?corto(i.nombre):'')} · ${esc(i&&i.responsable||'')}</small></div>`}).join(''):'<div class="empty">Sin decisiones pendientes este mes.</div>');
 }
+let ACT_SORT=(()=>{try{return JSON.parse(localStorage.getItem('planActSort'))||{k:'fecha',d:1}}catch(e){return{k:'fecha',d:1}}})();
+const EST_ORD={venc:0,prox:1,pend:2,ok:3};
+function ordenarActs(list){const cmp=(a,b)=>String(a||'').localeCompare(String(b||''),'es',{sensitivity:'base'});
+  const iniN=a=>(byId(db.iniciativas,a.iniciativaId)||{}).nombre||'',f=a=>a.fechaEstimada||'9999';
+  const key={chk:(a,b)=>(a.completada?1:0)-(b.completada?1:0),nom:(a,b)=>cmp(a.nombre,b.nombre),ini:(a,b)=>cmp(iniN(a),iniN(b)),
+    resp:(a,b)=>cmp(a.responsable||'~',b.responsable||'~'),fecha:(a,b)=>f(a).localeCompare(f(b)),est:(a,b)=>EST_ORD[estAct(a)]-EST_ORD[estAct(b)]}[ACT_SORT.k]||((a,b)=>0);
+  return list.slice().sort((a,b)=>key(a,b)*ACT_SORT.d||f(a).localeCompare(f(b))||cmp(a.nombre,b.nombre))}
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sort]');if(!b)return;const k=b.dataset.sort;
+  ACT_SORT=ACT_SORT.k===k?{k,d:-ACT_SORT.d}:{k,d:1};try{localStorage.setItem('planActSort',JSON.stringify(ACT_SORT))}catch(x){}renderCargaAct()});
 function actTable(list,o={}){
-  return `<table><thead><tr><th style="width:34px">✓</th><th>Actividad</th>${o.ini?'<th>Iniciativa</th>':''}<th>Responsable</th><th>Fecha est.</th><th>Estado</th>${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td>${o.edit?`<input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}>`:(a.completada?'<span class="rochk on" title="Completada">✓</span>':'<span class="rochk" title="Pendiente"></span>')}</td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
+  const H=(k,t,st)=>o.sort?`<th${st?` style="${st}"`:''}><button type="button" class="thsort${ACT_SORT.k===k?' on':''}" data-sort="${k}" title="Ordenar">${t}<i>${ACT_SORT.k===k?(ACT_SORT.d>0?'▲':'▼'):'↕'}</i></button></th>`:`<th${st?` style="${st}"`:''}>${t}</th>`;
+  return `<table><thead><tr>${H('chk','✓','width:44px')}${H('nom','Actividad')}${o.ini?H('ini','Iniciativa'):''}${H('resp','Responsable')}${H('fecha','Fecha est.')}${H('est','Estado')}${o.edit?'<th class="noprint"></th>':''}</tr></thead><tbody>${list.map(a=>{const e=estAct(a),i=byId(db.iniciativas,a.iniciativaId);return `<tr class="${a.completada?'done':''}"><td>${o.edit?`<input type="checkbox" class="chk" data-chk="${a.id}" ${a.completada?'checked':''}>`:(a.completada?'<span class="rochk on" title="Completada">✓</span>':'<span class="rochk" title="Pendiente"></span>')}</td><td class="nm">${esc(a.nombre)}${a.nota?`<div class="muted" style="font-size:12px">${esc(a.nota)}</div>`:''}</td>${o.ini?`<td>${esc(i?i.nombre:'')} ${i?bP(i.prioridad):''}</td>`:''}<td>${esc(a.responsable)}</td><td class="nowrap">${fmtD(a.fechaEstimada)}${a.completada&&a.fechaCompletada?`<div class="muted" style="font-size:11.5px">Cerrada ${fmtD(a.fechaCompletada)}</div>`:''}</td><td>${bS(e)}</td>${o.edit?`<td class="acts noprint"><button class="ib sm" data-ed="act:${a.id}" title="Editar">${IC.edit}</button> <button class="ib sm del" title="Eliminar" data-del="act:${a.id}">${IC.trash}</button></td>`:''}</tr>`}).join('')}</tbody></table>`;
 }
 document.addEventListener('change',e=>{const id=e.target.dataset&&e.target.dataset.chk;if(!id)return;const c=e.target.checked;run('marcarActividad',id,c,iso(new Date())).then(ok(c?'Actividad completada':'Actividad reabierta')).catch(()=>{})});
 
@@ -1186,8 +1197,8 @@ function renderCargaAct(){
   const base=db.actividades.filter(a=>permit.has(a.iniciativaId)&&(!$('#fActIni').value||a.iniciativaId===$('#fActIni').value));
   const vr=$('#fActResp').value;$('#fActResp').innerHTML=opts([...new Set(base.map(a=>a.responsable).filter(Boolean))].sort((a,b)=>a.localeCompare(b)).map(r=>[r,r]),vr,'Todos');
   const ve=$('#fActEst').value;$('#fActEst').innerHTML=opts(Object.entries(EST),ve,'Todos');
-  const list=base.filter(a=>(!$('#fActResp').value||a.responsable===$('#fActResp').value)&&(!$('#fActEst').value||estAct(a)===$('#fActEst').value)).sort((a,b)=>(a.fechaEstimada||'').localeCompare(b.fechaEstimada||''));
-  $('#tbAct').innerHTML=list.length?actTable(list,{ini:true,edit:true}):'<div class="empty">Sin actividades.</div>';
+  const list=base.filter(a=>(!$('#fActResp').value||a.responsable===$('#fActResp').value)&&(!$('#fActEst').value||estAct(a)===$('#fActEst').value));
+  $('#tbAct').innerHTML=list.length?actTable(ordenarActs(list),{ini:true,edit:true,sort:true}):'<div class="empty">Sin actividades.</div>';
 }
 $('#fActIni').onchange=()=>{renderCargaAct()};
 $('#fActResp').onchange=()=>{renderCargaAct()};
