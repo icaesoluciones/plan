@@ -995,6 +995,22 @@ function ordenarActs(list){const cmp=(a,b)=>String(a||'').localeCompare(String(b
   return list.slice().sort((a,b)=>key(a,b)*ACT_SORT.d||f(a).localeCompare(f(b))||cmp(a.nombre,b.nombre))}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sort]');if(!b)return;const k=b.dataset.sort;
   ACT_SORT=ACT_SORT.k===k?{k,d:-ACT_SORT.d}:{k,d:1};try{localStorage.setItem('planActSort',JSON.stringify(ACT_SORT))}catch(x){}renderCargaAct()});
+/* ---- Auto-actualización: si hay una versión nueva en GitHub, recarga cuando el usuario está inactivo ---- */
+(function(){
+  if(!/^https?:/.test(location.protocol))return;
+  const URLV=location.pathname+'?v=';
+  const h=t=>{let x=5381;for(let i=0;i<t.length;i++)x=(x*33^t.charCodeAt(i))>>>0;return x};
+  let base=null,nueva=false,ult=Date.now();
+  ['mousemove','mousedown','keydown','touchstart','scroll','input'].forEach(ev=>addEventListener(ev,()=>{ult=Date.now()},{passive:true,capture:true}));
+  const ocupado=()=>!!document.querySelector('.modal.on,form.editing,input.dirty,#kpiMesW input:focus');
+  async function revisar(){try{const r=await fetch(URLV+Date.now(),{cache:'no-store',credentials:'omit'});if(!r.ok)return;const v=h(await r.text());
+    if(base===null)base=v;else if(v!==base)nueva=true}catch(e){}}
+  function intentar(forzar){if(!nueva||ocupado())return;if(forzar||Date.now()-ult>=3*60*1000)location.reload()}
+  revisar();
+  setInterval(async()=>{await revisar();intentar(false)},5*60*1000);
+  setInterval(()=>intentar(false),30*1000);
+  document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){await revisar();intentar(true)}});
+})();
 /* ---- Ayuda en video ---- */
 (function(){
   const curTab=()=>((document.querySelector('nav button.on')||{}).dataset||{}).t||'resumen';
