@@ -231,6 +231,11 @@ details.ot summary:hover .otn{color:var(--pri2)}
 .x{border:0;background:none;font-size:26px;line-height:1;color:#94a3b8;cursor:pointer;padding:0 4px}.x:hover{color:var(--ink)}
 .warn{border:1px solid #fecaca;background:#fef2f2;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px}
 @media (max-width:900px){.app{display:block}.side{position:static;width:auto;height:auto;padding:10px 10px 6px}.brand{border:0;padding:2px 6px 8px;margin:0}nav{display:flex;overflow-x:auto;gap:2px}nav .lbl{display:none}nav button{width:auto;white-space:nowrap;padding:8px 10px}main{padding:16px}.topbar{padding:10px 16px;position:static}.g2{grid-template-columns:1fr}.prow{grid-template-columns:1fr 2fr 40px}}
+.ib.help{color:var(--pri2,#1e3a5f);border-color:#c7d6ea;background:#f3f7fc}
+.hvid{position:relative;background:#0f172a;border-radius:12px;overflow:hidden;aspect-ratio:16/9}.hvid video{width:100%;height:100%;display:block}
+.hnov{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#cbd5e1;font-size:14px}.hvid.no .hnov{display:flex}.hvid.no video{visibility:hidden}
+.hlist{margin-top:14px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.hlist b{width:100%;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-top:4px}
+.hlist button{border:1px solid var(--line,#e2e8f0);background:#fff;border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:#334155}.hlist button.on{background:var(--pri2,#1e3a5f);border-color:var(--pri2,#1e3a5f);color:#fff}
 .mbar,.mshade,.monly{display:none}
 @media (max-width:760px){
   body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
@@ -271,6 +276,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
   .kcard.hito{grid-template-columns:1fr auto}.kcard.fut{grid-template-columns:1fr auto auto}
   #resCrit .irow{grid-template-columns:minmax(0,1fr) 44px 40px auto;gap:4px 10px}#resCrit .irow .n{grid-column:1/-1;font-size:14px}
   .prow{grid-template-columns:minmax(0,1fr) 46px;gap:4px 10px}.prow .n{grid-column:1/-1}
+  body:has(.modal.on) .mbar{display:none}
   main .card{overflow-x:auto}main table:not(.atable):not(.kgrid){display:block;overflow-x:auto}
   #toast,.toast{bottom:calc(76px + env(safe-area-inset-bottom))!important}
   .modal{padding:0;align-items:flex-end}.modal .mbox,.modal>div{max-width:100%!important;width:100%!important;border-radius:16px 16px 0 0;max-height:92vh;overflow:auto}
@@ -307,6 +313,7 @@ details.ot summary:hover .otn{color:var(--pri2)}
   <div class="ctl">
     <label for="selAnio">Año</label><select id="selAnio"></select>
     <span id="sync">Cargando…</span>
+    <button class="ib help" id="btnHelp" title="Ayuda: video de esta pantalla"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg></button>
     <button class="ib" id="btnRef" title="Actualizar datos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></svg></button>
     <button class="ib" onclick="window.print()" title="Imprimir esta vista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></button>
   </div>
@@ -390,7 +397,12 @@ details.ot summary:hover .otn{color:var(--pri2)}
     <div><h3 style="margin-bottom:12px">Historial</h3><div id="revHist"></div></div>
   </div>
 </div></div>
-<div class="modal" id="m-hito"><div class="sheet"><div class="mhead"><h3 id="hitoT">Marcar hito cumplido</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+<div class="modal" id="m-help"><div class="sheet w"><div class="mhead"><h3 id="helpT">Ayuda</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
+    <div class="hvid"><video id="hVid" controls playsinline preload="metadata"></video><div class="hnov" id="hNo">Video no disponible todavía.</div></div>
+    <div class="hlist" id="hList"></div>
+    <p class="hint" style="margin:12px 0 0">¿Prefiere leer? <a href="instructivo.pdf" target="_blank" rel="noopener">Abrir el instructivo (PDF)</a></p>
+  </div></div>
+  <div class="modal" id="m-hito"><div class="sheet"><div class="mhead"><h3 id="hitoT">Marcar hito cumplido</h3><button type="button" class="x" data-close title="Cerrar">&times;</button></div>
     <p class="hint" id="hitoCrit"></p>
     <form class="f" id="fmHito">
       <input type="hidden" name="id">
@@ -983,6 +995,24 @@ function ordenarActs(list){const cmp=(a,b)=>String(a||'').localeCompare(String(b
   return list.slice().sort((a,b)=>key(a,b)*ACT_SORT.d||f(a).localeCompare(f(b))||cmp(a.nombre,b.nombre))}
 document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('[data-sort]');if(!b)return;const k=b.dataset.sort;
   ACT_SORT=ACT_SORT.k===k?{k,d:-ACT_SORT.d}:{k,d:1};try{localStorage.setItem('planActSort',JSON.stringify(ACT_SORT))}catch(x){}renderCargaAct()});
+/* ---- Ayuda en video ---- */
+(function(){
+  const curTab=()=>((document.querySelector('nav button.on')||{}).dataset||{}).t||'resumen';
+  const nombre=t=>{const b=document.querySelector(`nav button[data-t="${t}"]`);return b?b.textContent.trim():t};
+  const grupo=t=>t.startsWith('c-')?'Gestionar':'Ver';
+  function play(t,auto){const v=$('#hVid'),w=v.parentNode;w.classList.remove('no');
+    $('#helpT').textContent=`Ayuda · ${grupo(t)} › ${nombre(t)}`;
+    v.onerror=()=>w.classList.add('no');v.src=`videos/${t}.mp4`;v.load();if(auto){const p=v.play();p&&p.catch(()=>{})}
+    document.querySelectorAll('#hList button').forEach(b=>b.classList.toggle('on',b.dataset.h===t))}
+  function lista(){const bs=[...document.querySelectorAll('nav button[data-t]')];let g='';
+    $('#hList').innerHTML=bs.map(b=>{const t=b.dataset.t,gg=grupo(t);const hd=gg!==g?`<b>${gg}</b>`:'';g=gg;return hd+`<button type="button" data-h="${t}">${esc(b.textContent.trim())}</button>`}).join('')}
+  document.addEventListener('click',e=>{
+    if(e.target.closest&&e.target.closest('#btnHelp')){lista();play(curTab(),true);abrirModal('m-help');return}
+    const h=e.target.closest&&e.target.closest('#hList button');if(h){play(h.dataset.h,true);return}
+    if(e.target.closest&&(e.target.closest('#m-help [data-close]')||e.target.id==='m-help'))$('#hVid').pause();
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#hVid'))$('#hVid').pause()});
+})();
 /* ---- celular: barra inferior, menú "Más", filtros ---- */
 (function(){
   const MB=['resumen','c-act','c-ind'];
